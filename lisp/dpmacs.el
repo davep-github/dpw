@@ -11,6 +11,9 @@
 ;;
 
 ;; @todo XXX Where appropriate, look at using autoloads vs loads or requires.
+
+(message "dpmacs.el...")
+
 (require 'advice)
 (defun dp-xemacs-p ()
   "A cheap way of detecting xemacs."
@@ -93,7 +96,6 @@ its temp-ness.")
 ;;; break everything, I can exit w/o having these defuns be unbound
 ;;; and causing errors.  I guess I should really look at doing some
 ;;; reordering and clean up in general.
-(message "dpmacs.el...")
 
 (define-error 'dp-signal-message
   "Signal an error just for the message.  This is in `debug-ignored-errors'."
@@ -149,6 +151,10 @@ This should be set by the emacs specific code.")
 
 (defvar dp-warning-buffer-name "*Warnings*"
   "*The name of the buffer warning messages (duh).
+It's the same (!!) on both macsen! And by the same, I mean not different.")
+
+(defvar dp-help-buffer-name "*Help*"
+  "*The name of the help buffer (duh).
 It's the same (!!) on both macsen! And by the same, I mean not different.")
 
 (defvar dp-ding-backtrace-p t
@@ -1208,7 +1214,37 @@ minibuffer history list `bookmark-history'."
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
 
-;; See `dp-set-frame-height' for too many ways the height might be overridden.
-(run-with-idle-timer 2 nil #'dp-set-to-max-vert-frame-height)
+(defun dp-stuff-that-needs-to-done-after-init ()
+  "Some things need to be done after the processing of `init.el'...
 
-(message "dpmacs.el... finished.")
+... after control returns to the inscrutable and unfathomable
+depths of Emacs' initialization code.  In particular *display*
+stuff, some of which doesn't work if done while in `init.el' or
+the files it loads/requires, no matter how many `sit-for's and
+redisplays, etc.  Sometimes stuff works and then stops, others
+vice-versa, Some seems intermittent.  However, having some things
+done after we finish `init.el' they do seem to work consistently.
+Possibly, Emacs does some (X) type display stuff, or other
+conflicting operations.  This is a dumping ground for those
+actions.  It's been decades since I started using them 'macsen,
+and this is the first time I've needed to do this.  As the
+mega-MAGA-geniuses I used to work with said, 'we've never needed
+to do that before.'"
+  ;; The kde comments are very olde.  Very.
+  ;; The -geometry arg doesn't work quite right under kde.
+  ;; Or maybe it's because something was wrong with setting the font in the
+  ;; very early init phase.  It looks like it didn't take when I broke right
+  ;; after the call to set the font.  Hence the move here.
+  ;; Set it before the snuggle so everything has the final display values.
+  (dp-set-frame-font-size dp-set-frame-font-size-default)
+  (unless (bound-and-true-p dp-do-not-snuggle-frame-in-upper-right-p)
+    (dp-snuggle-frame-in-upper-right)
+    (message "snuggling...finished."))
+  (dp-set-to-max-vert-frame-height)
+  )
+
+;; See `dp-set-frame-height' for far too many ways the height might be
+;; overridden.
+(run-with-idle-timer 2 nil #'dp-stuff-that-needs-to-done-after-init)
+
+(message "dpmacs.el...finished.")

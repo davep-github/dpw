@@ -553,7 +553,7 @@ string containing their values."
 " dp-ws)
   "Whitespace chars including newline.")
 
-(defvar dp-ws+cr+newline (format "%s" dp-ws+newline)
+(defvar dp-ws+newline+cr (format "%s" dp-ws+newline)
   "Whitespace chars including newline.")
 
 (defvar dp-ws-regexp (format "[%s]" dp-ws)
@@ -574,13 +574,13 @@ string containing their values."
 (defvar dp-ws+newline-regexp+ (format "%s+" dp-ws+newline-regexp)
   "Whitespace chars including newline regexp, one or more.")
 
-(defvar dp-ws+cr+newline-regexp (format "[%s]" dp-ws+cr+newline)
+(defvar dp-ws+newline+cr-regexp (format "[%s]" dp-ws+newline+cr)
   "Whitespace chars including newline + CR regexp.")
 
-(defvar dp-ws+cr+newline-regexp* (format "%s*" dp-ws+cr+newline-regexp)
+(defvar dp-ws+newline+cr-regexp* (format "%s*" dp-ws+newline+cr-regexp)
   "Whitespace chars including newline + CR regexp, zero or more.")
 
-(defvar dp-ws+cr+newline-regexp+ (format "%s+" dp-ws+cr+newline-regexp)
+(defvar dp-ws+newline+cr-regexp+ (format "%s+" dp-ws+newline+cr-regexp)
   "Whitespace chars including newline + CR regexp, one or more.")
 
 (defvar dp-ws-regexp-not (format "[^%s]" dp-ws)
@@ -604,16 +604,16 @@ string containing their values."
                                           dp-ws+newline)
   "Whitespace chars including newline regexp, 0 or more.")
 
-(defvar dp-ws+cr+newline-regexp-not (format "[^%s]"
-                                         dp-ws+cr+newline)
+(defvar dp-ws+newline+cr-regexp-not (format "[^%s]"
+					    dp-ws+newline+cr)
   "White spacechars including newline regexp, one or more.")
 
-(defvar dp-ws+cr+newline-regexp+-not (format "[^%s]+"
-                                          dp-ws+cr+newline)
+(defvar dp-ws+newline+cr-regexp+-not (format "[^%s]+"
+					     dp-ws+newline+cr)
   "Whitespace chars including newline regexp, one or more.")
 
-(defvar dp-ws+cr+newline-regexp*-not (format "[^%s]*"
-                                          dp-ws+cr+newline)
+(defvar dp-ws+newline+cr-regexp*-not (format "[^%s]*"
+					     dp-ws+newline+cr)
   "Whitespace chars including newline regexp, 0 or more.")
 
 (defvar dp-typical-hack-vars-block "###
@@ -1130,12 +1130,12 @@ first and last non-white space on the line."
   "Map of convenience symbolic args to `dp-region-or...' to functions.
 Format is an alist of: \(symbol . \(function [args...]))  I know, it's the
 same as \(symbol function [args...]), but the . emphasizes the key
-element. ")
+element.")
 
 (defun* dp-region-or... (&key beg end
                          (bounder 'line-p) bounder-args
                          &allow-other-keys)
-  "Return an ordered (cons first last) from one of many bounding conditions:
+  "Return an ordered (cons begin end) from one of many bounding conditions:
 1. (cons BEG END) if they are non-nil,
 2. the region if active,
 3. when BOUNDER is callable, the results of `BOUNDER' applied to BOUNDER-ARGS.
@@ -1627,6 +1627,7 @@ Returns the buffer created."
                                    nil nil nil "mt*mb")
       (goto-char (point-max)))
     temp*-buf))
+(dp-defaliases 'dptb 'mdtb 'mdptb 'dpmtb 'dp-make-temp-*mode-buffer)
 
 (defun dp-make-temp-c++-mode-buffer (&optional buffer-name)
   "Helper to create a C++ mode buffer using `dp-make-temp-*mode-buffer'."
@@ -3439,6 +3440,7 @@ lisp-interaction mode."
                      (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer)))
                   'follow-output))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun dp-display-message-buffer (&optional same-window-p tallest-window-p)
   (interactive "P")
   (dp-display-sys-buffer dp-message-buffer-name same-window-p
@@ -3453,8 +3455,9 @@ lisp-interaction mode."
 
 (dp-defaliases 'mbd 'mb0 'mb. 'mb1 'dp-display-message-buffer-same-window)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun dp-display-warning-buffer (&optional same-window-p tallest-window-p)
-  "Display the message buffer in window predicated by SAME-WINDOW-P."
+  "Display the warning buffer in window predicated by SAME-WINDOW-P."
   (interactive "P")
   (dp-display-sys-buffer dp-warning-buffer-name same-window-p
 			 tallest-window-p))
@@ -3462,12 +3465,29 @@ lisp-interaction mode."
 (dp-defaliases 'wb 'wb2 'wb-other 'dp-display-warning-buffer)
 
 (defun dp-display-warning-buffer-same-window ()
-  "Display the message buffer in this window."
+  "Display the warning buffer in this window."
   (interactive)
-  (dp-display-message-buffer 'same-window))
+  (dp-display-warning-buffer 'same-window))
 
-(dp-defaliases 'wbd 'wb0 'wb. 'wb1 'dp-display-message-buffer-same-window)
+(dp-defaliases 'wb 'wb0 'wb1 'wbd 'wb. 'wb-same 'dp-display-warning-buffer)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun dp-display-help-buffer (&optional same-window-p tallest-window-p)
+  "Display the help buffer in window predicated by SAME-WINDOW-P."
+  (interactive "P")
+  (dp-display-sys-buffer dp-help-buffer-name same-window-p
+			 tallest-window-p))
+
+(dp-defaliases 'hb 'hb2 'hb-other 'dp-display-help-buffer)
+
+(defun dp-display-help-buffer-same-window ()
+  "Display the help buffer in this window."
+  (interactive)
+  (dp-display-help-buffer 'same-window))
+
+(dp-defaliases 'hbd 'hb0 'hb. 'hb1 'dp-display-help-buffer-same-window)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun dp-display-backtrace-buffer (&optional same-window-p tallest-window-p)
   "Go to *Backtrace* buffer."
   (interactive "P")
@@ -3479,6 +3499,7 @@ lisp-interaction mode."
   "Go to *Backtrace* buffer in this window."
   (interactive)
   (bt 'same-window-p))
+
 (dp-defaliases 'btb0 'btb. 'btb1 'btbd 'dp-backtrace-buffer-same-window)
 
 (defun mbm ()
@@ -5542,15 +5563,6 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   ;; This function is called after dpmacs has completed.
   (dp-activate-appts)
   (dp-appt-initialize-on)
-  ;; The -geometry arg doesn't work quite right under kde.
-  ;; Or maybe it's because something was wrong with setting the font in the
-  ;; very early init phase.  It looks like it didn't take when I broke right
-  ;; after the call to set the font.  Hence the move here.
-  ;; Set it before the snuggle so everything has the final display values.
-  (dp-set-frame-font-size dp-set-frame-font-size-default)
-  (unless (bound-and-true-p dp-do-not-snuggle-frame-in-upper-right-p)
-    (dp-snuggle-frame-in-upper-right)
-    (message "snuggling...finished."))
   (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w (&optional height width)
@@ -7284,7 +7296,7 @@ kill-pred-func forces kill-func-in."
                                    kill-func prompt)))))
      (killp2 (setq func kill-func)))
 
-    (dmessage "%s'd: %s" func (buffer-name))
+    (dmessage "%c%s'd: %s" ?` func (buffer-name))
     (funcall func)
     (format "%s" func)))
 
@@ -7952,21 +7964,33 @@ The highlight will be removed after the next command."
 
 
 ;; toggle algorithm copped from view-mode
+(defun dp-toggle-val (arg val &optional verbose-p)
+"Toggle value of VAL in the canonical manner as a function of ARG.
+If ARG is nil, toggle value of VAL.
+If ARG is > 0, or t then set value of VAL to t.
+If ARG is <= 0, set value of VAL to nil.
+If VERBOSE-P is non-nil, show new value of VAL."
+  (interactive "P")
+  (setq olde-val val
+	val (if arg
+		(or (eq arg t)		; t if, well, t.
+		    (and (numberp arg)
+			 (> arg 0)))	; t if >, nil if <=
+	      ;; Just toggle.
+	      (not val)))
+  (when verbose-p
+    (message "val was: %s, now %s." olde-val val))
+  val)
+
 (defun dp-toggle-var (arg var-sym &optional quiet-p)
 "Toggle value of VAR-SYM in the canonical manner as a function of ARG.
-If ARG is nil, toggle value of VAR-SYM.
-If ARG is > 0, or t then set value of VAR-SYM to t.
-If ARG is <= 0, set value of VAR-SYM to nil.
-If QUIET-P is non-nil, show new value of VAR-SYM."
+
+See `dp-toggle-val' for details."
   (interactive "P")
   (let ((val (symbol-value var-sym)))
-    (set var-sym (if arg
-		     (or (equal arg t)  ; t if, well, t.
-			 (> arg 0))	; t if >, nil if <=
-                   ;; Just toggle.
-		   (not val))))
-  (unless quiet-p
-    (message "%s is now %s." var-sym (symbol-value var-sym))))
+    (set var-sym (dp-toggle-val arg val nil))
+    (unless quiet-p
+      (message "%s was: %s, now %s." var-sym val (symbol-value var-sym)))))
 
 (defun key-id ()
   (interactive)
@@ -8630,12 +8654,9 @@ Can be called directly or by an abbrev's hook.
   (setq saveconf-file-name (concat (saveconf-make-file-name)
                                    "."
                                    (dp-short-hostname))
-;;                                   (if (dp-current-sandbox-name)
-;;                                       (concat "." (dp-current-sandbox-name))
-;;                                     ""))
         saveconf-file-name-prev (concat saveconf-file-name ".prev"))
-  (message "saveconf-file-name>%s<, saveconf-file-name-prev>%s<"
-           saveconf-file-name saveconf-file-name-prev)
+  (dmessage "saveconf-file-name>%s<, saveconf-file-name-prev>%s<"
+	    saveconf-file-name saveconf-file-name-prev)
   ;; Keep the data from the last save so it won't be overwritten as current
   ;; data are written.
   (when (file-exists-p saveconf-file-name)
@@ -10764,30 +10785,34 @@ when the command was issued?")
                                confirm-name-p
                                (void-var-format
                                 "`%s' is void as a variable.  Try again: "))
-  (let* ((v (variable-at-point))
+  ;;
+  ;; Emacs states in the doc, that `variable-at-point' returns 0 if there is
+  ;; nothing there.
+  ;; XEmacs does, too, since the OG code checked for a zero.
+  (let* ((vatp (variable-at-point))
          (val (let ((enable-recursive-minibuffers t))
-		(when (and (numberp v)
-			   (= 0 v))
-		  (setq v nil))
-                (if (and v (not confirm-name-p))
-                    (format "%s" v)
+		(when (and (numberp vatp)
+			   (= 0 vatp))
+		  (setq vatp nil))
+                (if (and vatp (not confirm-name-p))
+                    (format "%s" vatp)
                   (completing-read
-                   (if v
+                   (if vatp
                        (format (or def-prompt
                                    "Describe variable (default %s): ")
-                               v)
+                               vatp)
                      (gettext (or (when void-var-format
                                     (format void-var-format
                                             (symbol-near-point)))
                                   prompt "Describe variable: ")))
                    obarray 'boundp t nil (or history-symbol 'variable-history)
-                   (if v
-                       (symbol-name v)
+                   (if vatp
+                       (symbol-name vatp)
                      nil)
                    )))))
     (list (if (string= val "")
-              nil
-            (intern val)))))
+	      nil
+	    (intern val)))))
 
 (defun dp-show-variable-value (var-sym &optional confirm-name-p
                                copy-as-kill-p no-history-p)
@@ -12116,7 +12141,7 @@ Where plist has elements:
 'comment-start - for customizing the comment chars preceding the time-stamp
 'make-exe-p - should we make the file executable?")
 
-(defvar dp-auto-it-found-buffer-empty-p nil
+(dp-deflocal dp-auto-it-found-buffer-empty-p nil
   "Hack for empty/new file initialization. If we use this, then >1
   initializers can run. Otherwise, the first one makes the buffer non-empty
   for the rest. Dealing with ordering will be a bitch. Another way should be
@@ -12143,12 +12168,9 @@ Where plist has elements:
 (defun dp-auto-it? ()
   "Automagically call `dp-auto-it' on empty fileses."
   (interactive)
-  (and (dp-buffer-empty-p)
-       (setq dp-auto-it-found-buffer-empty-p t)
-       (dp-auto-it)))
-;;replaced by the above;   (and (eq (point-min) 1)
-;;replaced by the above;        (equal (point-min) (point-max))
-;;replaced by the above;        (dp-auto-it)))
+  (when (dp-buffer-empty-p)
+    (setq dp-auto-it-found-buffer-empty-p t)
+    (dp-auto-it)))
 
 (defvar dp-cx-mode-bits #o110
   "Who do we want to allow to execute this thing.")
