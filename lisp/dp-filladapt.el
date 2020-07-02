@@ -6,11 +6,17 @@
 ;;; that are indented and/or are set off with semicolons, dashes, etc."
 ;;; (copped from sample.init.el)
 ;;;
-;;; Give us a less powerful fallback if we can't find filladapt.
+
+;; It's now in elpa.
+(require 'filladapt)
+
 (setq-default filladapt-mode t)
 (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
 (setq filladapt-mode-line-string " Fa")
 
+;;
+;; Halfhearted attempt to fall back to auto-fill.
+;;
 (defun dp-turn-on-auto-fill ()
   (if (fboundp 'turn-on-filladapt-mode)
       (turn-on-filladapt-mode))
