@@ -15,6 +15,16 @@
 
 (message "init.el...")
 
+(defmacro dp-loading-require (name enable-p &rest body)
+  (let ((msg-prefix (dmessage "require: %s..." name)))
+    (when enable-p
+      `(progn
+	 (dmessage "%s" ,msg-prefix)
+	 ,@body
+	 (dmessage "%sdone." ,msg-prefix)
+	 (provide ',name)
+	 ))))
+
 (if (getenv "DP_NO_DP_INIT")
     (message "init.el...skipped")
   (defvar dp-lisp-dir
