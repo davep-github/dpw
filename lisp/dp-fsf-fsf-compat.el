@@ -461,7 +461,7 @@ I need to look at filtered-frame-list to use device if non-nil."
 Dumb-fuxking-ass saveconf.el defined it's own window-list (FUCK!
 function that had different parameters and was causing an error.
 Hence the compat function which isn't needed.  Bailiff, whack his
-pee-pee. "
+pee-pee."
   (window-list frame minibuf window))
 
 (defun dp-bobp (&optional buffer)
@@ -829,5 +829,11 @@ nil -- disabled by removing `dp-xemacs-like-eol-cursor' from `post-command-hook.
 	   (lambda ()
 	     (dp-add-corresponding-file-pair "dp-fsf-fsf-compat.el"
 					     "dp-xemacs-fsf-compat.el"))))
+
+;; Steal XEmacs function.
+(defun remassoc (key alist)
+  (cl-delete key alist
+	     :test #'equal
+	     :key #'car))
 
 (message "dp-fsf-fsf-compat loading...done")
