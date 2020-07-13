@@ -5,13 +5,20 @@ set -u
 
 progname=$(basename $0)
 
-D_one=${1-}
+DOT_NOT_GIT=12
 
 gitted_p()
 {
-    echo 1>&2 "Make me use: git ls-files --error-unmatch <file>"
-    local file="$1"
-    git mv -n "$file" some-file-or-another
+    # Make sure . is gitted.
+    git ls-files --error-unmatch "."
+    if ! git ls-files --error-unmatch "." >/dev/null 2>&1
+    then
+	echo 1>&2 "cwd >${PWD}< is not part of a git repo."
+	retrc "${DOT_NOT_GIT}"			# rc
+    else
+	local file="$1"
+	git ls-files --error-unmatch "${file}" # rc from git (duh).
+    fi
 }
 
 gitted_p_quiet()
@@ -29,13 +36,28 @@ gitted_p_debug()
 gitted_p_normal()
 {
     local file="$1"
-    if gitted_p_quiet "$file"
+    local git_msg
+    git_msg=$(gitted_p "$file" 2>&1)
+    local rc="$?"
+    if ((rc == 0))
     then
-        echo "+ $file is under git's dominion."
+        echo "++ $file is under git's dominion."
         return 0
-    else
-        echo "- $file is not under git's dominion."
+    elif ((rc == 1))
+    then
+        echo "-- $file is not under git's dominion: $rc."
         return 1
+    else
+	{
+	    ((rc == DOT_NOT_GIT)) && {
+		echo "${git_msg}"
+		return "${rc}"
+	    }
+	    echo "Something failed, and I know not what, but the rc is: ${rc}."
+	    [ -n "$git_msg" ] && {
+		echo "and git said>${git_msg}<"
+	    }
+	} 1>&2
     fi
     # WTF?
     return 2
@@ -95,7 +117,8 @@ do
   [ -e "$f" ] || {
       at_least_one_fail=1
       [ -z "${quiet_p}" ] && {
-          echo "$progname: $f does not exist."
+	  # print the fail prefix for bad programs using this.
+          echo "-- $progname: $f does not exist."
       } 1>&2
       continue
   }
