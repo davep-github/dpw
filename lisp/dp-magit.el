@@ -145,12 +145,13 @@ else: NUM-LINES lines.
 Want to put cursor at the beginning of the buffer, but stuff is
 done after this is called so we end up not at the beginning.  No
 real biggie, since an `undo' gets us there.  For now, at least."
-  (let ((bfn (expand-file-name buffer-file-name)))
-    (cond
-     ;; Yummy! Hard coding.
-     ((string-match "\\(^\\|/\\)COMMIT_EDITMSG$" bfn)
-      (goto-char (point-min)))
-     (t nil))))
+  (when buffer-file-name
+    (let ((bfn (expand-file-name buffer-file-name)))
+      (cond
+       ;; Yummy! Hard coding.
+       ((string-match "\\(^\\|/\\)COMMIT_EDITMSG$" bfn)
+	(goto-char (point-min)))
+       (t nil)))))
 
 (global-set-key [(control ?x) (control ?g)]
 		(kb-lambda ()

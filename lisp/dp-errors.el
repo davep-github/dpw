@@ -271,6 +271,7 @@
     "^No mark set in this buffer$"
     "^The mark is not set now, so there is no region$"
     "^Too few elements on stack$"
+    "No next hunk$"
     ;; recover-file
     "^Auto-save file .* not current$"
 

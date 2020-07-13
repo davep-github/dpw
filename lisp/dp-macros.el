@@ -204,9 +204,9 @@ it as a string."
   (defmacro dp-defcustom-local (symbol value docstring &rest args)
     "Define a custom variable and make it buffer local."
     (if (stringp docstring)
-        (setq docstring (format "%s\n(buffer-local)" docstring))
+        (setq docstring (format "%s\n(dp-defcustom-local)" docstring))
       (setq args (cons docstring args)
-            docstring "(buffer-local)"))
+            docstring "(dp-defcustom-local)"))
     `(progn
       (defcustom ,symbol ,value ,docstring ,@args)
       (make-variable-buffer-local ',symbol)
@@ -232,8 +232,8 @@ it as a string."
     "Define a variable and make it buffer local and permanent."
     (setq docstring
           (if docstring
-              (setq docstring (format "%s\n(permanent-local)" docstring))
-            "(permanent-local"))
+              (setq docstring (format "%s\n(dp-deflocal-permanent)" docstring))
+            "(dp-deflocal-permanent"))
     `(progn
       (dp-deflocal ,name ,init-val ,docstring)
       (put ',name 'permanent-local t)))

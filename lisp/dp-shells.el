@@ -1903,7 +1903,8 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (let* ((cur-input (buffer-substring (dp-current-pmark-pos) (point-max))))
     (when (or (and (eq save-contents-p 'ask)
                    (y-or-n-p "Save contents first? "))
-              save-contents-p)
+              (and save-contents-p
+		   (not (eq save-contents-p 'ask))))
       (dp-save-shell-buffer))
     (dp-erase-buffer)
     (when fake-cmd-p
@@ -1915,7 +1916,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
       (insert cur-input))
     ))
 
-(defcustom dp-shell-buffer-max-lines 1701
+(defcustom dp-shell-buffer-max-lines 714
   "*Max lines to preserve in shell buf when using `dp-clr-shell' w/o a prefix arg."
   :group 'dp-vars
   :type 'integer)
