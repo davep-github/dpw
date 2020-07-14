@@ -550,20 +550,20 @@
     (("faf" "find . -type f -print0 | xargs -r0 "
       "find . -type f -print0 | xargs -r0 egrep ")
      dp-manual)
-    (("faff" "find . -type f -print0 | xargs -r0 fgrep -n "
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -ni "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep -n ")
      dp-manual)
-    (("faff" "find . -type f -print0 | xargs -r0 fgrep -n "
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -ni "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep -n ")
      dp-manual)
-    (("fafe" "find . -type f -print0 | xargs -r0 egrep -n "
+    (("fafe" "find . -type f -print0 | xargs -r0 egrep -ni "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 fgrep -n ")
+      "find . -type f -print0 | xargs -r0 fgrep -ni ")
      dp-manual)
     (("fasf" "find . -type f \\( -name '*.cpp' -o -name '*.h' \\)  -print0 | xargs -r0 fgrep -ni "
       ;;Usually it's fgrep or egrep.
