@@ -951,7 +951,7 @@ examining all of the message calls."
 ;;exp;       (cons bol (point)))))
 
 (defun dp-line-boundaries (&optional text-only-p no-newline-p from-pos
-                               no-eol-punctuation-p)
+				     no-eol-punctuation-p)
   "Return cons of beginning-of-line and end-of-line.
 The *ENTIRE* line is marked.  This includes the following newline, if
 one exists, otherwise the preceding newline.  The purpose of this was
@@ -1001,7 +1001,7 @@ non-white space on the line."
   (dp-cons-to-list (apply 'dp-line-boundaries r)))
 
 (defun dp-region-or-line-boundaries(&optional m p text-only-p
-                                    no-newline-p from-pos)
+					      no-newline-p from-pos)
   (interactive)
   (dp-region-or... :beg m :end p
                    :bounder 'dp-line-boundaries
@@ -1013,20 +1013,20 @@ non-white space on the line."
   (dp-cons-to-list (apply dp-region-or-line-boundaries r)))
 
 (defun dp-func-on-region-or-line (func &optional text-only-p
-                                  no-newline-p from-pos
-                                  m p)
+				       no-newline-p from-pos
+				       m p)
   "Apply FUNC to region if defined else the entire line."
   (let ((region (dp-region-or-line-boundaries m p text-only-p no-newline-p
                                               from-pos)))
     (funcall func (car region) (cdr region))))
 
-;(defun dp-pwn-sel (&optional p1 p2 type how-to-add data-type)
-;  (interactive "r")
-;  (setq-ifnil p1 (mark)
-;	      p2 (point))
-;  (let ((bss (buffer-substring p1 p2)))
-;    (dp-deactivate-mark)		; TEMP????
-;    (own-selection bss type how-to-add data-type)))
+;;(defun dp-pwn-sel (&optional p1 p2 type how-to-add data-type)
+;;  (interactive "r")
+;;  (setq-ifnil p1 (mark)
+;;	      p2 (point))
+;;  (let ((bss (buffer-substring p1 p2)))
+;;    (dp-deactivate-mark)		; TEMP????
+;;    (own-selection bss type how-to-add data-type)))
 
 (defun dp-pwn-sel()
   )
@@ -1072,7 +1072,8 @@ FUNC must take two args, beginning and end buffer positions."
 			  (and (not (dp-xemacs-p))
 			       (dp-minibuffer-p)))))
     (loop repeat count do
-      (dp-operate-on-entire-line 'delete-region text-only-p no-newline-p))))
+	  (dp-operate-on-entire-line 'delete-region text-only-p
+				     no-newline-p))))
 
 
 (defun dp-mark-line-if-no-mark (&optional text-only-p no-newline-p)
