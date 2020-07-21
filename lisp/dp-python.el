@@ -4,8 +4,8 @@
 ;; mode stuff is now in a file called python.el, naming becomes inconsistent.
 ;;
 
-(dp-loading-require dp-python t
-
+(dp-loading-require 'dp-python t
+"Load & support my Python needs."
 ;; Fancy vars...
 (defcustom dp-python-new-file-template-file
   (expand-file-name "~/bin/templates/python-template.py")
