@@ -277,6 +277,7 @@
 
     ;; edebug* errors:
     "[^ ]*edebug(error"
+    "^Edebug is not active$"
 
     ;; shell-resync-dirs will cause this if there are non-existent
     ;; directories on the dirstack.
