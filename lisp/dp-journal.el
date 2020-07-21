@@ -2925,6 +2925,10 @@ This kind of allows us to use a journal file with a non-standard name."
 
 (add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
 
+(defun dpj-after-save-hook ()
+  (dpj-set-current-journal-file (buffer-file-name))
+  (dpj-merge-all-topics nil 'write-em))
+
 ;;; real dp-journal-mode function defined here:
 (define-derived-mode dp-journal-mode text-mode "Jrn" ;; "Journal"
   "Major mode for editing journals.
@@ -3045,11 +3049,7 @@ exist to move from one topic record to the next or previous.
   (dpj-add-menu-item "Kill old journal buffers " 'dpj-tidy-journals)
 
   (dp-make-local-hook 'after-save-hook)
-  (add-hook 'after-save-hook
-	    (function
-	     (lambda ()
-	       (dpj-set-current-journal-file (buffer-file-name))
-	       (dpj-merge-all-topics nil 'write-em)))
+  (add-hook 'after-save-hook 'dpj-after-save-hook
 	    nil 'local)
 
   (add-local-hook 'kill-buffer-hook 'dpj-buffer-killed-hook)
