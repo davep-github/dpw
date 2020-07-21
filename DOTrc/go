@@ -57,21 +57,21 @@ Ee|csdb|                                         ${cscopedbroot}
 
 Ee|ipystartup|ipyup|ipyrc|   ${davep}/.config/ipython/profile_default/startup/
 
-Ee|dpvl|                     /home/dpanarit/var/log/
-Ee|dplog|                    /home/dpanarit/var/log/
-Ee|lobld|                    /home/dpanarit/local/build/
-Ee|hlb|                      /home/dpanarit/local/bin/
-Ee|hlbld|                    /home/dpanarit/local/build/
-Ee|drops|                    /home/dpanarit/droppings/
-Ee|droppings|                /home/dpanarit/droppings/
-Ee|xemssas|                  ${droppings}/editors/xemacs/session-auto-saves.d/
-Ee|xemdrop|                  ${droppings}/editors/xemacs/
-Ee|eddrop|                   ${droppings}/editors/
-Ee|hi|                       /home/dpanarit/etc/pydb/
-Ee|emacsdropping|edrop|      ${droppings}/editors/emacs/
-Ee|xemacsdropping|xedrop|    ${droppings}/editors/xemacs/
+Ee|dpvl|                        /home/dpanarit/var/log/
+Ee|dplog|                       /home/dpanarit/var/log/
+Ee|lobld|                       /home/dpanarit/local/build/
+Ee|hlb|                         /home/dpanarit/local/bin/
+Ee|hlbld|                       /home/dpanarit/local/build/
+Ee|drops|                       /home/dpanarit/droppings/
+Ee|droppings|                   /home/dpanarit/droppings/
+Ee|xemssas|                     ${droppings}/editors/xemacs/session-auto-saves.d/
+Ee|xemdrop|                     ${droppings}/editors/xemacs/
+Ee|eddrop|                      ${droppings}/editors/
+Ee|hi|                          /home/dpanarit/etc/pydb/
+Ee|emacsdropping|edrop|emd|     ${droppings}/editors/emacs/
+Ee|xemacsdropping|xedrop|xmd|   ${droppings}/editors/xemacs/
 Ee|originmaster|origmas|origm|omaster|omas| origin/master
-Ee|masto|morigin|morig|      ${originmaster}
+Ee|masto|morigin|morig|         ${originmaster}
 
 ### 
 ### Local Variables: ***

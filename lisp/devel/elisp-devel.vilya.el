@@ -1285,14 +1285,65 @@ nil
 
 
 
-(let ((a1 '((a . 1) (b . 2) (c . 4)))
+(let ((a1 '((a . 1) (b . 2) (c . 4) (z . 26)))
       (a2 '((aa . 11) (d . 4) (c . 3)))
+      (a9 '((aa . 99)))
       z)
-  (princf "a1>%s<" a1)
-  (princf "a2>%s<" a2)
-  (setq z (dp-add-or-update-alist-with-alist 'a1 a2))
-  (princf "z>%s<" z)
-  (princf "a1>%s<" a1))
+  (princf "1, a1>%s<" a1)
+  (princf "1, a2>%s<" a2)
+  (princf "1, a9>%s<" a9)
+  (setq z (dp-add-or-update-alist-with-alist 'a2 a9))
+  (princf "2, z>%s<" z)
+  (princf "2, a1>%s<" a1)
+  (princf "2, a2>%s<" a2)
+  (princf "2, a9>%s<" a9))
+1, a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+1, a2>((aa . 11) (d . 4) (c . 3))<
+1, a9>((aa . 99))<
+2, z>((aa . 99) (d . 4) (c . 3))<
+2, a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+2, a2>((aa . 99) (d . 4) (c . 3))<
+2, a9>((aa . 99))<
+nil
+
+1, a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+1, a2>((aa . 11) (d . 4) (c . 3))<
+1, a9>((aa . 99))<
+2, z>((aa . 99) (a . 1) (b . 2) (c . 4) (z . 26))<
+2, a1>((aa . 99) (a . 1) (b . 2) (c . 4) (z . 26))<
+2, a2>((aa . 11) (d . 4) (c . 3))<
+2, a9>((aa . 99))<
+nil
+
+1, a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+1, a2>((aa . 11) (d . 4) (c . 3))<
+1, a9>((aa . 99))<
+2, z>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3) (z . 26))<
+2, a1>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3) (z . 26))<
+2, a2>((aa . 11) (d . 4) (c . 3))<
+2, a9>((aa . 99))<
+nil
+
+
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+a2>((aa . 11) (d . 4) (c . 3))<
+z>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3) (z . 26))<
+a1>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+a2>((aa . 11) (d . 4) (c . 3))<
+z>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3) (z . 26))<
+a1>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4))<
+a2>((aa . 11) (d . 4) (c . 3))<
+z>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3))<
+a1>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3))<
+nil
+
 a1>((a . 1) (b . 2) (c . 4))<
 a2>((aa . 11) (d . 4) (c . 3))<
 z>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3))<
@@ -2047,12 +2098,28 @@ E.e. things in `dp-macros.el'."
 (put 'dp-unindented-body 'lisp-indent-function 'dp-lisp-indent-0)
 
 (cl-pe '
-(dp-unindented-body
+(dp-unindented-body zz t
 (a)
 (b)
 (c)
 )
 )
+
+(dp-unindented-body zz t (a) (b) (c))nil
+
+
+
+(dp-unindented-body zz t (a) (b) (c))nil
+
+
+
+(dp-unindented-body zz t (a) (b) (c))nil
+
+
+
+(dp-unindented-body (a) (b) (c))nil
+
+
 
 (progn
   (a)
@@ -2107,6 +2174,8 @@ dp-unindented-body
 
 
 (get 'dp-loading-require 'lisp-indent-function)
+nil
+
 (lambda (&rest r) 2)
 
 lisp-indent-0
@@ -2120,6 +2189,14 @@ lisp-indent-0
  (dp-loading-require bubba t
 		     (setq a 'b)
 		     ))
+
+(progn
+  (dmessage "%s" "require: bubba...")
+  (setq a 'b)
+  (dmessage "%sdone." "require: bubba...")
+  (provide 'bubba))nil
+
+
 
 (progn
   (dmessage ">%s<<" "require: bubba...")
@@ -2336,6 +2413,8 @@ bubba3
   (princf "did g")
 )
 )
+name: bubba3, enable-p: (quote nil), docstring: (setq req==test==b (quote b))
+
 
 (defun dp-lisp-indent-0 (a b)
   (dmessage "a: %s, b: %s" a b)
@@ -2470,4 +2549,1142 @@ Monday June 29 2020
 	      dp-xemacs-like-eol-cursor-type 'box
 	      cursor-type dp-xemacs-like-eol-cursor-type)))
     (cons old dp-xemacs-like-eol-cursor-type)))
+
+
+========================
+Monday July 06 2020
+--
+(defmacro dp-loading-require (name enable-p docstring &rest body)
+  (unless (stringp docstring)
+    (error "dp-loading-require: docstring isn't."))
+  (let ((msg-prefix (dmessage "require: %s..." name)))
+    (when enable-p
+      `(progn
+	 (dmessage "%s" ,msg-prefix)
+	 ,@body
+	 (dmessage "%sdone." ,msg-prefix)
+	 (provide ',name)
+	 ))))
+dp-loading-require
+
+(defmacro dp-loading-require (name enable-p docstring &rest body)
+  (princf "name: %s, enable-p: %s, docstring: %s" name enable-p docstring)
+  (unless (stringp docstring)
+    (error "dp-loading-require: docstring isn't."))
+  (let ((msg-prefix (dmessage "require: %s..." name))
+	(ok-enable-values '(t enable enabled load require allow))
+	(nok-enable-values '(nil no-enable no-enabled no-load no-require allow)))
+    (if (not (memq `,enable-p (append ok-enable-values nok-enable-values)))
+	(error "enable-p>%s< not a member of %s" enable-p ok-enable-values)
+      (when (memq `,enable-p ok-enable-values)
+	`(progn
+	   (dmessage "%s" ,msg-prefix)
+	   (dmessage "%s" ,docstring)
+	   ,@body
+	   (dmessage "%sdone." ,msg-prefix)
+	   (provide ',name)
+	   )))))
+
+
+(cl-pe '
+ (dp-loading-require 'bubba3 t
+"Test of loading messages."
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+)
+)
+
+(progn
+  (message "%sbegin" "require: 'bubba3...")
+  "Test of loading messages."
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (message "%sdone." "require: 'bubba3...")
+  (provide 'bubba3))
+
+  (message "a%sbegin" "require: 'bubba3...")
+"arequire: 'bubba3...begin"
+
+  (message "b%sdone." "require: 'bubba3...")
+"brequire: 'bubba3...done."
+
+
+
+(progn
+  (message "begin: %s" "require: 'bubba3...")
+  (message "end: %sdone." "require: 'bubba3...")
+  )
+"end: require: 'bubba3...done."
+
+"require: 'bubba3...done."
+
+
+
+(progn
+  (message "%s" "require: 'bubba3...")
+  "Test of loading messages."
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (message "%sdone." "require: 'bubba3...")
+  (provide 'bubba3))nil
+
+
+
+(progn
+  (message "%s" "require: bubba3...")
+  "Test of loading messages."
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (message "%sdone." "require: bubba3...")
+  (provide "bubba3"))nil
+
+
+name: bubba3, enable-p: t, docstring: Test of loading messages.
+
+(progn
+  (dmessage "%s" "require: bubba3...")
+  (dmessage "%s" "Test of loading messages.")
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (dmessage "%sdone." "require: bubba3...")
+  (provide '"bubba3"))nil
+
+
+name: (quote bubba3), enable-p: t, docstring: Test of loading messages.
+
+(progn
+  (dmessage "%s" "require: 'bubba3...")
+  (dmessage "%s" "Test of loading messages.")
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (dmessage "%sdone." "require: 'bubba3...")
+  (provide '(quote bubba3)))nil
+
+
+name: bubba3, enable-p: t, docstring: Test of loading messages.
+
+(progn
+  (dmessage "%s" "require: bubba3...")
+  (dmessage "%s" "Test of loading messages.")
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (dmessage "%sdone." "require: bubba3...")
+  (provide 'bubba3))nil
+
+
+name: bubba3, enable-p: t, docstring: Test of loading messages.
+
+(progn
+  (dmessage "%s" "require: bubba3...")
+  (dmessage "%s" docstring)
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (dmessage "%sdone." "require: bubba3...")
+  (provide 'bubba3))nil
+
+
+name: bubba3, enable-p: t, docstring: Test of loading messages.
+
+(progn
+  (dmessage "%s" "require: bubba3...")
+  (princf "req==test==b")
+  (princf "req==test==a")
+  (princf "req==test==c")
+  (princf "did abc")
+  (princf "req==test==d")
+  (princf "req==test==e")
+  (princf "req==test==f")
+  (princf "did def")
+  (princf "req==test==g")
+  (princf "did g")
+  (dmessage "%sdone." "require: bubba3...")
+  (provide 'bubba3))nil
+
+
+name: bubba3, enable-p: nil, docstring: Test of loading messages.
+
+nilnil
+
+
+name: bubba3, enable-p: nil, docstring: Test of loading messages.
+
+nilnil
+
+
+
+
+(princf "%s" ''x)
+(quote x)
+nil
+
+x
+nil
+
+========================
+Tuesday July 07 2020
+--
+
+(dp-temp-*mode-buffer-alist 'lisp-interaction-mode)
+nil
+dp-temp-*mode-buffer-alist
+nil
+
+(dp-temp-*mode-buffer-alist 'lisp-interaction-mode)
+nil
+
+(cl-pe '
+ (defmacro cl--check-test (item x)       ;all of the above.
+  (declare (debug edebug-forms))
+  `(cl--check-test-nokey ,item (cl--check-key ,x)))
+ )
+
+(prog1
+    (defalias 'cl--check-test
+      (cons 'macro
+	    (function
+	     (lambda (item x)
+	       (list 'cl--check-test-nokey item (list 'cl--check-key x))))))
+  (progn
+    :autoload-end
+    (put 'cl--check-test 'edebug-form-spec 'edebug-forms)))nil
+
+
+
+
+(let ((a1 '((a . 1) (b . 2) (c . 4) (z . 26)))
+      (a2 '((aa . 11) (d . 4) (c . 3)))
+      (a9 '((aa . 99)))
+      z z2)
+  ;(remassoc 'a1 '(b 2))
+  ;; (setq z (cl-delete 'b a1 :test #'equal
+  ;; 	     :key #'car))
+  (setq z2 (remassoc 'b a1))
+  (princf "a1>%s<" a1)
+  (princf "z>%s<" z)
+  (princf "z2>%s<" z2)
+  )
+a1>((a . 1) (c . 4) (z . 26))<
+z>nil<
+z2>((a . 1) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (c . 4) (z . 26))<
+z>((a . 1) (c . 4) (z . 26))<
+z2>nil<
+nil
+
+a1>((a . 1) (c . 4) (z . 26))<
+z>((a . 1) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (c . 4) (z . 26))<
+z>((a . 1) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (z . 26))<
+z>((a . 1) (b . 2) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+z>((a . 1) (b . 2) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+z>((a . 1) (b . 2) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+z>((a . 1) (b . 2) (c . 4) (z . 26))<
+nil
+
+
+ssssss
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+z>((a . 1) (b . 2) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+z>((a . 1) (b . 2) (c . 4) (z . 26))<
+nil
+
+a1>((a . 1) (b . 2) (c . 4) (z . 26))<
+nil
+
+
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+
+
+
+
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+(nthcdr 2 '((a . 1) (b . 2) (c . 4) (z . 26)))
+((c . 4) (z . 26))
+
+
+(nthcdr 3 '(1 2 3 4 5))
+(4 5)
+
+
+
+(nthcdr 3 '((a . 1) (b . 2) (c . 4) (z . 26)))
+((z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+
+
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+((a . 1) (b . 2) (c . 4) (z . 26))
+
+
+
+(assoc 'c 
+========================
+2020-07-07T19:20:29
+--
+(let ((a1 '((a . 1) (b . 2) (c . 4) (z . 26)))
+      (a2 '((aa . 11) (d . 4) (c . 3)))
+      (a9 '((aa . 99)))
+      z z2)
+  (assoc 'c a1))
+
+(list 'a 'a)
+(a a)
+(atom 'a)
+t
+
+(cdr 1)
+(internal--listify 'a)
+(a a)
+(internal--listify 1)
+(internal--listify nil)
+(nil nil)
+
+(internal--listify 'a)
+(internal--listify '(((+ 1 1))))
+(s ((+ 1 1)))
+
+(cdr '(((+ 1 1))))
+nil
+
+
+(a a)
+
+(s a)
+
+(a b)
+
+(a b c)
+
+(a b c 1 2 3)
+
+(s a)
+
+(dp-listify-thing 'a)
+(a)
+(dp-listify-thing 1)
+(1)
+(dp-listify-thing "szzz")
+("szzz")
+(dp-listify-thing '(a))
+(a)
+(dp-listify-thing '(a b c))
+(a b c)
+
+(dp-listify-thing '(((+ 1 1))))
+(((+ 1 1)))
+========================
+2020-07-07T21:23:48
+--
+(cl-pp dp-bubba-item)
+
+(#("politics.2020" 0 13 (fontified t)))nil
+
+(cdr dp-bubba-item)
+nil
+(listp (car dp-bubba-item))
+nil
+(listp dp-bubba-item)
+t
+
+
+
+#("politics.2020" 0 13 (fontified t))
+
+
+========================
+Thursday July 09 2020
+--
+========================
+2020-07-09T11:25:46
+--
+(setq dp-dbg-a '((a "a") (qw "qw") (qw "qw2")
+		 ))
+((a "a") (qw "qw") (qw "qw2"))
+(assoc 'qw dp-dbg-a)
+(qw "qw")
+
+(setq dp-dbg-a '((a "a") (qw ("qw" "qw2"))
+		 ))
+((a "a") (qw ("qw" "qw2")))
+(assoc 'qw dp-dbg-a)
+(qw ("qw" "qw2"))
+
+(setq dp-dbg-a '((a . "a") (qw . ("qw" "qw2"))
+		 ))
+((a . "a") (qw "qw" "qw2"))
+
+dp-dbg-a
+((a . "a") (qw "qw" "qw2"))
+
+(assoc 'z dp-dbg-a)
+nil
+
+(assoc 'qw dp-dbg-a)
+(qw "qw" "qw2")
+
+(remassoc 'qw '((a . "a") (qw . ("qw" "qw2"))
+		 ))
+((a . "a"))
+(remassoc 'a
+	  '(
+	    (a . "a")
+	    (qw . ("qw" "qw2"))
+	    (a . "aa")
+	    (qw . ("qwA" "QWb"))
+	    )
+	  )
+((qw "qw" "qw2") (qw "qwA" "QWb"))
+
+
+((qw "qw" "qw2"))
+
+(let ((l '((a "a") (qw ("qw" "qw2")))))
+  (car (assoc 'a l))
+  )
+a
+(let ((l '((a "a") (qw ("qw" "qw2")))))
+  (car (assoc 'qw l))
+  )
+qw
+(let ((l '((a "a") (qw ("qw" "qw2")))))
+  (car (cdr (assoc 'qw l)))
+  )
+("qw" "qw2")
+
+(("qw" "qw2"))
+
+(let ((l '((a "a") (qw ("qw" "qw2")))))
+  (car (cdr (assoc 'a l)))
+  )
+"a"
+
+("a")
+
+(let ((l '((a "a") (qw ("qw" "qw2")))))
+  (acons 'a "NEWa" l)
+  )
+((a . "NEWa") (a "a") (qw ("qw" "qw2")))
+
+
+;; installed (defun* dp-add-or-update-alist (alist-var key val
+;; installed 					  &key
+;; installed 					  (canonicalizep nil)
+;; installed 					  (keep-old-if-nil-p nil))
+;; installed   "Add \(cons KEY VAL) to ALIST-VAR iff KEY isn't in ALIST-VAR.
+
+;; installed If KEY exists, VAL will replace the existing val associated with
+;; installed KEY.  UPDATE-P tells us how to update VAL: nil or not specified:
+;; installed just add or replace.  'CANONICALIZEP: Nuke all with matching keys
+;; installed w/ `remassoc'.  This puts the list into the canonical format: 0
+;; installed or 1 instances of KEY.  In this case, 0 instances.  We don't use
+;; installed `add-to-list' because we only want to key on KEY."
+;; installed   (let (item orig-val)
+;; installed     (when (and keep-old-if-nil-p
+;; installed 	       (null val))
+;; installed       ;; Preserve the original value if new one is nil and the caller wants
+;; installed       ;; us to.  Be sure to save before canonicalization (d'uh).
+;; installed       (setq item (assoc key (symbol-value alist-var))
+;; installed 	    val (cdr-safe item)))
+;; installed     (when canonicalizep
+;; installed       ;; Nuke 'em all. We'll add a single entry for this key of val.
+;; installed       (set alist-var (remassoc key (symbol-value alist-var))))
+;; installed     ;; `item' (val part) may have changed due to the update. ?WHY/HOW?
+;; installed     ;; get current item
+;; installed     (if (setq item (assoc key (symbol-value alist-var)))
+;; installed 	;; Update in place, either adding new entry if we canonicalized, else
+;; installed 	;; cons the new val onto the current items' key.
+;; installed 	(progn
+;; installed 	  (setq val (cons val (dp-listify-thing (cdr item))))
+;; installed 	  (setcdr item val))
+;; installed       ;; Not in the alist, add it.
+;; installed       (set alist-var (acons key val (symbol-value alist-var))))
+;; installed     ;; Return current value.
+;; installed     (symbol-value alist-var)))
+
+(setq dp-dbg-a '((a "a") (qw ("qw" "qw2"))))
+(let ()
+  (dp-add-or-update-alist 'dp-add-or-update-alist 'a "a2")
+  )
+((a "a2" "a") (qw ("qw" "qw2")))
+
+(setq dp-dbg-a '((a "a") (qw ("qw" "qw2")) (a "OTHER A")))
+dp-dbg-a
+((a "a") (qw ("qw" "qw2")))
+
+((a ("JUSTME" "a") "JUSTME" "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+((a "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+((a . "WAHA") (qw ("qw" "qw2")))
+
+
+(dp-add-or-update-alist 'dp-dbg-a 'a nil :canonicalizep t :keep-old-if-nil-p t)
+((a "JUSTME" "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+
+((a . "JUSTME") (qw ("qw" "qw2")))
+
+((a "PUZUZU" "WAHA" "WAHA" "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+
+
+
+((a . "a100") (qw ("qw" "qw2")))
+
+((a . "a100") (qw ("qw" "qw2")))
+
+((a . "a22") (qw ("qw" "qw2")))
+
+
+
+((a "a22" "a22" "a22" "a1" "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+((a "a22" "a1" "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+((a "a1" "a") (qw ("qw" "qw2")) (a "OTHER A"))
+
+
+
+
+(cl-pp dpj-topic-list)
+
+((#("amd.work.umrsh" 0 14 (fontified t face dp-journal-topic-face)))
+ (#("emacs.elisp" 0 11 (fontified t face dp-journal-topic-face)) (nil) nil)
+ (#("games" 0 5 (fontified t)))
+ (#("politics.2020" 0 13 (fontified t face dp-journal-topic-face)) ((((nil)
+								      nil)
+								     (nil)
+								     nil)
+								    ((nil)
+								     nil)
+								    (nil)
+								    nil)
+  (((nil)
+    nil)
+   (nil)
+   nil)
+  ((nil)
+   nil)
+  (nil)
+  nil)
+ (#("politics.2020.humor" 0 19 (fontified t face dp-journal-topic-face))))nil
+ )
+
+consp
+
+
+(defun* dp-add-or-update-alist (alist-var key val
+					  &key
+					  (canonicalizep nil)
+					  (cons-it nil)
+					  (keep-old-if-nil-p nil))
+  "Add \(cons KEY VAL) to ALIST-VAR iff KEY isn't in ALIST-VAR.
+
+If KEY exists, VAL will replace the existing val associated with
+KEY.  UPDATE-P tells us how to update VAL: nil or not specified:
+just add or replace.  'CANONICALIZEP: Nuke all with matching keys
+w/ `remassoc'.  This puts the list into the canonical format: 0
+or 1 instances of KEY.  In this case, 0 instances.  We don't use
+`add-to-list' because we only want to key on KEY."
+  (let (item orig-val)
+    (when (and keep-old-if-nil-p
+	       (null val))
+      ;; Preserve the original value if new one is nil and the caller wants
+      ;; us to.  Be sure to save before canonicalization (d'uh).
+      (setq item (assoc key (symbol-value alist-var))
+	    val (cdr-safe item)))
+    (when canonicalizep
+      ;; Nuke 'em all. We'll add a single entry for this key of val.
+      (set alist-var (remassoc key (symbol-value alist-var))))
+    ;; `item' (val part) may have changed due to the update. ?WHY/HOW?
+    ;; get current item
+    (if (setq item (assoc key (symbol-value alist-var)))
+	;; Update in place, either adding new entry if we canonicalized, else
+	;; cons the new val onto the current items' key.
+	(if cons-it
+	    (setcdr item (cons val (dp-listify-thing (cdr item))))
+	  (setcdr item val))
+      ;; Not in the alist, add it.
+      (set alist-var (acons key val (symbol-value alist-var))))
+    ;; Return current value.
+    (symbol-value alist-var)))
+
+========================
+Tuesday July 14 2020
+--
+(defun org-fontify-entities (limit)
+  "Find an entity to fontify."
+  (let (ee)
+    (when org-pretty-entities
+      (catch 'match
+	;; "\_ "-family is left out on purpose.  Only the first one,
+	;; i.e., "\_ ", could be fontified anyway, and it would be
+	;; confusing when adding a second white space character.
+	(while (re-search-forward
+		"\\\\\\(there4\\|sup[123]\\|frac[13][24]\\|[a-zA-Z]+\\)\\($\\|{}\\|[^[:alpha:]\n]\\)"
+		limit t)
+	  (when (and (not (org-at-comment-p))
+		     (setq ee (org-entity-get (match-string 1)))
+		     (= (length (nth 6 ee)) 1))
+	    (let* ((end (if (equal (match-string 2) "{}")
+			    (match-end 2)
+			  (match-end 1))))
+	      (add-text-properties
+	       (match-beginning 0) end
+	       (list 'font-lock-fontified t))
+	      (compose-region (match-beginning 0) end
+			      (nth 6 ee) nil)
+	      (backward-char 1)
+	      (throw 'match t))))
+	nil))))
+
+(defun org-set-font-lock-defaults ()
+  "Set font lock defaults for the current buffer."
+  (let* ((em org-fontify-emphasized-text)
+	 (lk org-highlight-links)
+	 (org-font-lock-extra-keywords
+	  (list
+	   ;; Call the hook
+	   '(org-font-lock-hook)
+	   ;; Headlines
+	   `(,(if org-fontify-whole-heading-line
+		  "^\\(\\**\\)\\(\\* \\)\\(.*\n?\\)"
+		"^\\(\\**\\)\\(\\* \\)\\(.*\\)")
+	     (1 (org-get-level-face 1))
+	     (2 (org-get-level-face 2))
+	     (3 (org-get-level-face 3)))
+	   ;; Table lines
+	   '("^[ \t]*\\(\\(|\\|\\+-[-+]\\).*\\S-\\)"
+	     (1 'org-table t))
+	   ;; Table internals
+	   '("^[ \t]*|\\(?:.*?|\\)? *\\(:?=[^|\n]*\\)" (1 'org-formula t))
+	   '("^[ \t]*| *\\([#*]\\) *|" (1 'org-formula t))
+	   '("^[ \t]*|\\( *\\([$!_^/]\\) *|.*\\)|" (1 'org-formula t))
+	   '("| *\\(<[lrc]?[0-9]*>\\)" (1 'org-formula t))
+	   ;; Properties
+	   (list org-property-re
+		 '(1 'org-special-keyword t)
+		 '(3 'org-property-value t))
+	   ;; Drawers
+	   '(org-fontify-drawers)
+	   ;; Link related fontification.
+	   '(org-activate-links)
+	   (when (memq 'tag lk) '(org-activate-tags (1 'org-tag prepend)))
+	   (when (memq 'radio lk) '(org-activate-target-links (1 'org-link t)))
+	   (when (memq 'date lk) '(org-activate-dates (0 'org-date t)))
+	   (when (memq 'footnote lk) '(org-activate-footnote-links))
+           ;; Targets.
+           (list org-radio-target-regexp '(0 'org-target t))
+	   (list org-target-regexp '(0 'org-target t))
+	   ;; Diary sexps.
+	   '("^&?%%(.*\\|<%%([^>\n]*?>" (0 'org-sexp-date t))
+	   ;; Macro
+	   '(org-fontify-macros)
+	   ;; TODO keyword
+	   (list (format org-heading-keyword-regexp-format
+			 org-todo-regexp)
+		 '(2 (org-get-todo-face 2) t))
+	   ;; DONE
+	   (if org-fontify-done-headline
+	       (list (format org-heading-keyword-regexp-format
+			     (concat
+			      "\\(?:"
+			      (mapconcat 'regexp-quote org-done-keywords "\\|")
+			      "\\)"))
+		     '(2 'org-headline-done t))
+	     nil)
+	   ;; Priorities
+	   '(org-font-lock-add-priority-faces)
+	   ;; Tags
+	   '(org-font-lock-add-tag-faces)
+	   ;; Tags groups
+	   (when (and org-group-tags org-tag-groups-alist)
+	     (list (concat org-outline-regexp-bol ".+\\(:"
+			   (regexp-opt (mapcar 'car org-tag-groups-alist))
+			   ":\\).*$")
+		   '(1 'org-tag-group prepend)))
+	   ;; Special keywords
+	   (list (concat "\\<" org-deadline-string) '(0 'org-special-keyword t))
+	   (list (concat "\\<" org-scheduled-string) '(0 'org-special-keyword t))
+	   (list (concat "\\<" org-closed-string) '(0 'org-special-keyword t))
+	   (list (concat "\\<" org-clock-string) '(0 'org-special-keyword t))
+	   ;; Emphasis
+	   (when em '(org-do-emphasis-faces))
+	   ;; Checkboxes
+	   '("^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\)[ \t]+\\(?:\\[@\\(?:start:\\)?[0-9]+\\][ \t]*\\)?\\(\\[[- X]\\]\\)"
+	     1 'org-checkbox prepend)
+	   (when (cdr (assq 'checkbox org-list-automatic-rules))
+	     '("\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]"
+	       (0 (org-get-checkbox-statistics-face) t)))
+	   ;; Description list items
+	   '("^[ \t]*[-+*][ \t]+\\(.*?[ \t]+::\\)\\([ \t]+\\|$\\)"
+	     1 'org-list-dt prepend)
+	   ;; ARCHIVEd headings
+	   (list (concat
+		  org-outline-regexp-bol
+		  "\\(.*:" org-archive-tag ":.*\\)")
+		 '(1 'org-archived prepend))
+	   ;; Specials
+	   '(org-do-latex-and-related)
+	   '(org-fontify-entities)
+	   '(org-raise-scripts)
+	   ;; Code
+	   '(org-activate-code (1 'org-code t))
+	   ;; COMMENT
+	   (list (format
+		  "^\\*+\\(?: +%s\\)?\\(?: +\\[#[A-Z0-9]\\]\\)? +\\(?9:%s\\)\\(?: \\|$\\)"
+		  org-todo-regexp
+		  org-comment-string)
+		 '(9 'org-special-keyword t))
+	   ;; Blocks and meta lines
+	   '(org-fontify-meta-lines-and-blocks))))
+    (setq org-font-lock-extra-keywords (delq nil org-font-lock-extra-keywords))
+    (run-hooks 'org-font-lock-set-keywords-hook)
+    ;; Now set the full font-lock-keywords
+    (setq-local org-font-lock-keywords org-font-lock-extra-keywords)
+    (setq-local font-lock-defaults
+		'(org-font-lock-keywords t nil nil backward-paragraph))
+    (setq-local font-lock-extend-after-change-region-function
+		#'org-fontify-extend-region)
+    (kill-local-variable 'font-lock-keywords)
+    nil))
+========================
+2020-07-14T18:47:06
+--
+dp-journal-mode-font-lock-keywords is a variable defined in ‘dp-journal.el’.
+Its value is shown below.
+
+  Automatically becomes buffer-local when set.
+  This variable may be risky if used as a file-local variable.
+
+Documentation:
+Journal mode font lock keywords
+
+Value:
+(("^[	 ]*!!!+\\( .*$\\|$\\)" quote dp-journal-high-problem-face)
+ ("^[	 ]*!!\\( .*$\\|$\\)" quote dp-journal-medium-problem-face)
+ ("^[	 ]*!\\( .*$\\|$\\)" quote dp-journal-low-problem-face)
+ ("^[	 ]*D'OH!*\\( .*$\\|$\\)" quote dp-journal-high-problem-face)
+ ("^[	 ]*d'oh!*\\( .*$\\|$\\)" quote dp-journal-medium-problem-face)
+ ("^[	 ]*@@@+\\( .*$\\|$\\)" quote dp-journal-high-todo-face)
+ ("^[	 ]*@@\\( .*$\\|$\\)" quote dp-journal-medium-todo-face)
+ ("^[	 ]*@\\( .*$\\|$\\)" quote dp-journal-low-todo-face)
+ ("^[	 ]*\\?\\?\\?+\\( .*$\\|$\\)" quote dp-journal-high-question-face)
+ ("^[	 ]*\\?\\?\\( .*$\\|$\\)" quote dp-journal-medium-question-face)
+ ("^[	 ]*\\?\\( .*$\\|$\\)" quote dp-journal-low-question-face)
+ ("^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" quote dp-journal-high-info-face)
+ ("^[	 ]*\\$\\$\\( .*$\\|$\\)" quote dp-journal-medium-info-face)
+ ("^[	 ]*\\$\\( .*$\\|$\\)" quote dp-journal-low-info-face)
+ ("^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" quote dp-journal-high-info-face)
+ ("^[	 ]*>>>>+\\( .*$\\|$\\)" quote dp-journal-extra-emphasis-face)
+ ("^[	 ]*>>>\\( .*$\\|$\\)" quote dp-journal-high-info-face)
+ ("^[	 ]*>>\\( .*$\\|$\\)" quote dp-journal-medium-info-face)
+ ("^[	 ]*>\\( .*$\\|$\\)" quote dp-journal-low-info-face)
+ ("^[	 ]*\\+\\+\\++\\( .*$\\|$\\)" quote dp-journal-high-attention-face)
+ ("^[	 ]*\\+\\+\\( .*$\\|$\\)" quote dp-journal-medium-attention-face)
+ ("^[	 ]*\\+\\( .*$\\|$\\)" quote dp-journal-low-attention-face)
+ ("^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" quote dp-journal-high-attention-face)
+ ("^[	 ]*\\*\\*\\( .*$\\|$\\)" quote dp-journal-medium-attention-face)
+ ("^[	 ]*\\*\\( .*$\\|$\\)" quote dp-journal-low-attention-face)
+ ("^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" quote dp-journal-high-example-face)
+ ("^[	 ]*[nN]\\.?[Bb][.:]?\\( .*$\\|$\\)" quote dp-journal-extra-emphasis-face)
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+--
+" quote dp-journal-timestamp-face)
+ ("^========================
+[SMTWF][a-z]+ [JFMASOND][a-z]+ [0-3][0-9] [0-9]\\{4\\}
+--
+" quote dp-journal-datestamp-face)
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+\\(.+?\\)
+--
+"
+  (0 'dp-journal-topic-stamp-face)
+  (1 'dp-journal-topic-face t))
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+\\(^todo: .*\\)
+--
+"
+  (1 'dp-journal-todo-face t))
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+\\(^\\(<<done:\\|~~cancelled:\\).*\\)
+--
+"
+  (0 'dp-journal-done-face t))
+ ("\\((e.g[^)]*)\\)" 1 'dp-journal-high-example-face t)
+ ("\\(ftp\\(?:\\.\\|://\\)\\|gopher://\\|http\\(?:s?://\\)\\|mailto:\\|telnet://\\|www\\.\\)[^
+]*" quote dp-journal-medium-info-face)
+ ("\\([	 ]\\|^\\)\\(\\*\\*.+?\\*\\*\\)" 2 'dp-journal-extra-emphasis-face 'prepend)
+ ("\\([	 ]\\|^\\)\\(\\*.+?\\*\\)" 2 'dp-journal-emphasis-face 'prepend)
+ ("\\([	 ]\\|^\\)\\(\\?[^?].*?\\?\\)" 2 'dp-journal-low-question-face 'prepend)
+ ("\\([	 ]\\|^\\)\\(\\[\\?.+?\\?\\]\\)" 2 'dp-journal-emphasis-face 'prepend)
+ ("\\(^[^=~].*?\\)\\(<<<<<*\\|\\?\\?\\?\\?\\?*\\|!!!!!*\\|WTF\\|\\^\\^\\^\\^\\^*\\)\\(.*\\)$"
+  (1 'dp-journal-extra-emphasis-face nil)
+  (2 'dp-journal-extra-emphasis-face t)
+  (3 'dp-journal-extra-emphasis-face nil))
+ ("`\\([^'`
+]+\\)'" 1 'dp-journal-quote-face t)
+ ("\\([a-zA-Z_]\\([0-9a-zA-Z_.-]\\|->\\|::\\)*\\)(\\(.*?\\))"
+  (1 'dp-journal-function-face t)
+  (3 'dp-journal-function-args-face t))
+ ("=======[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}=======" quote dp-journal-topic-stamp-face)
+ ("^[	 ]*~[?!@].*$" quote dp-journal-cancelled-action-item-face)
+ ("^[	 ]*=[?!@].*$" quote dp-journal-completed-action-item-face)
+ (":\\((.*)\\):" 0 'dp-journal-embedded-lisp-face t)
+ ("\\(^.*?\\)\\(/////*\\)\\(.*\\)$"
+  (1 'dp-journal-deemphasized-face t)
+  (2 'dp-journal-deemphasized-face t)
+  (3 'dp-journal-deemphasized-face nil))
+ ("^[	 ]*--+\\( .*$\\|$\\)" quote dp-journal-deemphasized-face)
+ (dpj-alt-0
+  (0 'dp-journal-alt-0-face prepend))
+ (dpj-alt-1
+  (0 'dp-journal-alt-1-face prepend))
+ ("\\(^.*?\\) \\(# .*\\)$" 2 'dp-journal-low-question-face t)
+ ("^\\([^	
+]\\{8\\}\\|[^	
+]\\{0,7\\}	\\)\\{10\\}\\(.+\\)$" 2 'dp-default-line-too-long-error-face prepend)
+ ("^\\([^	
+]\\{8\\}\\|[^	
+]\\{0,7\\}	\\)\\{9\\}.\\{6\\}\\(.+\\)$" 2 'dp-default-line-too-long-warning-face prepend))
+Local in buffer daily-2020-07.jxt; global value is 
+(("^[	 ]*!!!+\\( .*$\\|$\\)" quote dp-journal-high-problem-face)
+ ("^[	 ]*!!\\( .*$\\|$\\)" quote dp-journal-medium-problem-face)
+ ("^[	 ]*!\\( .*$\\|$\\)" quote dp-journal-low-problem-face)
+ ("^[	 ]*D'OH!*\\( .*$\\|$\\)" quote dp-journal-high-problem-face)
+ ("^[	 ]*d'oh!*\\( .*$\\|$\\)" quote dp-journal-medium-problem-face)
+ ("^[	 ]*@@@+\\( .*$\\|$\\)" quote dp-journal-high-todo-face)
+ ("^[	 ]*@@\\( .*$\\|$\\)" quote dp-journal-medium-todo-face)
+ ("^[	 ]*@\\( .*$\\|$\\)" quote dp-journal-low-todo-face)
+ ("^[	 ]*\\?\\?\\?+\\( .*$\\|$\\)" quote dp-journal-high-question-face)
+ ("^[	 ]*\\?\\?\\( .*$\\|$\\)" quote dp-journal-medium-question-face)
+ ("^[	 ]*\\?\\( .*$\\|$\\)" quote dp-journal-low-question-face)
+ ("^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" quote dp-journal-high-info-face)
+ ("^[	 ]*\\$\\$\\( .*$\\|$\\)" quote dp-journal-medium-info-face)
+ ("^[	 ]*\\$\\( .*$\\|$\\)" quote dp-journal-low-info-face)
+ ("^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" quote dp-journal-high-info-face)
+ ("^[	 ]*>>>>+\\( .*$\\|$\\)" quote dp-journal-extra-emphasis-face)
+ ("^[	 ]*>>>\\( .*$\\|$\\)" quote dp-journal-high-info-face)
+ ("^[	 ]*>>\\( .*$\\|$\\)" quote dp-journal-medium-info-face)
+ ("^[	 ]*>\\( .*$\\|$\\)" quote dp-journal-low-info-face)
+ ("^[	 ]*\\+\\+\\++\\( .*$\\|$\\)" quote dp-journal-high-attention-face)
+ ("^[	 ]*\\+\\+\\( .*$\\|$\\)" quote dp-journal-medium-attention-face)
+ ("^[	 ]*\\+\\( .*$\\|$\\)" quote dp-journal-low-attention-face)
+ ("^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" quote dp-journal-high-attention-face)
+ ("^[	 ]*\\*\\*\\( .*$\\|$\\)" quote dp-journal-medium-attention-face)
+ ("^[	 ]*\\*\\( .*$\\|$\\)" quote dp-journal-low-attention-face)
+ ("^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" quote dp-journal-high-example-face)
+ ("^[	 ]*[nN]\\.?[Bb][.:]?\\( .*$\\|$\\)" quote dp-journal-extra-emphasis-face)
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+--
+" quote dp-journal-timestamp-face)
+ ("^========================
+[SMTWF][a-z]+ [JFMASOND][a-z]+ [0-3][0-9] [0-9]\\{4\\}
+--
+" quote dp-journal-datestamp-face)
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+\\(.+?\\)
+--
+"
+  (0
+   (quote dp-journal-topic-stamp-face))
+  (1
+   (quote dp-journal-topic-face)
+   t))
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+\\(^todo: .*\\)
+--
+"
+  (1
+   (quote dp-journal-todo-face)
+   t))
+ ("^\\(?:========================
+\\|======================== \\)[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}
+\\(^\\(<<done:\\|~~cancelled:\\).*\\)
+--
+"
+  (0
+   (quote dp-journal-done-face)
+   t))
+ ("\\((e.g[^)]*)\\)" 1
+  (quote dp-journal-high-example-face)
+  t)
+ ("\\(ftp\\(?:\\.\\|://\\)\\|gopher://\\|http\\(?:s?://\\)\\|mailto:\\|telnet://\\|www\\.\\)[^
+]*" quote dp-journal-medium-info-face)
+ ("\\([	 ]\\|^\\)\\(\\*\\*.+?\\*\\*\\)" 2
+  (quote dp-journal-extra-emphasis-face)
+  (quote prepend))
+ ("\\([	 ]\\|^\\)\\(\\*.+?\\*\\)" 2
+  (quote dp-journal-emphasis-face)
+  (quote prepend))
+ ("\\([	 ]\\|^\\)\\(\\?[^?].*?\\?\\)" 2
+  (quote dp-journal-low-question-face)
+  (quote prepend))
+ ("\\([	 ]\\|^\\)\\(\\[\\?.+?\\?\\]\\)" 2
+  (quote dp-journal-emphasis-face)
+  (quote prepend))
+ ("\\(^[^=~].*?\\)\\(<<<<<*\\|\\?\\?\\?\\?\\?*\\|!!!!!*\\|WTF\\|\\^\\^\\^\\^\\^*\\)\\(.*\\)$"
+  (1
+   (quote dp-journal-extra-emphasis-face)
+   nil)
+  (2
+   (quote dp-journal-extra-emphasis-face)
+   t)
+  (3
+   (quote dp-journal-extra-emphasis-face)
+   nil))
+ ("`\\([^'`
+]+\\)'" 1
+ (quote dp-journal-quote-face)
+ t)
+ ("\\([a-zA-Z_]\\([0-9a-zA-Z_.-]\\|->\\|::\\)*\\)(\\(.*?\\))"
+  (1
+   (quote dp-journal-function-face)
+   t)
+  (3
+   (quote dp-journal-function-args-face)
+   t))
+ ("=======[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}T[0-9]\\{2\\}:[0-9]\\{2\\}:[0-9]\\{2\\}=======" quote dp-journal-topic-stamp-face)
+ ("^[	 ]*~[?!@].*$" quote dp-journal-cancelled-action-item-face)
+ ("^[	 ]*=[?!@].*$" quote dp-journal-completed-action-item-face)
+ (":\\((.*)\\):" 0
+  (quote dp-journal-embedded-lisp-face)
+  t)
+ ("\\(^.*?\\)\\(/////*\\)\\(.*\\)$"
+  (1
+   (quote dp-journal-deemphasized-face)
+   t)
+  (2
+   (quote dp-journal-deemphasized-face)
+   t)
+  (3
+   (quote dp-journal-deemphasized-face)
+   nil))
+ ("^[	 ]*--+\\( .*$\\|$\\)" quote dp-journal-deemphasized-face)
+ (dpj-alt-0
+  (0
+   (quote dp-journal-alt-0-face)
+   prepend))
+ (dpj-alt-1
+  (0
+   (quote dp-journal-alt-1-face)
+   prepend))
+ ("\\(^.*?\\) \\(# .*\\)$" 2
+  (quote dp-journal-low-question-face)
+  t))
+
+========================
+Monday July 20 2020
+--
+
+	 (format "%.1f seconds"
+		 (float-time
+		  (time-subtract first second)))))
+)
+
+(defun* dp-floating-point-time-diff-sec(&optional (first (current-time))
+						  (second before-init-time))
+  (let ((tim (float-time
+	      (time-subtract first second))))
+    tim))
+
+(defun dp-floating-point-time-diff-str(first second)
+  (let ((str
+	 (format "%.1f seconds"
+		 (float-time
+		  (time-subtract first second)))))
+    (if (called-interactively-p 'interactive)
+        (message "%s" str)
+      str)))
+
+(defun dp-uptime-sec ()
+  (interactive)
+  (message "up time: %s" (dp-floating-point-time-diff-sec
+			  (current-time) before-init-time)))
+
+(defun* dp-uptime-pretty (&optional (first (current-time))
+				    (second before-init-time))
+  (let* ((sec (dp-floating-point-time-diff-sec first second))
+	 (fmt-sec (split-string (format-seconds "%y %d %h %m %s" sec)))
+	 (unit-names '("year" "day" "hour" "min" "sec"))
+	 (time-component "")
+	 (pretty "")
+	 (sep ""))
+    (loop for time-component in fmt-sec do
+	  (setq unit-name (car unit-names)
+		unit-names (cdr unit-names)
+		time-component (string-to-int time-component))
+	  (unless (= time-component 0)
+	    (setq pretty (concat pretty
+				 (format "%s%s %s%s"
+					 sep
+					 time-component
+					 unit-name
+					 (dp-pluralize-num time-component)))
+		  sep ", ")))
+    pretty))
+
+(dp-uptime-pretty)
+"2 hours, 5 mins, 13 secs"
+
+sec: 7480.90785982, fmt-sec>(0 0 2 4 40)<
+"2 hours, 4 mins, 40 secs"
+
+sec: 7479.86026353, fmt-sec>(0 0 2 4 39)<
+"2 hours, 4 mins, 39 secs"
+
+sec: 7476.472470877, fmt-sec>(0 0 2 4 36)<
+"2 hours, 4 mins, 36 secs"
+
+sec: 7474.087666438, fmt-sec>(0 0 2 4 34)<
+"2 hours, 4 mins, 34 secs"
+
+sec: 7462.859995834, fmt-sec>(0 0 2 4 22)<
+"2 hours, 4 mins, 22 secs"
+
+
+
+
+    
+"0 0 1 24 40"
+
+
+
+
+
+(dp-uptime-sec)
+"up time: 4537.4 seconds"
 
