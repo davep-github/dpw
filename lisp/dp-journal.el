@@ -179,7 +179,21 @@ e.g. URLs.")
 (defvar dpj-info-regexps (concat dpj-info-regexps0 "[^
 ]*"))
 
-(defvar dpj-alt-regexp "^[	 ]*\\(!*[0-9]+[.a-zA-Z0-9]*\\)[].:|!)].*$")
+(defvar dpj-alt-regexp
+  (concat
+   "\\(^[	 ]*\\)"			; 1 - leading WS.
+   "\\("				; 2 - \\(item sans WS
+   "\\("				; 3 - \\(Item number prefix sans WS.
+   "\\(!*[0-9]+[.a-zA-Z0-9]*\\)"	; 4 - item number[sep[subitem]*]
+   "\\([].:|!)]\\)"			; 5 - item number terminator.
+   "\\)"				; 3 - \\)item number prefix sans WS.
+   "\\(.*$\\)"				; 6 - item text.
+   "\\)"				; 2 - \\)item sans WS
+   ))
+
+(defvar dpj-alt-item-num-match-index 4
+  "See above, \"item number\".")
+
 ;;;(defvar dpj-alt-regexp "^[	 ]*|.*$")
 ;;;(defvar dpj-alt-regexp "^\\([	 ]*| .*\\|[0-9][0-9]*) .*\\)$")
 
@@ -187,12 +201,14 @@ e.g. URLs.")
   (catch 'done
     (let (n-th)
       (while (dp-re-search-forward dpj-alt-regexp limit t)
-	(setq n-th (mod (truncate (string-to-int (match-string 1)))
+	(setq n-th (mod (truncate
+			 (string-to-int
+			  (match-string dpj-alt-item-num-match-index)))
 			max-colors))
-;         (dmessage "ms1>%s<, s2i: %s, n: %s, n-th: %s"
-;                   (match-string 1)
-;                   (string-to-int (match-string 1))
-;                   n n-th)
+	;; (dmessage "ms1>%s<, s2i: %s, n: %s, n-th: %s, point: %s"
+	;; 	  (match-string 1)
+	;; 	  (string-to-int (match-string 1))
+	;; 	  n n-th (point))
 	(if (= n-th n)
 	    (throw 'done t))))
     nil))
@@ -246,139 +262,147 @@ This way we can get alternating colors on journal mode structure in the text:
 ;; see `font-lock-keywords' for format of this variable
 ;; <:fonts|fontlock|keywords:>
 (defvar dp-journal-mode-font-lock-keywords  ;<:font lock keywords:>
-  (list
-   ;; ?? Add whitespace after prefix?
-   ;; yes, since the searches use ws and this way the line
-   ;; won't highlight if a search won't find it.
-   ;; we can add spaces here or remove them from the search regexp.
-   ;; For these basic line type faces, only apply them to the unfontified
-   ;; parts of the line. They are essentially background. This allows any
-   ;; specific things (like the function face) to work w/o specifically
-   ;; prepending it. Even though it is done that way below at this time.
-   (cons "^[	 ]*!!!+\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
-   (cons "^[	 ]*!!\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
-   (cons "^[	 ]*!\\( .*$\\|$\\)" ''dp-journal-low-problem-face)
-   ;; d'oh doh
-   (cons "^[	 ]*D'OH!*\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
-   (cons "^[	 ]*d'oh!*\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
+  (delq nil ;; Purge any nils left by conditionals
+	(list
+	 ;; ?? Add whitespace after prefix?
+	 ;; yes, since the searches use ws and this way the line
+	 ;; won't highlight if a search won't find it.
+	 ;; we can add spaces here or remove them from the search regexp.
+	 ;; For these basic line type faces, only apply them to the unfontified
+	 ;; parts of the line. They are essentially background. This allows any
+	 ;; specific things (like the function face) to work w/o specifically
+	 ;; prepending it. Even though it is done that way below at this time.
+	 (cons "^[	 ]*!!!+\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
+	 (cons "^[	 ]*!!\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
+	 (cons "^[	 ]*!\\( .*$\\|$\\)" ''dp-journal-low-problem-face)
+	 ;; d'oh doh
+	 (cons "^[	 ]*D'OH!*\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
+	 (cons "^[	 ]*d'oh!*\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
 
-   (cons "^[	 ]*@@@+\\( .*$\\|$\\)" ''dp-journal-high-todo-face)
-   (cons "^[	 ]*@@\\( .*$\\|$\\)" ''dp-journal-medium-todo-face)
-   (cons "^[	 ]*@\\( .*$\\|$\\)" ''dp-journal-low-todo-face)
+	 (cons "^[	 ]*@@@+\\( .*$\\|$\\)" ''dp-journal-high-todo-face)
+	 (cons "^[	 ]*@@\\( .*$\\|$\\)" ''dp-journal-medium-todo-face)
+	 (cons "^[	 ]*@\\( .*$\\|$\\)" ''dp-journal-low-todo-face)
 
-   (cons "^[	 ]*\\?\\?\\?+\\( .*$\\|$\\)" ''dp-journal-high-question-face)
-   (cons "^[	 ]*\\?\\?\\( .*$\\|$\\)" ''dp-journal-medium-question-face)
-   (cons "^[	 ]*\\?\\( .*$\\|$\\)" ''dp-journal-low-question-face)
-   ;; what was I doing here???
-   ;; (cons "\\?+[^?].*\\?\\?*" (list 0 ''dp-journal-low-question-face ''keep))
+	 (cons "^[	 ]*\\?\\?\\?+\\( .*$\\|$\\)" ''dp-journal-high-question-face)
+	 (cons "^[	 ]*\\?\\?\\( .*$\\|$\\)" ''dp-journal-medium-question-face)
+	 (cons "^[	 ]*\\?\\( .*$\\|$\\)" ''dp-journal-low-question-face)
+	 ;; what was I doing here???
+	 ;; (cons "\\?+[^?].*\\?\\?*" (list 0 ''dp-journal-low-question-face ''keep))
 
-   (cons "^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
-   (cons "^[	 ]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
-   (cons "^[	 ]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
-   (cons "^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-high-info-face)
-   (cons "^[	 ]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
-   (cons "^[	 ]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
-   (cons "^[	 ]*>>\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
-   (cons "^[	 ]*>\\( .*$\\|$\\)" ''dp-journal-low-info-face)
-   (cons "^[	 ]*\\+\\+\\++\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
-   (cons "^[	 ]*\\+\\+\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
-   (cons "^[	 ]*\\+\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
-   (cons "^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
-   (cons "^[	 ]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
-   (cons "^[	 ]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
-   ;; e.g. (fyi: I have a eg --> e.g. abbrev)
-   (cons "^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$"
-	 ''dp-journal-high-example-face)
-   ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-   (cons "^[	 ]*[nN]\\.?[Bb][.:]?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+	 (cons "^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+	 (cons "^[	 ]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+	 (cons "^[	 ]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
+	 (cons "^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+	 (cons "^[	 ]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+	 (cons "^[	 ]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+	 (cons "^[	 ]*>>\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+	 (cons "^[	 ]*>\\( .*$\\|$\\)" ''dp-journal-low-info-face)
+	 (cons "^[	 ]*\\+\\+\\++\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
+	 (cons "^[	 ]*\\+\\+\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
+	 (cons "^[	 ]*\\+\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
+	 (cons "^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
+	 (cons "^[	 ]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
+	 (cons "^[	 ]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
+	 ;; e.g. (fyi: I have a eg --> e.g. abbrev)
+	 (cons "^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$"
+	       ''dp-journal-high-example-face)
+	 ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
+	 (cons "^[	 ]*[nN]\\.?[Bb][.:]?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
 
-   ;; plain timestamps
-   (cons (dpj-mk-topic-re "") ''dp-journal-timestamp-face)
-   ;; datestamps
-   (cons dpj-datestamp-re ''dp-journal-datestamp-face)
-   ;; topics
-   (list (dpj-mk-topic-re)
-	 (list 0 ''dp-journal-topic-stamp-face)
-	 (list 1 ''dp-journal-topic-face t))
-   ;; todos
-   (list (dpj-mk-topic-re dpj-todo-re)
-	 (list 1 ''dp-journal-todo-face t))
-   ;; done todos
-   (list (dpj-mk-topic-re dpj-done-re)
-	 (list 0 ''dp-journal-done-face t))
+	 ;; plain timestamps
+	 (cons (dpj-mk-topic-re "") ''dp-journal-timestamp-face)
+	 ;; datestamps
+	 (cons dpj-datestamp-re ''dp-journal-datestamp-face)
+	 ;; topics
+	 (list (dpj-mk-topic-re)
+	       (list 0 ''dp-journal-topic-stamp-face)
+	       (list 1 ''dp-journal-topic-face t))
+	 ;; todos
+	 (list (dpj-mk-topic-re dpj-todo-re)
+	       (list 1 ''dp-journal-todo-face t))
+	 ;; done todos
+	 (list (dpj-mk-topic-re dpj-done-re)
+	       (list 0 ''dp-journal-done-face t))
 
+	 ;; Why did I do two? 1) Topic type. 2) embedded.
+	 ;; example, e.g.
+	 (cons "\\((e.g[^)]*)\\)" (list 1 ''dp-journal-high-example-face t))
 
-   ;; Why did I do two? 1) Topic type. 2) embedded.
-   ;; example, e.g.
-   (cons "\\((e.g[^)]*)\\)" (list 1 ''dp-journal-high-example-face t))
+	 (cons dpj-info-regexps ''dp-journal-medium-info-face)
 
-   (cons dpj-info-regexps ''dp-journal-medium-info-face)
+	 (cons "\\([	 ]\\|^\\)\\(\\*\\*.+?\\*\\*\\)" ; extra **emphasis**
+	       (list 2 ''dp-journal-extra-emphasis-face ''prepend))
+	 (cons "\\([	 ]\\|^\\)\\(\\*.+?\\*\\)"
+	       (list 2 ''dp-journal-emphasis-face ''prepend)) ; *emphasis*
 
-   (cons "\\([	 ]\\|^\\)\\(\\*\\*.+?\\*\\*\\)" ; extra **emphasis**
-	 (list 2 ''dp-journal-extra-emphasis-face ''prepend))
-   (cons "\\([	 ]\\|^\\)\\(\\*.+?\\*\\)"
-	 (list 2 ''dp-journal-emphasis-face ''prepend)) ; *emphasis*
+	 (cons "\\([	 ]\\|^\\)\\(\\?[^?].*?\\?\\)"
+	       (list 2 ''dp-journal-low-question-face ''prepend)) ; ?huh?
 
-   (cons "\\([	 ]\\|^\\)\\(\\?[^?].*?\\?\\)"
-	 (list 2 ''dp-journal-low-question-face ''prepend)) ; ?huh?
+	 ;; [?.....?] unsure editorial change
+	 (cons "\\([	 ]\\|^\\)\\(\\[\\?.+?\\?\\]\\)"
+	       (list 2 ''dp-journal-emphasis-face ''prepend))
 
-   ;; [?.....?] unsure editorial change
-   (cons "\\([	 ]\\|^\\)\\(\\[\\?.+?\\?\\]\\)"
-	 (list 2 ''dp-journal-emphasis-face ''prepend))
+	 ;; add extra emphasis to a line.
+	 ;; this allows us, e.g., to emphasize a particular item in a list.
+	 ;; it is set up so that the <<<... overrides any existing face
+	 ;; whereas the preceding text face is not overridden.
+	 ;; E.g. |++ this is important! <<<<<<<<<<<<<<
+	 (cons "\\(^[^=~].*?\\)\\(<<<<<*\\|\\?\\?\\?\\?\\?*\\|!!!!!*\\|WTF\\|\\^\\^\\^\\^\\^*\\)\\(.*\\)$"
+	       (list
+		(list 1 ''dp-journal-extra-emphasis-face nil)
+		(list 2 ''dp-journal-extra-emphasis-face t)
+		(list 3 ''dp-journal-extra-emphasis-face nil)))
 
-   ;; add extra emphasis to a line.
-   ;; this allows us, e.g., to emphasize a particular item in a list.
-   ;; it is set up so that the <<<... overrides any existing face
-   ;; whereas the preceding text face is not overridden.
-   (cons "\\(^[^=~].*?\\)\\(<<<<<*\\|\\?\\?\\?\\?\\?*\\|!!!!!*\\|WTF\\|\\^\\^\\^\\^\\^*\\)\\(.*\\)$"
-	 (list
-	  (list 1 ''dp-journal-extra-emphasis-face nil)
-	  (list 2 ''dp-journal-extra-emphasis-face t)
-	  (list 3 ''dp-journal-extra-emphasis-face nil)))
-
-   (cons "`\\([^'`
+	 (cons "`\\([^'`
 ]+\\)'" (list 1 ''dp-journal-quote-face t)) ; `quote'
-   (list "\\([a-zA-Z_]\\([0-9a-zA-Z_.-]\\|-\>\\|::\\)*\\)(\\(.*?\\))"
-	 (list 1 ''dp-journal-function-face t)
-	 (list 3 ''dp-journal-function-args-face t)) ; functions
+	 (list "\\([a-zA-Z_]\\([0-9a-zA-Z_.-]\\|-\>\\|::\\)*\\)(\\(.*?\\))"
+	       (list 1 ''dp-journal-function-face t)
+	       (list 3 ''dp-journal-function-args-face t)) ; functions
 
-   (cons (concat "=======" dpj-timestamp-re0 "=======")
-	 ''dp-journal-topic-stamp-face)
-   ;; no need to dim these out, just remove highlight
-   (cons "^[	 ]*~[?!@].*$" ''dp-journal-cancelled-action-item-face)
-   (cons "^[	 ]*=[?!@].*$" ''dp-journal-completed-action-item-face)
+	 (cons (concat "=======" dpj-timestamp-re0 "=======")
+	       ''dp-journal-topic-stamp-face)
+	 ;; no need to dim these out, just remove highlight
+	 (cons "^[	 ]*~[?!@].*$" ''dp-journal-cancelled-action-item-face)
+	 (cons "^[	 ]*=[?!@].*$" ''dp-journal-completed-action-item-face)
 
-   (cons dpj-embedded-lisp-regexp
-	 (list 0 ''dp-journal-embedded-lisp-face t))
+	 (cons dpj-embedded-lisp-regexp
+	       (list 0 ''dp-journal-embedded-lisp-face t))
 
-   ;; deemphasize a line
-   ;; text after /s will not be dimmed
-   ;; C++ type comment * 2 (////...) but affects the preceding text.
-   (cons "\\(^.*?\\)\\(/////*\\)\\(.*\\)$"
-	 (list
-	  (list 1 ''dp-journal-deemphasized-face t)
-	  (list 2 ''dp-journal-deemphasized-face t)
-	  (list 3 ''dp-journal-deemphasized-face nil)))
-   (cons "^[	 ]*--+\\( .*$\\|$\\)" ''dp-journal-deemphasized-face)
+	 ;; deemphasize a line
+	 ;; text after /s will not be dimmed
+	 ;; C++ type comment * 2 (////...) but affects the preceding text.
+	 (cons "\\(^.*?\\)\\(/////*\\)\\(.*\\)$"
+	       (list
+		(list 1 ''dp-journal-deemphasized-face t)
+		(list 2 ''dp-journal-deemphasized-face t)
+		(list 3 ''dp-journal-deemphasized-face nil)))
+	 (cons "^[	 ]*--+\\( .*$\\|$\\)" ''dp-journal-deemphasized-face)
 
-   ;; Alternating colors based on a numeric prefix.
-   ;; E.g.
-   ;; 1) sjdhjsdh     <<<< color 1
-   ;; 2) not sjdhjsdh <<<< color 2
-   ;; 3) yadda        <<<< color 1
-   (cons ''dpj-alt-0 (list 0 ''dp-journal-alt-0-face ''prepend))
-   (cons ''dpj-alt-1 (list 0 ''dp-journal-alt-1-face ''prepend))
+	 ;; Alternating colors based on a numeric prefix.
+	 ;; E.g.
+	 ;; 1) sjdhjsdh     <<<< color 1
+	 ;; 2) not sjdhjsdh <<<< color 2
+	 ;; 3) yadda        <<<< color 1
+	 (if (dp-xemacs-p)
+	     (cons ''dpj-alt-0 (list 0 ''dp-journal-alt-0-face ''prepend))
+	   '(dpj-alt-0 (2 'dp-journal-alt-0-face prepend)))
+	 (if (dp-xemacs-p)
+	     (cons ''dpj-alt-1 (list 0 ''dp-journal-alt-1-face ''prepend))
+	   '(dpj-alt-1 (2 'dp-journal-alt-1-face prepend)))
 
-   ;; Shell type comment face
-;    (cons "\\(^[^=~].*?\\)\\(.*?\\) \\(# .*\\)$"
-;          (list 3 ''dp-journal-low-question-face t))
-   (cons "\\(^.*?\\) \\(# .*\\)$"
-	 (list 2 ''dp-journal-low-question-face t))
+	 ;; Shell type comment face
+	 ;;    (cons "\\(^[^=~].*?\\)\\(.*?\\) \\(# .*\\)$"
+	 ;;          (list 3 ''dp-journal-low-question-face t))
+	 (cons "\\(^.*?\\) \\(# .*\\)$"
+	       (list 2 ''dp-journal-low-question-face t))
 
-   (cons "^[	 ]*[0-9][0-9]*)"
-	 (list 0 ''dp-journal-medium-question-face t))
+	 ;; ? Why did I want simple numbers to be highlighted?
+	 ;; As a stop gap till I found out why alternatives didn't work on
+	 ;; FSF Emacs?
+	 ;;  (cons "^[	 ]*[0-9][0-9]*)"
+	 ;;  	 (list 0 ''dp-journal-medium-question-face t))
 
-   )
+   ))
   "Journal mode font lock keywords")
 
 ;;
@@ -491,7 +515,7 @@ for example, a project notes file can be used.")
   (dpj-restore-match-data)
   (match-string (or num dpj-topic-subexp)))
 
-(defsubst* dpj-topic-match-beginning (&optional num (no-marker-p t))
+(defun* dpj-topic-match-beginning (&optional num (no-marker-p t))
   (dpj-restore-match-data)
   (dp-mk-buffer-position (match-beginning
 			  (or num dpj-topic-subexp))
@@ -1186,8 +1210,8 @@ current file.  If WRITE-EM is non-nil, write the list to the topic-file."
 		      (topic (list key)))
 		 ;; this needs to compare only CARs < not true anymore.
 		 (dp-add-to-or-update-alist 'dpj-topic-list topic
-					      :update-p 'rem-add
-					      :keep-old-if-nil-p t)
+					    :canonicalizep t
+					    :keep-old-if-nil-p t)
 		 (if (string-match dpj-private-topic-re key)
 		     nil
 		   topic))))
@@ -1238,8 +1262,7 @@ non-nil otherwise get the current list topics."
   (interactive (dpj-get-topic-interactive))
   (let ((topic-l (list topic 'last-update: (dp-timestamp-string))))
     ;; topic list looks: '(("topic" "extra-info, like date") ("top2" "xxx"))
-    (dp-add-to-or-update-alist 'dpj-topic-list topic-l :update-p 'rem-add)))
-;;    (dp-add-to-alist-if-new-key 'dpj-topic-list topic-l)))
+    (dp-add-to-or-update-alist 'dpj-topic-list topic-l :canonicalizep t)))
 
 (defun dpj-short-timestamp ()
   (interactive)
