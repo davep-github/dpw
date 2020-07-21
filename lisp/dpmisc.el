@@ -219,7 +219,7 @@ beginnings and ends."
   (ding)
   nil)
 
-(defun* dp-pluralize-num (num &optional if-one not-one stem)
+(cl-defun dp-pluralize-num (num &optional if-one not-one stem)
   "Picky ass way to pluralize a number of things correctly.
 If you hate things like '1 things fucked up' vs '1 thing...', use this."
   (setq-ifnil if-one ""
@@ -244,8 +244,8 @@ If you hate things like '1 things fucked up' vs '1 thing...', use this."
 (defun dp-mk-save-orig-symbol-name (sym-name)
   (dp-ify-symbol sym-name "save-orig-n-set-new>"))
 
-(defun* dp-save-orig-n-set-new (var-sym new-var-value &optional docstring
-                                &rest new-var-value-args)
+(cl-defun dp-save-orig-n-set-new (var-sym new-var-value &optional docstring
+					    &rest new-var-value-args)
   "Save a copy of VAR-SYM's value iff it hasn't already been backed up.
 Set VAR-SYM's value according to NEW-VAR-VALUE.
 NEW-VAR-VALUE can be a variable or \(functionp).  If \(functionp), then it is
@@ -316,7 +316,7 @@ Always return the value from NEW-VAR-VALUE.
     )
   nil)
 
-(defun* dp-member*-index (target list &optional (pred 'equal))
+(cl-defun dp-member*-index (target list &optional (pred 'equal))
   (let* ((m (member* target list :test pred)))
     (when m
       (- (length list) (length m)))))
@@ -324,7 +324,7 @@ Always return the value from NEW-VAR-VALUE.
 (defun dp-insert-most-recent-history-item (hist-var)
   (insert (car hist-var)))
 
-(defun* dp-insert-cwd (&optional (expand-p t) (relative-to "~"))
+(cl-defun dp-insert-cwd (&optional (expand-p t) (relative-to "~"))
   (interactive "P")
   (insert (if (and (not current-prefix-arg) expand-p)
 	      default-directory
@@ -427,10 +427,10 @@ ONE-AROUND-ALL-P wraps the result in [shy] parens."
         (format "\\(%s%s\\)" (if shy-p "?:" "") result)
       result)))
 
-(defun* dp-symvals (vsym &key (format "%s: %s") (val-fmt "val: %S")
-                    (func-fmt "func: %S")
-                    (vals-fmt "%s%s%s")
-                    (sep-str ", "))
+(cl-defun dp-symvals (vsym &key (format "%s: %s") (val-fmt "val: %S")
+			   (func-fmt "func: %S")
+			   (vals-fmt "%s%s%s")
+			   (sep-str ", "))
   "Return string with value(s) of VSYM, a symbol.
 Show symbol's value and/or symbol's funtion.  FORMAT is used to format the
 results.  The first %s is for the vsym's name, and the second is for the
@@ -527,6 +527,13 @@ string containing their values."
   nil)
 (dp-defaliases 'dp-inilop 'dp-nilop 'dp-nop-nil)
 
+(defun dp-nop-val (value)
+  (interactive)
+  "Return VALUE.  Ignore REST."
+  value)
+
+(dp-defaliases 'dp-it-nop 'dp-itnop 'dp-nop-t)
+
 (defun dp-nop-t (&rest rest)
   (interactive)
   "Return t.  Ignore REST. This is essentially a NOP."
@@ -553,7 +560,8 @@ string containing their values."
 " dp-ws)
   "Whitespace chars including newline.")
 
-(defvar dp-ws+newline+cr (format "%s" dp-ws+newline)
+(defvar dp-ws+newline+cr (format "%s
+" dp-ws+newline)
   "Whitespace chars including newline.")
 
 (defvar dp-ws-regexp (format "[%s]" dp-ws)
@@ -678,13 +686,13 @@ LESSP defaults to less-than ('<)."
                       (concat "dp-" (or post-dp-prefix "orig-")))
                   symbol)))
 
-(defun* dp-flanked-string (text-in front-char
-                           &key
-                           start end
-                           back-char
-                           sep-str
-                           prefix suffix
-                           desired-width)
+(cl-defun dp-flanked-string (text-in front-char
+				     &key
+				     start end
+				     back-char
+				     sep-str
+				     prefix suffix
+				     desired-width)
   (setq-ifnil start 0
               end (if desired-width
                       (+ start desired-width)
@@ -768,42 +776,51 @@ LINE-OFFSET defaults to `dp-c-fill-column'."
     (dp-ding-and-message "Could not find \"%s\"" str)
     (goto-char p)))
 
-(defun* dp-add-or-update-alist (alist-var key val &key
-                                (update-p 'remove-all-then-add)
-                                keep-old-if-nil-p)
+(defun* dp-add-or-update-alist (alist-var key val
+					  &key
+					  (canonicalizep nil)
+					  (cons-it nil)
+					  (keep-old-if-nil-p nil))
   "Add \(cons KEY VAL) to ALIST-VAR iff KEY isn't in ALIST-VAR.
-If KEY exists, VAL will replace the existing val associated with KEY.
-UPDATE-P tells us how to update VAL:
-nil or not specified: just add or replace.
-'rem-add: Nuke all with matching keys w/ `remassoc'.  This puts the list into
-          the expected format: 0 or 1 instance of KEY.
-We don't use `add-to-list' because we only want to key on KEY."
-  (let ((update-p-legit-vals '(nil t rem-add remove-all-then-add)))
-    (unless (memq update-p update-p-legit-vals)
-      (error 'invalid-constant update-p update-p-legit-vals)))
-  (when (and (null val)
-             keep-old-if-nil-p)
-    ;; Preserve the original value if new one is nil.
-    (setq val (cdr-safe (assoc key (symbol-value alist-var)))))
-  (when (eq update-p 'rem-add)
-    ;; Nuke 'em all. Canonicalize to 1 or zero keys in list.
-    (set alist-var (remassoc key (symbol-value alist-var))))
-  (if (assoc key (symbol-value alist-var))
-      ;; Update in place.
-      (setcdr (assoc key (symbol-value alist-var)) val)
-    ;; Not in the alist, add it.
-    (set alist-var (acons key val (symbol-value alist-var))))
-  ;; Return current value.
-  (symbol-value alist-var))
 
-(defun* dp-add-to-or-update-alist (alist-var item &rest args
-					       &key &allow-other-keys)
+If KEY exists, VAL will replace the existing val associated with
+KEY.  UPDATE-P tells us how to update VAL: nil or not specified:
+just add or replace.  'CANONICALIZEP: Nuke all with matching keys
+w/ `remassoc'.  This puts the list into the canonical format: 0
+or 1 instances of KEY.  In this case, 0 instances.  We don't use
+`add-to-list' because we only want to key on KEY."
+  (let (item orig-val)
+    (when (and keep-old-if-nil-p
+	       (null val))
+      ;; Preserve the original value if new one is nil and the caller wants
+      ;; us to.  Be sure to save before canonicalization (d'uh).
+      (setq item (assoc key (symbol-value alist-var))
+	    val (cdr-safe item)))
+    (when canonicalizep
+      ;; Nuke 'em all. We'll add a single entry for this key of val.
+      (set alist-var (remassoc key (symbol-value alist-var))))
+    ;; `item' (val part) may have changed due to the update. ?WHY/HOW?
+    ;; get current item
+    (if (setq item (assoc key (symbol-value alist-var)))
+	;; Update in place, either adding new entry if we canonicalized, else
+	;; cons the new val onto the current items' key.
+	(if cons-it
+	    (setcdr item (cons val (dp-listify-thing (cdr item))))
+	  (setcdr item val))
+      ;; Not in the alist, add it.
+      (set alist-var (acons key val (symbol-value alist-var))))
+    ;; Return current value.
+    (symbol-value alist-var)))
+
+(cl-defun dp-add-to-or-update-alist (alist-var item &rest args)
+  ;;&allow-other-keys)
   "Simple front end to `dp-add-or-update-alist' taking a single item.
-The item is sent piecemeal to `dp-add-or-update-alist' using `car' and `cdr'."
+The item \(KEY . VAL\) is sent piecemeal to
+`dp-add-or-update-alist' using `car' and `cdr' on ITEM for key and val."
   (apply 'dp-add-or-update-alist alist-var (car item) (cdr item) args))
 
-(defun* dp-add-or-update-alist-with-alist (alist-var from-alist &rest args
-						     &key &allow-other-keys)
+(cl-defun dp-add-or-update-alist-with-alist (alist-var from-alist &rest args
+						       &key &allow-other-keys)
   "Add each item of FROM-ALIST to ALIST-VAR per `'dp-add-to-or-update-alist'."
   (mapc (function
 	 (lambda (item)
@@ -844,7 +861,8 @@ The item is sent piecemeal to `dp-add-or-update-alist' using `car' and `cdr'."
 
 (defun xmessage (&rest rest)
   "A quick, easy, visible and expensive way to turn off messages."
-)
+  )
+(dp-defaliases 'Xdmessage 'Xmessage 'xdmessage 'xmessage)
 
 (defun dp-dmessage (format &rest rest)
   "A more easily identifiable debugging message name.
@@ -864,17 +882,17 @@ Sadly, I use this all the time, even for non-debugging/tracing/info messages."
 Also kindly inserts the `@todo' prefix for you.
 Also does an obnoxious `ding' by default."
   (let* ((optional-flag2 (cond
-                         ((eq optional-flag nil)
-                          nil)
-                         ((memq optional-flag '(ding t))
-                          t)
-                         (t 'no-flag-p)))
+			  ((eq optional-flag nil)
+			   nil)
+			  ((memq optional-flag '(ding t))
+			   t)
+			  (t 'no-flag-p)))
          (fmt (if (eq optional-flag2 'no-flag-p)
                   optional-flag
                 fmt))
          (args (if (eq optional-flag2 'no-flag-p)
-                  args
-                (cons fmt args))))
+		   args
+		 (cons fmt args))))
     (and (eq optional-flag2 t)
          (ding))
     (apply 'dmessage (format "@todo! %s" fmt) args)))
@@ -1087,12 +1105,12 @@ first and last non-white space on the line."
     ;; t means that we marked the line.
     t))
 
-;; (defun* dp-rest-or-all-of-line (&optional (text-only-p t) (no-newline-p t)
+;; (cl-defun dp-rest-or-all-of-line (&optional (text-only-p t) (no-newline-p t)
 ;;                                 from-pos shrink-wrap-p
 ;;                                 ignore-eol-punctuation-p)
-(defun* dp-rest-or-all-of-line (&key (text-only-p t) (no-newline-p t)
-                                from-pos shrink-wrap-p
-                                ignore-eol-punctuation-p)
+(cl-defun dp-rest-or-all-of-line (&key (text-only-p t) (no-newline-p t)
+				          from-pos shrink-wrap-p
+				          ignore-eol-punctuation-p)
   "If at eol, return boundaries of whole line, else the rest of line."
   (if (looking-at "\\s-*$")
       (dp-line-boundaries text-only-p no-newline-p from-pos)
@@ -1133,9 +1151,9 @@ Format is an alist of: \(symbol . \(function [args...]))  I know, it's the
 same as \(symbol function [args...]), but the . emphasizes the key
 element.")
 
-(defun* dp-region-or... (&key beg end
-                         (bounder 'line-p) bounder-args
-                         &allow-other-keys)
+(cl-defun dp-region-or... (&key beg end
+				   (bounder 'line-p) bounder-args
+				   &allow-other-keys)
   "Return an ordered (cons begin end) from one of many bounding conditions:
 1. (cons BEG END) if they are non-nil,
 2. the region if active,
@@ -1167,10 +1185,11 @@ All args are simply passed thru to `dp-mark-region'"
   (interactive)
   (dp-mark-region (apply 'dp-region-or... args-for-dp-region-or...)))
 
-(defun* dp-get--as-string--region-or... (&rest args-for-dp-region-or...
-                             &key (gettor 'symbol-near-point) gettor-args
-                             (default "")
-                             &allow-other-keys)
+(cl-defun dp-get--as-string--region-or... (&rest args-for-dp-region-or...
+						 &key (gettor 'symbol-near-point)
+						 gettor-args
+						 (default "")
+						 &allow-other-keys)
   "Get region or... (see `dp-region-or...') and return it as a string.
 If region is not active, default gettor is `symbol-near-point'."
   (interactive)
@@ -1384,8 +1403,8 @@ Return nil of not on a supported directive."
   "MAKE THIS GOTO and CHECK it, returning point of matching paren."
   (point))
 
-(defun* dp-find-matching-paren0 (&optional re-alist open-paren-string
-                                 (ding-p t))
+(cl-defun dp-find-matching-paren0 (&optional re-alist open-paren-string
+					     (ding-p t))
   "Goto matching paren type character.
 Also, if on a CPP conditional directive, find complementary part:
 {if[xx]|else|elif} -> endif, endif -> if[xx].
@@ -1482,7 +1501,7 @@ matching operation and only if we are on a ?< or ?>."
 
 (defalias 'dp-find-matching-paren 'dp-find-matching-paren-including-<)
 
-(defun* dp-matching-paren-pos (&optional (unbalanced-ok-p t))
+(cl-defun dp-matching-paren-pos (&optional (unbalanced-ok-p t))
   (save-excursion
     (and (dp-find-matching-paren unbalanced-ok-p)
          (point))))
@@ -1493,9 +1512,9 @@ Better than (or (eq pred t) (funcall pred))."
   t)
 (dp-defaliases 'dpt 'dp-t 'dp-non-nil 'dp-true)
 
-(defun* dp-mk-completion-list (list &key (pred 'dp-true) pred-args
-                               ctor ctor-args
-                               listifier listifier-args)
+(cl-defun dp-mk-completion-list (list &key (pred 'dp-true) pred-args
+				         ctor ctor-args
+				         listifier listifier-args)
   "Turn LIST into a completion list, filtering on PRED and CONS-ifying as needed.
 If CTOR is non-nil then it is assumed to be a function that will create
 completion list members.  It is called for each element in LIST with the
@@ -5189,14 +5208,17 @@ ALIST-SYM's format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
           (if (consp new-elements)
               (list (car new-elements) (cdr new-elements))
             (list new-elements))))
-  (set-modified-alist alist-sym
-                      (list (cons key (append new-elements initial-elements)))))
+  (dp-add-or-update-alist alist-sym key new-elements)
+
+  ;; REPLACED BY ABOVE (set-modified-alist alist-sym
+  ;;                     (list (cons key (append new-elements initial-elements))))
+  )
 
 (defun* dp-delete-from-alist-list (alist-sym key doomed-elements
                                    &optional (initial-elements
                                               (cdr (assoc key (symbol-value alist-sym)))))
   "Remove DOOMED-ELEMENTS from ALIST-SYM's KEY value.
-ALIST-SYM's format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
+\(symbol-val ALIST-SYM)'s format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
   (unless (listp doomed-elements)
     ;; C'mon man... its name is doomed-elementsSSSSS!
     (setq doomed-elements
@@ -5208,8 +5230,11 @@ ALIST-SYM's format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
                                        (unless (member elt doomed-elements)
                                          elt)))
                                     initial-elements))))
-    (set-modified-alist alist-sym
-                        (list (cons key new-list)))))
+    (dp-add-or-update-alist alist-sym key new-list)
+    ;; REPLACED BY ABOVE (set-modified-alist alist-sym
+    ;;                     (list (cons key new-list))
+    ;; 			)
+    ))
 
 (defun dp-face-list-at (&optional pos)
   "Return list of faces at POS or (point) if nil."
@@ -13076,14 +13101,18 @@ set VAR-SYM's default value to NEW-DEFAULT."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun dp-listify-thing (thing)
   "Ensure THING is a list (or nil) if it isn't one ALREADY.
-e.g. \"a\" --> '(\"a\")
-     '(a b) --> '(a b)"
-  (when thing
-    (cond
-     ((listp thing) thing)
-     ((consp thing) (list (car thing) (cdr thing)))
-     ((atom thing) (list thing))
-     (t nil))))
+
+e.g. \"a\" --> '(\"a\") '(a b) --> '(a b)
+Emacs defines `internal--listify' which is not really similar. It
+seems to want to indicate what the parameter was,and
+deals with some types in particular.  In general it
+doesn't take a non-list thing and do the equivalent of
+\(list thing)."
+  (cond
+   ((listp thing) thing)
+   ((consp thing) (list (car thing) (cdr thing)))
+   ((atom thing) (list thing))
+   (t nil)))
 
 (defun dp-listify-things (&rest things)
   "Apply `dp-listify-thing' to each member of THINGS, removing all top-level nils."
@@ -14930,6 +14959,49 @@ Of course, I'll forget the name of this function and its aliases, too."
 (defun dp-stringize (s)
   "Convert S to a string."
   (format "%s" s))
+
+(cl-defun dp-floating-point-time-diff-sec(&optional (first (current-time))
+						    (second before-init-time))
+  (let ((tim (float-time
+	      (time-subtract first second))))
+    tim))
+
+(defun dp-floating-point-time-diff-str(first second)
+  (let ((str
+	 (format "%.1f seconds"
+		 (float-time
+		  (time-subtract first second)))))
+    (if (called-interactively-p 'interactive)
+        (message "%s" str)
+      str)))
+
+(defun dp-uptime-sec ()
+  (interactive)
+  (message "up time: %s" (dp-floating-point-time-diff-sec
+			  (current-time) before-init-time)))
+
+(cl-defun dp-uptime-pretty (&optional (first (current-time))
+				      (second before-init-time))
+  (let* ((sec (dp-floating-point-time-diff-sec first second))
+	 (fmt-sec (split-string (format-seconds "%y %d %h %m %s" sec)))
+	 (unit-names '("year" "day" "hour" "min" "sec"))
+	 (time-component "")
+	 (pretty "")
+	 (sep ""))
+    (loop for time-component in fmt-sec do
+	  (setq unit-name (car unit-names)
+		unit-names (cdr unit-names)
+		time-component (string-to-int time-component))
+	  (unless (= time-component 0)
+	    (setq pretty (concat pretty
+				 (format "%s%s %s%s"
+					 sep
+					 time-component
+					 unit-name
+					 (dp-pluralize-num time-component)))
+		  sep ", ")))
+    pretty))
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
