@@ -19,6 +19,15 @@ complete -F dp_sp_complete run-iff
 complete -F dp_sp_complete xit
 complete -F dp_sp_complete lessit
 
+dp_go_complete()
+{
+        local cur
+        cur=${COMP_WORDS[COMP_CWORD]}
+        COMPREPLY=($(go2env --grep-name-only "^$cur"))
+}
+complete -F dp_go_complete g
+complete -F dp_go_complete dogo
+
 dp_ctags_etags_expand()
 {
     local cur="$1"

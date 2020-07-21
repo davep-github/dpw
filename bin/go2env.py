@@ -250,13 +250,22 @@ def handle_emacs(name, alias_item, **kw_args):
 #
 def handle_print(val, name, **kw_args):
     ostream = kw_args.get("ostream", sys.stdout)
+    did_something = False
 
 #     ostream.write("{}    {}\n".format(first, second))
     if kw_args.get("grep-val"):
         ostream.write("{} -- {}\n".format(val, name))
-    elif kw_args.get("grep-name"):
+        did_something = True
+    if kw_args.get("grep-name"):
         ostream.write("{} -- {}\n".format(name, val))
-    else:
+        did_something = True
+    if kw_args.get("grep-name-only"):
+        ostream.write("{}\n".format(name))
+        did_something = True
+    if kw_args.get("grep-val-only"):
+        ostream.write("{}\n".format(val))
+
+    if did_something is not True:
         ostream.write("{}\n".format(val))
 
 
@@ -829,13 +838,18 @@ def main(argv):
     suffix = ""
     selector = SELECTOR_ENV
     grep_regexps = []
-    opts, args = getopt.getopt(argv[1:], 'efvdlLs:Eq:g:G:m:M:S:pP:aFuUrD:')
+    shortopts = 'efvdlLs:Eq:g:G:m:M:S:pP:aFuUrD:'
+    longopts = ["grep-name-only=", "gno=",
+                "grep-val-only=", "gvo="]
+    opts, args = getopt.getopt(argv[1:], shortopts, longopts)
     handler_keyword_args = {}
     serialize_aliases_p = False
     serialized_file_name = DEFAULT_SERIALIZED_FILE_NAME
     write_dict_p = False
     force_read_file = True
     shell_type = Shell_type
+    # @todo XXX Change this to a real arg parser.
+    # @todo XXX Hack using long options, which is what I'm most desirous of.
     # @todo XXX Change this to a real arg parser.
     for opt, val in opts:
         if opt == '-e':
@@ -870,6 +884,14 @@ def main(argv):
             grep_regexps.append(val)
             handler_keyword_args["grep-name"] = True
             shell_type = "grep"
+        elif opt in ('--grep-name-only', '--gno'):
+            grep_regexps.append(val)
+            handler_keyword_args["grep-name-only"] = True
+            shell_type = "grep"
+        elif opt in ('--grep-val-only', '--gvo'):
+            grep_regexps.append(val)
+            handler_keyword_args["grep-val-only"] = True
+            shell_type = "grep-val"
         elif opt == '-G':
             grep_regexps.append(val)
             handler_keyword_args["grep-val"] = True
