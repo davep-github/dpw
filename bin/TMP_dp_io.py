@@ -162,7 +162,7 @@ def set_ofiles(file, flist, append=0):
     if fname:
         try:
             file = open(fname, mode)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write('could not open %s, e: %s\n' % (fname, e))
             return
     flist.append(file)
@@ -221,7 +221,8 @@ def set_print_leader(s):
 
 ###############################################################
 def print_vars(*namelist, **kargs):
-    print apply(dump_vars, namelist, kargs)
+#    print apply(dump_vars, namelist, kargs)
+    print("{}".format(dump_vars(*namelist, **kargs)))
 
 
 ###############################################################
@@ -240,7 +241,7 @@ if __name__ == "__main__":
     argv = sys.argv[1:]
     while len(argv) >= 2:
         s = hilight_match(argv[0], argv[1])
-        print '[%s], [%s], [%s]' % (argv[0], argv[1], s)
+        print("{}".format('[%s], [%s], [%s]' % (argv[0], argv[1], s)))
         argv = argv[2:]
 
     v1 = 'I am v1'
