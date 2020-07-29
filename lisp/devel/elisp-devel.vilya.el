@@ -3688,3 +3688,60 @@ sec: 7462.859995834, fmt-sec>(0 0 2 4 22)<
 (dp-uptime-sec)
 "up time: 4537.4 seconds"
 
+
+========================
+Monday July 27 2020
+--
+
+(cl-pe '
+(defun dp-copy-to-eof ()
+  (interactive)
+  (let ((text (dp-get--as-string--region-or... :bounder 'rest-of-line-p)))
+    (when (stringp text)
+      (save-excursion
+	(goto-char (point-max))
+	(insert text)))))
+dp-copy-to-eof
+
+)
+
+(defalias 'dp-copy-to-eof
+  (function
+   (lambda nil
+     (interactive)
+     (let ((text (dp-get--as-string--region-or\.\.\. :bounder 'line-p)))
+       (if (stringp text)
+	   (progn
+	     (save-excursion (goto-char (point-max)) (insert text))))))))nil
+
+
+
+(defalias 'dp-copy-to-eof
+  (function
+   (lambda nil
+     (interactive)
+     (let ((text (dp-get--as-string--region-or\.\.\.)))
+       (save-excursion (goto-char (point-max)) (insert text))))))nil
+
+(cl-pe '
+ (save-excursion (goto-char (point-max)) (insert text)))
+
+(save-excursion (goto-char (point-max)) (insert text))nil
+
+
+
+(dp-shell-copy-to-command-line
+
+
+ (let ((text "blah"))
+   (save-excursion
+     (goto-char (point-max))
+     (insert text)))
+nil
+blahregion-or...)))
+    (save-excursion
+p)))-copy-to-command-line-linee-
+(dp-shell-copy-to-command-line
+
+(defalias 'elpy-shell-send-region-or-buffer #[256 "\300\301\302\211$\207" [elpy-shell--send-with-step-go elpy-shell-send-region-or-buffer-and-step nil] 6 (#$ . 46302) "P"])
+#@123 Run `elpy-shell-send-region-or-buffer-and-step' but retain point position and switch to Python shell.

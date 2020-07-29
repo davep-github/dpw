@@ -339,4 +339,6 @@ alias dpclm=dpmailer
 # @todo XXX predicate this on gpg doing ssh.
 alias sshauthsock='gpgconf --list-dirs agent-ssh-socket'
 alias expauthsock='export SSH_AUTH_SOCK="$(sshauthsock)"'
+
+alias jcons='jupyter-console'
 true

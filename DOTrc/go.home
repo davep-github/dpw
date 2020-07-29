@@ -387,9 +387,10 @@ Ee|port|portfolio|       /home/davep/dpw/dpw/portfolio/
 Ee|dpwds|       /home/davep/.password-store/dpw/
 Ee|dpwd|       /home/davep/.password-store/dpw/
 Ee|umrsource|umrsrc|umr|       /home/davep/work/amd/utils/umr/
-Ee|umrsh|       /home/davep/work/amd/utils/umr/src/front-end/umrsh/
+Ee|umrsh|       /home/davep/work/amd/utils/umr/src/front-ends/umrsh/
 Ee|umrdoc|       /home/davep/work/amd/utils/umr/doc/
 Ee|lsemacs|lsmacs|lmacs|lemacs|   /home/davep/local/share/emacs/
+Ee|ipyconf|                       ~/.ipython/profile_default/ipython_config.py
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
