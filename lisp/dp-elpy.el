@@ -15,7 +15,24 @@
     (define-key elpy-mode-map [(control down)] 'dp-scroll-up)
     (define-key elpy-mode-map [(meta ?.)] 'elpy-goto-definition)
     (define-key elpy-mode-map [(meta ?,)] 'pop-tag-mark)
-    )
+    (define-key elpy-mode-map [(control return)] 'dp-open-above)
+    ;; move from C-return
+    (define-key elpy-mode-map [(meta control return)]
+      'elpy-shell-send-statement-and-step)
+    ;; See also <:elpy-python-bindings:> in `dp-python-mode-hook'
+    ;; this works:
+    (define-key elpy-mode-map [(control ?c) (control ?c)] 'dp-server-edit)
+    (define-key elpy-mode-map [(control ?c) (control ?C)]
+      'elpy-shell-send-region-or-buffer)
+    ;;@todo XXX reconcile me and the bindings in dp-python-mode-map
+    ;; This doesn't.  Ends up with `dp-server-edit' on both keys.
+    ;; I think `dp-copy-key-binding' is broken.  It does no
+    ;; setting/copying.
+    (dp-bump-key-binding [(control ?c) (control ?c)]
+    			 'dp-server-edit
+    			 [(control ?c) (control ?C)]
+    			 elpy-mode-map))
+
   (add-hook 'elpy-mode-hook 'dp-elpy-mode-hook)
 
   ;; This needs must be done after flycheck loads?  The doc says set to nil
