@@ -11566,7 +11566,13 @@ the minibuffer."
 (defun dp-insert-new-file-template (file-name &optional goto-pos)
   (when goto-pos
     (goto-char goto-pos))
-  (insert-file file-name))
+  (insert-file file-name)
+  (let ((end-of-template-pos (point)))
+    (save-excursion
+      (goto-char (point-min))
+      (replace-string "@TEMPLATE_FILENAME@" file-name nil
+		      (point-min) (point-max) end-of-template-pos)
+      )))
 
 (defun dp-add-new-file-template (template &optional template-args)
   (interactive "\stemplate name: ")
