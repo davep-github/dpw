@@ -12386,7 +12386,7 @@ By default, the startup frame is set to be the primary frame."
                                           )
   "Regex to determine if a `self,' needs to be inserted for a method call.")
 
-(defvar dp-py-data-member-prefix "d_"
+(defvar dp-py-data-member-prefix ""
   "Prefixed to data members to:
 1) Clearly ID data members (This Is NOT Hungarian!)
 2) Prevent clashes with method names.")
