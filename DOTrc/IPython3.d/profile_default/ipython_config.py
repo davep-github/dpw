@@ -4,11 +4,17 @@
 # InteractiveShellApp(Configurable) configuration
 #------------------------------------------------------------------------------
 
+## Discovery!
+## print("c: {}: {}".format(type(c), c))
+## print("dir: {}".format(dir(c)))
+## print("c.InteractiveShellApp>{}<".format(c.InteractiveShellAppXXX))
+## print("dir(c.InteractiveShellApp)>{}<".format(dir(c.InteractiveShellAppXXX)))
 ## A Mixin for applications that start InteractiveShell instances.
 #  
 #  Provides configurables for loading extensions and executing files as part of
 #  configuring a Shell environment.
-#  
+#
+#  JUST SAY NO TO METH!
 #  The following methods should be called by the :meth:`initialize` method of the
 #  subclass:
 #  
@@ -297,7 +303,8 @@
 #c.TerminalInteractiveShell.editing_mode = 'emacs'
 
 ## Set the editor used by IPython (default to $EDITOR/vi/notepad).
-#c.TerminalInteractiveShell.editor = 'ec-w'
+c.TerminalInteractiveShell.editor = 'ec-w'
+print("c.TerminalInteractiveShell.editor>{}<".format(c.TerminalInteractiveShell.editor))
 
 ## Enable vi (v) or Emacs (C-X C-E) shortcuts to open an external editor. This is
 #  in addition to the F2 binding, which is always enabled.
