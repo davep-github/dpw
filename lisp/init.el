@@ -19,8 +19,8 @@
 ;; Since I don't know how to bail from a file being `require'd or `load'd,
 ;; I'll make a very small if to get what I need.
 ;; sigh.
-(if (getenv "DP_NO_DP_INIT")
-    (message "init.el...env var DP_NO_DP_INIT exists, skipping.")
+(if (getenv "DP_NO_DP_LISP_INIT")
+    (message "init.el...env var DP_NO_DP_LISP_INIT exists, skipping.")
   (defvar dp-lisp-dir
     (if (featurep 'xemacs)
 	(expand-file-name "~/xlisp/")
