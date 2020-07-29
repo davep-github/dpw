@@ -213,6 +213,15 @@ It's the same (!!) on both macsen! And by the same, I mean not different.")
 (defvar dp-after-kill-this-buffer-hook '()
   "Runs after my kill buffer function.")
 
+(defun dp-kill-this-buffer-NOT-YET (&optional buffer)
+  "Kill BUFFER or the current buffer.
+
+I used `kill-this-buffer' everywhere in XEmacs, but Emacs says it
+can only be \"called reliably\" from the menu bar.  Hence this
+since it's easier to just add dp-."
+  (interactive)
+  (kill-buffer (current-buffer)))
+
 (setq list-command-history-max nil)     ; Unlimited limit.
 
 ;; I need to require this because it inits its name ring to a funky value.
