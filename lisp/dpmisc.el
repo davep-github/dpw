@@ -158,8 +158,19 @@ half-assed."
 (dp-deflocal dp-dp-previous-line-wrap-p nil
   "Do we want to wrap top to bottom in this buffer?")
 
-(defun dp-error-warning (fmt &rest args)
+;; Note, there need to be some `error' versions of these because it makes
+;; ignoring the error via `dp-debug-ignored-errors'.
+(defun dp-warning (fmt &rest args)
   (error "dp-warning: %s" (apply 'format fmt args)))
+
+(defun dp-error (fmt &rest args)
+  (error "dp-error: %s" (apply 'format fmt args)))
+
+(defun dp-broken (msg)
+  "Print a message about something I've written that is know to be broken.
+
+This has a well known prefix so the error code can easily identify it."
+  (error "dp-broken: %s" msg))
 
 ;; (previous-line &optional ARG TRY-VSCROLL))
 (defun dp-previous-line (&optional arg try-vscroll wrap-p)
