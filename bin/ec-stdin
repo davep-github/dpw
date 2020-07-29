@@ -108,7 +108,7 @@ Usage_error()
 : ${editor=ec}
 : ${nuke_file_p=t}
 : ${size_check='+1M'}
-: ${mktemp_pattern="emacs-stdin-$USER.XXXXXXX"}
+: ${mktemp_pattern="emacs-stdin.$USER.XXXXXXX"}
 
 # Usage variable usage:
 Usage_args_info=" -o|-t) <temp-file-name>. Default is to use mktemp(1)
