@@ -12395,7 +12395,8 @@ By default, the startup frame is set to be the primary frame."
   "Insert the bane of Python: self, before the current/preceding word.
 INITIALIZE-P says to do the common Python __init__() operation:
 def __init__(var):
-  var<M-s> ==> self.var = var"
+  var<M-s> ==> self.var = var
+"
   (interactive "P")
   (let (pt2)
     (if (let ((pt (dp-mk-marker)))
@@ -12419,8 +12420,9 @@ def __init__(var):
 ;;; In FSF Emacs' Python mode backward word is more like what it is in
 ;;; C.  Things like underscores count.
 	(back-to-indentation)
-	(unless (dp-looking-back-at "\\<self\\.")
-	  (insert (format "self.%s" dp-py-data-member-prefix)))
+	(if (not (dp-looking-at "\\<self\\."))
+	    (insert (format "self.%s" dp-py-data-member-prefix))
+	  (dp-broken "Already been self'd"))
 	(setq pt2 (dp-mk-marker nil nil nil))
 	(goto-char pt)))
     (when initialize-p
@@ -12431,7 +12433,7 @@ def __init__(var):
 	  (if (looking-at "\\s-*=")
 	      (progn
 		(replace-match " =")
-		(unless (looking-at "\\s")
+		(unless (looking-at "\\s-")
 		  (insert " ")))
 	    (insert " = "))
 	  (insert var-name)))
