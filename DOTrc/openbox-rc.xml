@@ -343,7 +343,7 @@
     <!-- Select and raise an emacs window. -->
     <keybind key="W-e">
       <action name="Execute">
-        <command>wmctrl -a "/Emacs@"</command>
+        <command>attempt-to-raise-emacs</command>
       </action>
     </keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->

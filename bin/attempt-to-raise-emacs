@@ -12,8 +12,15 @@ do
 done
 unset eexec_program
 
-wmctrl_pattern=${1-Serv/Emacs@}
-echo_id wmctrl_pattern
+EExec_verbose_msg "@>$@<"
+EExec_verbose_msg "#>$#<"
+if (($# > 0))
+then
+    wmctrl_patterns=("$@")
+else
+    wmctrl_patterns=(Serv/Emacs@)
+fi
+EExec_verbose_msg "#:" "${#wmctrl_patterns[@]}"
 #
 # if we're running sawfish, then raise emacs, too.
 # raise first, since sometimes emacs'll prompt for things
@@ -39,9 +46,19 @@ echo_id wmctrl_pattern
 
 if type wmctrl >/dev/null 2>&1
 then
-    wmctrl -a "${wmctrl_pattern}"
+    # Try all options
+    echo "# " "${#wmctrl_patterns[@]}"
+    for p in "${wmctrl_patterns[@]}"
+    do
+	echo "p>${p}<"
+    done
+    for p in "${wmctrl_patterns[@]}"
+    do
+	EExec -k wmctrl -a "${p}" && exit 0
+    done
+    exit 1
 else
     # This doesn't work in my AMD vdi sessions.
     # Perhaps due the way I had to build xemacs?
-    ec "$@" -e '(progn (raise-frame) (dp-focus-frame))'
+    EExec ec "$@" -e '(progn (raise-frame) (dp-focus-frame))'
 fi
