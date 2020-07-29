@@ -1199,12 +1199,15 @@ All args are simply passed thru to `dp-mark-region'"
 (cl-defun dp-get--as-string--region-or... (&rest args-for-dp-region-or...
 						 &key (gettor 'symbol-near-point)
 						 gettor-args
+						 (bounder 'nada)
+						 (bounder-args nil)
 						 (default "")
 						 &allow-other-keys)
   "Get region or... (see `dp-region-or...') and return it as a string.
 If region is not active, default gettor is `symbol-near-point'."
   (interactive)
-  (let* ((beg-end (apply 'dp-region-or... :bounder 'nada
+  (let* ((beg-end (apply 'dp-region-or... :bounder bounder
+			 :bounder-args bounder-args
                          args-for-dp-region-or...))
          ;;(dumby (dmessage "YOPP!, be: %s" beg-end))
          (str (if (consp beg-end)
