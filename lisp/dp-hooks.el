@@ -1657,9 +1657,23 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
                (string-match "/te?mp/" file-name)
                (equal (point-min) (point-max)))
       (dp-ding-and-message "Empty file. Could be a remote temp file.")))
-  (switch-to-buffer (current-buffer))
-  ;; (dp-raise-and-focus-frame)
-  (local-set-key "\C-c\C-c" 'dp-server-edit))
+  ;;
+  ;; In some cases, when there are multiple maps (e.g. python-mode and
+  ;; elpy-mode both define keys, but at this point, the local map seems to be
+  ;; python-mode's, but elpy-mode set C-cC-c, so this ends up not working
+  ;; since, for some reason, elpy's map dominates.  Keymaps, lookup, etc, is
+  ;; fucking black as voodoo magic.  So we catch what we can and then do the
+  ;; individual cases that don't work.  Took me ages to determine that the
+  ;; current-local-map, wasn't.  Also, there was a twisted macro in
+  ;; elpy-shell.el.  I couldn't find the function that was being bound to
+  ;; C-cC-c... find-function would visit the file, but not move anywhere.  So
+  ;; there's a map weirdness and a function weirdness.  The macro too its
+  ;; argument and made new names from the argument as a string using string
+  ;; editing functions.  Didn't make a difference, but was a huge, stinky red
+  ;; herring.
+  ;; Use my Canonical format for the key seq.  A fixed format makes grepping
+  ;; easier.
+  (local-set-key [(control ?c) (control ?c)] 'dp-server-edit))
 
 (defun dp-grep-setup-hook ()
   (dp-local-set-keys
