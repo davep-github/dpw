@@ -58,7 +58,9 @@
     dp-signal-message
     cl-assertion-failed
 
-    "dp-warning: "
+    "^dp-warning: "
+    "^dp-broken: "
+    "^dp-error: "
     "Keyboard macro terminated by a command ringing the bell$"
     "No cross references in this node"
     "There is no next link"
