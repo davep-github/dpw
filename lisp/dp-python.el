@@ -100,6 +100,49 @@ See `dp-parenthesize-region-paren-list'")
       (dp-python-indent-command))
     (goto-char pt)))
 
+(defun pyit ()
+  "Set up a buffer as a Python language buffer.
+Inserts `dp-python-new-file-template-file' by default."
+  (interactive)
+  (when (and buffer-file-name
+             (not (string-match dp-ipython-temp-file-re buffer-file-name))
+	     (let ((comment-start "###"))
+	       (dp-script-it "python" t
+                    :comment-start comment-start
+                    :template 'dp-insert-new-file-template
+                    :template-args (list dp-python-new-file-template-file))))))
+
+(defun dp-py-cleanup-class ()
+  (interactive)
+  ;; For some reason, I see `buffer-syntactic-context' getting hosed
+  ;; such that it thinks it's in a string, when it's not.  It seems
+  ;; like some kind of latch-up, since it will do that for a while
+  ;; and then stop.  Going to `point-min' and calling
+  ;; `buffer-syntactic-context' and returning seems to fix it, but...
+  ;;  For now, I'll just make sure there's no colon where I want to
+  ;;  put one.
+  ;;  [ at this time: 2020-07-21T20:32:23 ] I'm using FSF Emacs so we'll see
+  ;;  if it still happens.
+  (save-excursion
+    (beginning-of-line)
+    (when (dp-re-search-forward dp-py-cleanup-class-re (line-end-position) t)
+      (replace-match (format "\\1 \\2(%s)\\9"
+			     (or (dp-non-empty-string (match-string 6))
+				 "object"))))))
+
+(defun dp-python-indent-command (&optional indent-offset)
+  "Indent region if mark is active, the current line otherwise."
+  (interactive "*P")
+  (if (dp-mark-active-p)
+      (progn
+	(py-indent-region (region-beginning) (region-end) indent-offset)
+	;;(message "indent region")
+	)
+    ;;(message "indent line")
+    (when dp-orig-python-tab-binding
+      (setq this-command dp-orig-python-tab-binding)
+      (call-interactively dp-orig-python-tab-binding))))
+
 ;; ^^^^^^^^^^^^^^^^^^^^^^^^^^ Common ^^^^^^^^^^^^^^^^^^^^^^^^^^
 ;; vvvvvvvvvvvvvvvvvvvvvvvvvv Emacs  vvvvvvvvvvvvvvvvvvvvvvvvvv
 (if (bound-and-true-p dp-use-standard-emacs-python-mode-p)
@@ -159,6 +202,13 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (local-set-key [(meta up)] 'dp-other-window-up)
   (local-set-key [(meta down)] 'other-window)
+  ;; @todo XXX 
+  ;; See also <:elpy-python-bindings:> in `dp-elpy-mode-hook'.
+  ;; This mode and that mode interact by stacking in some way, some keys on
+  ;; one map, some keys on another, as normal minor modes do, but I don't
+  ;; know how to handle them in the best way.  So sometimes I'm stuck using
+  ;; mode specific keymap (names).
+
   (dp-add-line-too-long-font 'python-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
   ;; @todo XXX conditionalize this properly
