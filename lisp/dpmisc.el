@@ -5363,9 +5363,9 @@ Here, first means the car of the list."
 ;; @todo Allow man suffixen, and allow n < 0 to mean backwards n:
 ;; {f -> defuns, l -> lines, s -> statements, S -> sentences, ...} and
 ;; other units that emacs understands.
-(defun dp-goto-line (line-or-bm &optional nada) ;<:dgl|goto line:>
+(defun dp-goto-line (new-position &optional nada) ;<:dgl|goto line:>
   "Goto line, char pos or bookmark. Saves current position on go-back first.
-Append \"c\" to LINE-OR-BM or prefix with [=.#] to use it as a point value vs
+Append \"c\" to NEW-POSITION or prefix with [=.#] to use it as a point value vs
 a line number.  Prefix w/+ or - to do a relative line jump."
   (interactive (dp-get-bm-interactive
                 (format "line# (or w/suffix: c -> char) or bm (%s): "
@@ -5374,30 +5374,30 @@ a line number.  Prefix w/+ or - to do a relative line jump."
   (let ((starting-point (point)))
     (dp-push-go-back "dp-goto-line")
     (dp-set-zmacs-region-stays t)
-    (if (string-equal "" line-or-bm)
-        (setq line-or-bm dp-goto-line-last-destination)
-      (setq dp-goto-line-last-destination line-or-bm))
+    (if (string-equal "" new-position)
+        (setq new-position dp-goto-line-last-destination)
+      (setq dp-goto-line-last-destination new-position))
     (cond
-     ((string-match "\\(^[0-9]+c$\\)\\|\\(^[.#][0-9]+$\\)" line-or-bm)
-      (if (match-string 1 line-or-bm)
-          (goto-char (string-to-int line-or-bm))
-        (goto-char (string-to-int (substring (match-string 2 line-or-bm) 1)))))
-     ((string-match "^=\\s-*\\([0-9]+\\)$" line-or-bm)
-      (goto-char (string-to-int (match-string 1 line-or-bm))))
-     ((string-match "^[0-9]" line-or-bm)
-      (goto-line (string-to-int line-or-bm)))
-     ((string-match "[+-][0-9]" line-or-bm)
-      (goto-line (+ (line-number) (string-to-int line-or-bm))))
+     ((string-match "\\(^[0-9]+c$\\)\\|\\(^[.#][0-9]+$\\)" new-position)
+      (if (match-string 1 new-position)
+          (goto-char (string-to-int new-position))
+        (goto-char (string-to-int (substring (match-string 2 new-position) 1)))))
+     ((string-match "^=\\s-*\\([0-9]+\\)$" new-position)
+      (goto-char (string-to-int (match-string 1 new-position))))
+     ((string-match "^[0-9]" new-position)
+      (goto-line (string-to-int new-position)))
+     ((string-match "[+-][0-9]" new-position)
+      (goto-line (+ (line-number) (string-to-int new-position))))
      (t (dp-set-or-goto-bm (if (string-match "\\([>/:]\\)\\([0-9]+\\)"
-                                             line-or-bm)
-                               (match-string 2 line-or-bm)
-                             line-or-bm)
+                                             new-position)
+                               (match-string 2 new-position)
+                             new-position)
                            :reset nil
                            :action-if-non-existent (if current-prefix-arg
                                                        'set
                                                      'ask))))
     (unless (equal starting-point (point))
-       (dp-what-cursor-position))))
+      (dp-what-cursor-position))))
 
 ; WHY THE FUCK did I do it this way?
 ; (defadvice dp-goto-line (before dp-goto-line-A act)
