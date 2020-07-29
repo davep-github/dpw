@@ -1,6 +1,7 @@
 
 #
-# davep's standard new Python file template.
+# davep's standard Python file template.
+# @TEMPLATE_FILENAME@
 #
 
 import os, sys, errno
@@ -14,12 +15,14 @@ warning_file = sys.stderr
 BROKEN_PIPE_RC = 1
 IOERROR_RC = 1
 
-##e.g. class App_arg_action(argparse.Action):
-##e.g.     def __call__(self, parser, namespace, values, option_string=None):
-##e.g.         regexps = getattr(namespace, self.dest)
-##e.g.         regexps.append(values)
-##e.g.         setattr(namespace, self.dest, regexps)
-##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
+#
+# Perform arbitrary actions to process an argument within the argparse framework.
+# e.g. class App_arg_action(argparse.Action):
+# e.g.     def __call__(self, parser, namespace, values, option_string=None):
+# e.g.         regexps = getattr(namespace, self.dest)
+# e.g.         regexps.append(values)
+# e.g.         setattr(namespace, self.dest, regexps)
+# e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
 
 def main(argv):
 
@@ -41,10 +44,10 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Do not print informative messages.")
-##e.g.     oparser.add_argument("--app-action", "--aa",
-##e.g.                          dest="app_action_stuff", default=[],
-##e.g.                          action=App_arg_action,
-##e.g.                          help="Something normal actions can't handle.")
+# e.g.     oparser.add_argument("--app-action", "--aa",
+# e.g.                          dest="app_action_stuff", default=[],
+# e.g.                          action=App_arg_action,
+# e.g.                          help="Something normal actions can't handle.")
 
     # ...
 
@@ -73,4 +76,3 @@ if __name__ == "__main__":
             sys.exit(BROKEN_PIPE_RC)
         print("IOError>%s<" % (e,), file=sys.stderr)
         sys.exit(IOERROR_RC)
-
