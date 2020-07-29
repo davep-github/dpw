@@ -823,7 +823,7 @@ TODO: add prompting for functions analogous to `local-set-key' et.al.
 (defun* dp-copy-key-binding (src-key-seq dst-key-seq
 					 &key (key-setter 'local-set-key))
   "Find definition of SRC-KEY-SEQ and put on DST-KEY-SEQ."
-  (funcall 'key-binding dst-key-seq (key-binding src-key-seq)))
+  (funcall key-setter dst-key-seq (key-binding src-key-seq)))
 
 (defun* dp-copy-global-key-binding (src-key-seq dst-key-seq)
   (dp-copy-key-binding src-key-seq dst-key-seq :key-setter 'global-set-key))
@@ -831,12 +831,14 @@ TODO: add prompting for functions analogous to `local-set-key' et.al.
 (defun* dp-copy-local-key-binding (src-key-seq dst-key-seq)
   (dp-copy-key-binding src-key-seq dst-key-seq :key-setter 'local-set-key))
 
-(defun dp-bump-key-binding (key-seq new-def new-seq &optional keymap noisyp)
+(defun dp-bump-key-binding (key-seq new-def new-seq &optional keymap verbosep)
   "Copy binding for KEY-SEQ to NEW-SEQ and then bind KEY-SEQ to NEW-DEF.
 This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
   ;; Don't do this if new-seq and new-def are already bound.
   (setq-ifnil keymap (current-local-map))
-  (if (and noisyp (equal new-def (key-binding key-seq)))
+  (if (and verbosep (equal new-def (key-binding key-seq)))
+      ;; This will happen, legitimately, on every mode hook that uses it, so
+      ;; let's keep it down.
       (message "new-def(%s) is already on key-seq(%s)"
                new-def key-seq)
     (dp-copy-key-binding key-seq new-seq)
