@@ -1262,7 +1262,8 @@ terminate and eol/nl+indent."
                  (dp-looking-back-at
                   ;; stream op in \1 rest of match in \2
                   "\\(<<\\|>>\\)\\(\\s-*\\(\\(//.*$\\)\\|$\\)\\)"))))
-    (dmessage "mstrings: %s" (dp-all-match-strings-string))
+    ;; (dmessage "mstrings-string:%s<" (dp-all-match-strings-string))
+    ;; (dmessage "mstrings:%s<" (dp-all-match-strings))
     (match-string 1)))
 
 (defun* dp-in-c-iostream-statement-p (&optional (anywhere-p t))
