@@ -3737,11 +3737,113 @@ dp-copy-to-eof
    (save-excursion
      (goto-char (point-max))
      (insert text)))
-nil
-blahregion-or...)))
-    (save-excursion
-p)))-copy-to-command-line-linee-
-(dp-shell-copy-to-command-line
 
-(defalias 'elpy-shell-send-region-or-buffer #[256 "\300\301\302\211$\207" [elpy-shell--send-with-step-go elpy-shell-send-region-or-buffer-and-step nil] 6 (#$ . 46302) "P"])
-#@123 Run `elpy-shell-send-region-or-buffer-and-step' but retain point position and switch to Python shell.
+ (let (alist)
+   (acons 'bubba 'b1 alist)
+   (acons 'bubba 'b2 alist)
+   (acons 'bubba 'b2 alist)
+   )
+ (let (alist)
+   (acons 'bubba 'b1 alist)
+   (acons 'bubba 'b2 alist)
+   (acons 'bubba 'b2 alist)
+   )
+
+ blahregion-or...
+
+ ((()))
+ (let (alist)
+   (acons 'bubba 'b1 alist)
+   (acons 'bubba 'b2 alist)
+   (acons 'bubba 'b2 alist)
+   )
+
+;; (defalias 'elpy-shell-send-region-or-buffer #[256 "\300\301\302\211$\207" [elpy-shell--send-with-step-go elpy-shell-send-region-or-buffer-and-step nil] 6 (#$ . 46302) "P"])
+;; #@123 Run `elpy-shell-send-region-or-buffer-and-step' but retain point position and switch to Python shell.
+
+
+========================
+Wednesday July 29 2020
+--
+(let (alist)
+  (acons 'bubba 'b1 alist)
+  (acons 'bubba 'b2 alist)
+  (acons 'bubba 'b2 alist)
+  )
+
+(let (alist)
+  (dp-add-or-update-alist 'alist 'bubba1 'b1-1 :cons-it t)
+  (dp-add-or-update-alist 'alist 'bubba1 'b1-2 :cons-it t)
+  (dp-add-or-update-alist 'alist 'bubba3 'b3-1 :cons-it t)
+  )
+((bubba3 . b3-1) (bubba1 b1-2 b1-1))
+
+(let (alist)
+  (dp-add-to-alist-if-new-key 'alist (cons 'bubba1 'b1-1))
+  (dp-add-to-alist-if-new-key 'alist (cons 'bubba1 'b1-2))
+  (dp-add-to-alist-if-new-key 'alist (cons 'bubba3 'b3-1))
+  )
+((bubba3 . b3-1) (bubba1 . b1-1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+dirtrack-list
+("^emacs \\([a-zA-Z]:.*\\)>" 1)
+
+("^davep@vilya:\\([~/].*[^/]$\\)" 1)
+
+"~/lisp (elpy-dev)"
+
+(setq dp-ll-input "davep@vilya:~/lisp (elpy-dev)\n2786/0001> ")
+"davep@vilya:~/lisp (elpy-dev)
+2786/0001> "
+
+(setq dp-ll-dirtrack-list '("^davep@vilya:\\([~/].*\\)\\( \\|([^)]*)\\)" 1))
+("^davep@vilya:\\([~/].*\\)\\( \\|([^)]*)\\)" 1)
+
+
+(let* (
+       (dirtrack-list0 '("^davep@vilya:\\([~/].*[^/]$\\)" 1))
+       (dirtrack-list dp-ll-dirtrack-list)
+       (input "davep@vilya:~/lisp (elpy-dev)\n2786/0001> ")
+       (i2 "davep@vilya:~\n2786/0001> ")
+       (regexp (nth 0 dirtrack-list))
+       (pp (string-match regexp input))
+       (m0 (match-string 0 input))
+       (dir (match-string (nth 1 dirtrack-list) input))
+       )
+  (princf "regexp>%s<" regexp)
+  (princf "input>%s<" input)
+  (princf "pp>%s<" pp)
+  (princf "m0>%s<" m0)
+  (princf "m1/dir>%s<" dir)
+  )
+
+
+
+
+
+
+
+regexp>^davep@vilya:\\([~/].*\\)\\( \\|([^)]*)\\)<117364
+
+(re-search-forward "\\([~/].*\\)\\( \\|([^)]+)\\).*")
+
+
+input>davep@vilya:~/lisp (elpy-dev)117410
+
+2786/0001> <
+pp>0<
+m0>davep@vilya:~/lisp (elpy-dev)<
+m1/dir>~/lisp <
+nil
+
+
+
+
+(dp-all-match-strings-string)
+"381"
+
+
+
+
+

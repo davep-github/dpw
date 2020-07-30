@@ -25,9 +25,6 @@
     (define-key elpy-mode-map [(control ?c) (control ?C)]
       'elpy-shell-send-region-or-buffer)
     ;;@todo XXX reconcile me and the bindings in dp-python-mode-map
-    ;; This doesn't.  Ends up with `dp-server-edit' on both keys.
-    ;; I think `dp-copy-key-binding' is broken.  It does no
-    ;; setting/copying.
     (dp-bump-key-binding [(control ?c) (control ?c)]
     			 'dp-server-edit
     			 [(control ?c) (control ?C)]

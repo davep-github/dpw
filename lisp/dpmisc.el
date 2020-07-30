@@ -1585,9 +1585,9 @@ The elements of the returned list are used in place of LIST."
   (dp-delete-from-alist-list 'dp-temp-*mode-buffer-alist mode name))
 
 (defun* dp-append-to-temp-*mode-buffer-alist (&key (mode major-mode)
-                                              (name (buffer-name)))
-  (dp-append-to-alist-list 'dp-temp-*mode-buffer-alist mode name))
-
+						   (name (buffer-name)))
+  (dp-add-or-update-alist 'dp-temp-*mode-buffer-alist
+			  mode name :cons-it t))
 
 (defvar dp-make-temp-*mode-buffer)
 
@@ -1605,7 +1605,8 @@ The elements of the returned list are used in place of LIST."
                                    (comment-beg "//     ")
                                     (comment-end ""))
   "Create a temporary buffer named BUFFER-NAME and then call MODE-FUNC.
-It WILL NOT be asked to be saved.
+It be asked to be saved. `dp-nada-or-kill-buffer'.  Can be written with 
+`y(es)?-or-n(o)?-p. @todo XXX Which to use?
 Returns the buffer created."
   (interactive)
   (dmessage "Add `other-window' stuff and clean up alist as buffers go away.")
@@ -1655,8 +1656,8 @@ Returns the buffer created."
       (dp-append-to-temp-*mode-buffer-alist :mode mode-func
                                             :name (format "%s" temp*-buf))
       (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer
-                                     "\ew" dp-deactivated-key
-                                     "\C-x\C-s" dp-deactivated-key
+                                     "\ew" dp-deactivated-key-ding
+                                     "\C-x\C-s" dp-deactivated-key-ding
                                      "\C-c\C-c" dp-maybe-kill-this-buffer)
                                    nil nil nil "mt*mb")
       (goto-char (point-max)))
@@ -1667,9 +1668,7 @@ Returns the buffer created."
   "Helper to create a C++ mode buffer using `dp-make-temp-*mode-buffer'."
   (interactive)
   (dp-make-temp-*mode-buffer buffer-name 'c++-mode ".cc" "// " ""))
-(defalias 'dptc 'dp-make-temp-c++-mode-buffer)
-(defalias 'tmpc 'dp-make-temp-c++-mode-buffer)
-(defalias 'ctmp 'dp-make-temp-c++-mode-buffer)
+(dp-defaliases 'dptc 'tmpc 'ctmp 'dp-make-temp-c++-mode-buffer)
 
 (defun dp-make-temp-python-mode-buffer(&optional buffer-name)
   "Helper to create a python mode buffer with `dp-make-temp-*mode-buffer'."
@@ -1680,7 +1679,7 @@ Returns the buffer created."
   "Create a text mode buffer using `dp-make-temp-*mode-buffer'."
   (interactive)
   (dp-make-temp-*mode-buffer buffer-name 'text-mode ".txt" "!# " ""))
-(defalias 'dptt 'dp-make-temp-text-mode-buffer)
+(dp-defaliases 'dptt 'ttmb 'dp-make-temp-text-mode-buffer)
 
 (defun dp-make-temp-fundie-mode-buffer(&optional buffer-name)
   "Create a fundamental mode buffer with `dp-make-temp-*mode-buffer'."
@@ -1713,6 +1712,11 @@ Returns the buffer created."
                          (concat message " ")
                        "")
                      key-msg mode-msg))))
+
+(defun dp-deactivated-key-ding (&optional message mode key)
+  (interactive)
+  (ding)
+  (dp-deactivated-key message mode key))
 
 (defalias 'dp-disabled-key 'dp-deactivated-key)
 
@@ -5222,7 +5226,7 @@ ALIST-SYM's format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
           (if (consp new-elements)
               (list (car new-elements) (cdr new-elements))
             (list new-elements))))
-  (dp-add-or-update-alist alist-sym key new-elements)
+  (dp-add-or-update-alist alist-sym key new-elements :cons-it t)
 
   ;; REPLACED BY ABOVE (set-modified-alist alist-sym
   ;;                     (list (cons key (append new-elements initial-elements))))
@@ -9315,7 +9319,7 @@ Application specific names should be made as explicit as possible."
 
 (defun dp-default-make-makefile-name (&optional starting-dir top-dir)
   "Default function to try to find a makefile."
-  (setq-ifnil starting-dir (default-directory))
+  (setq-ifnil starting-dir default-directory)
   (dp-multi-search-up-dir-tree starting-dir dp-default-makefile-names top-dir))
 
 (add-hook 'dp-default-makefile-name 'dp-default-make-makefile-name)
