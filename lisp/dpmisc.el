@@ -12073,10 +12073,14 @@ MATCH-STRING is required when the match data was produced by a string match.
 Optionally use MATCH-DATA instead of the existing match-data."
   (interactive)
   (setq-ifnil match-data (match-data))
-  (let ((access-fun (if match-data
-                        (lambda (index &rest junk)
-                          (nth i match-data))
-                      'match-string)))
+  ;; this is fucked up, but works for buffer matches.  match-data is non-nil
+  ;; no matter a buffer or string match.  if STRING from a `string-match'
+  ;; (i.e. `match-string' parameter) is passed in, that differentiates
+  ;; between buffer and string matches.  `match-string' should just work if
+  ;; MATCH-STRING is always passed in.  `match-string' will DTRT depending on
+  ;; the value of MATCH-STRING, just as I was stupidly trying to do before
+  ;; when assigning `access-fun' which just needs to be 'match-string.
+  (let ((access-fun 'match-string))
     (loop for i from 0 to (1- (dp-sizeof-match-data))
       collect (funcall access-fun i match-string))))
 
@@ -12088,6 +12092,8 @@ A matched against string here is common.
 STRING-JOIN-ARGS are passed through to `dp-string-join'. "
   (interactive)
   (apply 'dp-string-join
+	 ;; @todo XXX Will match-string-args be deconstructed when
+	 ;; `dp-all-match-strings' is called?
          (apply 'dp-all-match-strings match-string-args)
          string-join-args))
 
