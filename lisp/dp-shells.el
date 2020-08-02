@@ -54,7 +54,6 @@ Should be a color which nearly blends into background."
 ;; 5057/0002<1>
 ;; For shell 0 buffer:
 ;; 5002/spayshul>
-;;(defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
 (defconst dp-sh-prompt-regexp
   (concat "^[0-9]+"                     ; History number
           "\\("
@@ -62,7 +61,7 @@ Should be a color which nearly blends into background."
           "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name"
           "\\)"
           "?\\([#>]\\|<[0-9]*>\\)")
-  "For bash/sh/etc.")
+  "For colorization in shell-mode buffer (bash/sh/etc.)")
 
 (defconst dp-gdb-prompt-regexp "^(gdb) "
   "For gdb.")
@@ -165,28 +164,105 @@ prompt.  We don't want to stomp on them.")
   (when (dp-comint-pmark)
     (= (marker-position (dp-comint-pmark)) (point))))
 
+;;{{{
 ;; Current prompt style: NO / @ end
 ;; dpanariti@o-xterm-34:/home/scratch.dpanariti_t124/sb2/hw/hw
-(defun dp-shell-lookfor-dir-change (str)
-  ;;(dmessage "dir-change, str>%s<" str)
-  (let ((regexp (format "^%s@%s:\\([~/].*[^/]$\\)"
-                        (user-login-name) (dp-short-hostname))))
-    ;;(message "regexp>%s<" regexp)
-    (when (string-match regexp str)
-      (let ((s (match-string 1 str)))
-        (when (string-match
-	       (concat "^\\(" dp-ws+newline+cr-regexp+-not "\\)") s)
-          ;; Just set it, no sense in comparing to see if it changed.
-          (setq default-directory
-                (expand-file-name
-                 (concat (match-string 1 s) "/"))))))))
+;pending dirtrack confirmation. (defun dp-shell-lookfor-dir-change (str)
+;pending dirtrack confirmation.   "Set the directory based on the result current dir from the prompt.
 
-;; XXX @todo fix this, make it work.
-;; Debugger entered--Lisp error: (invalid-argument "Marker does not point anywhere")
-;;   ansi-color-filter-region(#<marker in no buffer 0x6e80> #<marker at 594 in *gdb-nemo-2* 0x6d35>)
-;;   ansi-color-process-output("(gdb) ")
-;;   run-hook-with-args(ansi-color-process-output "(gdb) ")
-;;   comint-output-filter(#<process "bash" pid 17415 state:run> "(gdb) ")
+;pending dirtrack confirmation. Because I have another tool for changing directories `g(dp)', comint doesn't know 
+;pending dirtrack confirmation. 1) that `g' changes directories at all
+;pending dirtrack confirmation. 2) it doesn't know that \"$ g lisp\" goes to an expansion of an
+;pending dirtrack confirmation.    abbrev named \"lisp\" which expands to /home/davep/flisp/.
+;pending dirtrack confirmation. So I made this hack to grab the current dir out of the prompt.
+;pending dirtrack confirmation. As I said, a hack.  But sometimes they work well.  This is years
+;pending dirtrack confirmation. old, but now for some reason, STR has a ^M tacked on the end.
+;pending dirtrack confirmation. This then gets put into `default-directory', which breaks, among
+;pending dirtrack confirmation. other things, shell tab completion.  Also, and this needs more
+;pending dirtrack confirmation. research, the git sandbox name, which is appended to the prompt
+;pending dirtrack confirmation. doesn't break things.
+
+;pending dirtrack confirmation. davep@vilya:~/bin (elpy-dev)
+;pending dirtrack confirmation. 2757/0001> g lisp
+;pending dirtrack confirmation. ~/lisp ~/bin ~/lisp ~/bin ~
+;pending dirtrack confirmation. davep@vilya:~/lisp (elpy-dev)
+;pending dirtrack confirmation. 2758/0001> 
+
+;pending dirtrack confirmation. Makes us see here:
+;pending dirtrack confirmation. ***************dir-change, str>davep@vilya:~/lisp (elpy-dev)
+
+;pending dirtrack confirmation. 2759/0001> <
+;pending dirtrack confirmation. regexp>^davep@vilya:\([~/].*[^/]$\)<
+;pending dirtrack confirmation. default-directory>/home/davep/lisp/<
+;pending dirtrack confirmation. match-string[1]>~/lisp (elpy-dev)
+<
+
+;pending dirtrack confirmation. I have no idea why the prompt (output from __git_ps1) would end with 
+.
+;pending dirtrack confirmation. Because it doesn't come from __git_ps1:
+;pending dirtrack confirmation. 2762/0001> __git_ps1 | hd
+;pending dirtrack confirmation. 00000000: 20 28 65 6c 70 79 2d 64 65 76 29                |  (elpy-dev)
+
+;pending dirtrack confirmation. There's a \n in my overly baroque prompt, but that's not a 
+ is it?
+
+;pending dirtrack confirmation. cd has a mode where it can use shell variables (not as good as my
+;pending dirtrack confirmation. `g' util), so does that work to set `default-directory'?
+
+;pending dirtrack confirmation. HAHA!  Once again, something I did for myself in XEmacs ( has
+;pending dirtrack confirmation. been) done in Emacs in the interim.  In this case, it's kind of
+;pending dirtrack confirmation. sad since I originally considered it a sorry hack.  Of course, it
+;pending dirtrack confirmation. done more robustly to work for, sigh, \"other people.\" It also
+;pending dirtrack confirmation. uses buffer local variables.  Now there's a minor mode
+;pending dirtrack confirmation. `dirtrack-mode', which uses variable `dirtrack-list' to extract
+;pending dirtrack confirmation. the cwd from the prompt and a and a
+;pending dirtrack confirmation. `comint-preoutput-filter-functions' hook named `dirtrack'.
+;pending dirtrack confirmation. Might as well use it.
+;pending dirtrack confirmation. "
+;pending dirtrack confirmation.   (dmessage "***************dir-change, str>%s<" str)
+;pending dirtrack confirmation.   (let ((regexp (format
+;pending dirtrack confirmation. 		 ;; `concat' makes it easier (for me) to see and doc the components.
+;pending dirtrack confirmation. 		 (concat "^%s@%s:"
+;pending dirtrack confirmation. 			 "\\([~/][[:graph:]]*\\)"
+;pending dirtrack confirmation. 			 "\\(.*\\)$"	  ;possible terminators
+;pending dirtrack confirmation. 			 )
+;pending dirtrack confirmation. 		 (user-login-name) (dp-short-hostname))))
+;pending dirtrack confirmation.     (dmessage "regexp>%s<" regexp)
+;pending dirtrack confirmation.     (dmessage "default-directory>%s<" default-directory)
+;pending dirtrack confirmation.     (when (string-match regexp str)
+;pending dirtrack confirmation.       (let ((s (match-string 1 str)))
+;pending dirtrack confirmation. 	(dmessage "match-string[1]>%s<" s)
+;pending dirtrack confirmation. 	))))
+;pending dirtrack confirmation.         ;; (when (string-match
+;pending dirtrack confirmation.     	;;        (concat "^\\(" dp-ws+newline+cr-regexp+-not "\\)") s)
+;pending dirtrack confirmation.         ;;   ;; Just set it, no sense in comparing to see if it changed.
+;pending dirtrack confirmation.         ;;   (setq default-directory
+;pending dirtrack confirmation.         ;;         (expand-file-name
+;pending dirtrack confirmation.         ;;          (concat (match-string 1 s) "/"))))))))
+
+;pending dirtrack confirmation. ;; XXX @todo fix this, make it work.
+;pending dirtrack confirmation. ;; Debugger entered--Lisp error: (invalid-argument "Marker does not point anywhere")
+;pending dirtrack confirmation. ;;   ansi-color-filter-region(#<marker in no buffer 0x6e80> #<marker at 594 in *gdb-nemo-2* 0x6d35>)
+;pending dirtrack confirmation. ;;   ansi-color-process-output("(gdb) ")
+;pending dirtrack confirmation. ;;   run-hook-with-args(ansi-color-process-output "(gdb) ")
+;pending dirtrack confirmation. ;;   comint-output-filter(#<process "bash" pid 17415 state:run> "(gdb) ")
+;;; default `dirtrack-list': ("^emacs \\([a-zA-Z]:.*\\)>" 1)
+;;}}}
+
+(setq dp-dirtrack-regexp
+  (format
+   ;; `concat' makes it easier (for me) to see and doc the components.
+   (concat "^%s@%s:"
+	   "\\([~/][[:graph:]]*\\)"
+	   "\\(.*\\)$"	  ;possible terminators
+	   )
+   (user-login-name) (dp-short-hostname)))
+
+(defun dp-setup-dirtrack ()
+  (interactive)
+  (setq-default dirtrack-list (list dp-dirtrack-regexp 1))
+  (setq dirtrack-list (list dp-dirtrack-regexp 1))
+  (dirtrack-mode))
 
 (dp-deflocal dp-dont-ask-to-tack-on-gdb-mode-p nil
   "Do not ask if the user want to ser gdb mode when we see a gdb-mode prompt.
@@ -783,6 +859,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
                  (kb-lambda
                      (dp-shell-switch-to-prev-buffer t)))
 
+  (dp-setup-dirtrack)
   (message "dp-shell-common-hook, (major-mode-str)>%s<, bn>%s< done."
 	   (major-mode-str) (buffer-name)))
 
@@ -1005,7 +1082,6 @@ Or both.")
     ;;(font-lock-set-defaults)
     (dp-maybe-add-ansi-color)
     (loop for hook in '(comint-strip-ctrl-m
-                        dp-shell-lookfor-dir-change
                         dp-shell-lookfor-gdb
                         comint-truncate-buffer)
     do (add-hook (dp-sls variant '-output-filter-functions)
