@@ -3609,12 +3609,13 @@ Local in buffer daily-2020-07.jxt; global value is
 ========================
 Monday July 20 2020
 --
-
+(
 	 (format "%.1f seconds"
 		 (float-time
 		  (time-subtract first second)))))
 )
 
+	  
 (defun* dp-floating-point-time-diff-sec(&optional (first (current-time))
 						  (second before-init-time))
   (let ((tim (float-time
@@ -3820,7 +3821,7 @@ dirtrack-list
 
 
 
-
+(re-search-forward (nth 0 ))
 
 
 
@@ -3847,3 +3848,174 @@ nil
 
 
 
+
+========================
+Friday July 31 2020
+--
+
+e.g.
+/home/davep/bin
+davep@vilya:~/bin (elpy-dev)
+2790/0001> 
+
+"\([~/].*?\)\((\|$\|(.*)$\)"
+"\\([~/].*?\\)\\((\\|$\\|(.*)$\\)"
+
+"^davep@vilya:\\([~/].*?\\)\\( (\\|$\\|(.*)$\\)"
+
+"^davep@vilya:\([~/].*?\)\([[:space:]](\|$\|(.*)$\)"
+
+
+(let (
+      (regexp "^davep@vilya:\\([~/].+?\\)\\([[:space:]](?\\|$\\|(.*)$\\)"
+	      ))
+  (save-excursion
+    (search-forward-regexp regexp)
+			   )
+  (princf "ms1:>>>>>>>>>>%s<<<<<<<<\n"
+	  (match-string-no-properties 1))
+  )
+ms1:>>>>>>>>>>~/tmp<<<<<<<<
+
+nil
+
+ms1:>>>>>>>>>>~/tmp<<<<<<<<
+
+nil
+
+Result: ("^davep@vilya:\\([~/].*?\\)\\([[:space:]](\\|$\\|(.*)$\\)" 1)
+dp-dbg-re
+"^davep@vilya:\\([~/].*?\\)\\([[:space:]](\\|$\\|(.*)$\\)"
+
+"^davep@vilya:\\([~/].+?\\)\\([[:space:]](\\|$\\|(.*)$\\)"
+
+re in shell buf:
+"^davep@vilya:\\([~/].*?\\)\\([[:space:]](\\|$\\|(.*)$\\)"
+
+dp-dirtrack-regexp
+"^davep@vilya:\\([~/].+?\\)\\([[:space:]](\\|$\\|(.*)$\\)"
+
+dp-dbg-input
+davep@vilya:~/tmp
+2792/0001> "
+
+dp-dbg-re
+"^davep@vilya:\\([~/].*?\\)\\([[:space:]](\\|$\\|(.*)$\\)"
+
+(string-match dp-dbg-re dp-dbg-input)
+0
+
+(string-match dp-dbg-re dp-dbg-input)
+0
+
+dp-dbg-input
+"davep@vilya:~/tmp
+2792/0001> "
+(cons 
+
+
+davep@vilya:~)/bin (elpy-dev)
+davep@vilya:~/bin
+ms1:>>>>>>>>>>~/bin<<<<<<<<
+
+nil
+
+
+nil
+
+"^davep@vilya:\([~/].*?\)\([[:space:]](\|$\|(.*)$\)"
+
+davep@vilya:~/bin (elpy-dev)
+;; "
+
+works: ^davep@vilya:\([~/][[:graph:]]*\)\(.*\)$
+       ^davep@vilya:\([~/][[:graph:]]*\)\(.*\)$
+       ^davep@vilya:\([~/][[:graph:]]*\)\(.*\)$
+
+(let (
+      (regexp (dp-dirtrack-regexp)
+       ;;"\\(^davep@vilya:[~/][[:graph:]]*?\\)\\([^[:graph:]]\\|$\\|.*$\\)"
+       ;;"^davep@vilya:\\([~/][[:graph:]]*\\)\\(.*\\)$"
+	      ))
+  (princf "regexp>%s<" regexp)
+  (if (not (string-match regexp dp-dbg-input))
+      (princf "No match.")
+    (princf "ms1:>>>>>>>>>>%s<<<<<<<<"
+	    (match-string-no-properties 1 dp-dbg-input))
+    (princf "ms2:>>>>>>>>>>%s<<<<<<<<"
+	    (match-string-no-properties 2 dp-dbg-input))
+    (princf "ms0:>>>>>>>>>>%s<<<<<<<<|"
+	    (match-string-no-properties 0 dp-dbg-input)))
+  )
+
+dp-dbg-input
+"davep@vilya:/yaya/ypyp (elpy-dev)
+yadda/bladda"
+
+davep@vilya:~/tmp
+2792/0001> "
+
+
+
+
+
+
+dp-bs
+"^davep@vilya:\\([~/].*?\\)\\([[:space:]](\\|$\\|(.*)$\\)"
+; "
+())
+
+(defun dp-setup-dirtrack ()
+  (interactive)
+  (setq-default dirtrack-list (list dp-dirtrack-regexp
+				    1))
+  (setq dirtrack-list (list dp-dirtrack-regexp
+			    1))
+  (dirtrack-mode))
+dp-setup-dirtrack
+
+
+
+
+abcdefg
+
+12345
+!@#$%^&*()-=_+[]{}\|:";',./<>?
+::::::::::::::::::
+
+:::::::::::: ::::::::: space
+::::::::::::	: tab
+;;::::::::::	
+
+===============================================================
+                                                     <
+
+
+
+dp-dbg-input
+davep@vilya:~/tmp
+2792/0001> "
+
+davep@vilya:~/lisp (elpy-dev)
+
+========================
+Saturday August 01 2020
+--
+
+;; :(dp-embedded-block-op 'dp-hide-region "ebo-block-end"):
+"a block 
+to test embedded block
+operations."
+;; ebo-block-end
+
+(fmakunbound 'dp-shell-lookfor-dir-change)
+(dp-shell-lookfor-dir-change)
+(remove-hook 'comint-input-filter-functions 'dp-shell-lookfor-dir-change)
+nil
+(remove-hook 'comint-input-filter-functions 'dp-shell-lookfor-dir-change)
+(remove-hook 'comint-output-filter-functions 'dp-shell-lookfor-dir-change)
+(ansi-color-process-output comint-postoutput-scroll-to-bottom comint-watch-for-password-prompt)
+
+
+
+()

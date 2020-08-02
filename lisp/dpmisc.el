@@ -1077,21 +1077,30 @@ determined by dp-line-boundaries."
     (goto-char opoint)
     (dp-deactivate-mark)))
 
-(defun dp-operate-on-entire-line (func &optional text-only-p no-newline-p)
+(defun dp-operate-on-entire-line (func &optional text-only-p no-newline-p
+				       keep-col-p)
   "Mark the entire line and then call FUNC with mark and point.
-Preserves the current column and attempts to move there after calling
-FUNC.  This was created for deleting and killing entire lines.
-FUNC must take two args, beginning and end buffer positions."
-  (let ((col (current-column)))
-    (dp-func-on-region-or-line func text-only-p no-newline-p)
+Preserves the current column and attempts to move there after
+calling FUNC.  This was created for deleting and killing entire
+lines.  FUNC must take two args, beginning and end buffer
+positions.
+@todo XXX Do I really care if the cursor remains in the same
+place after I delete an entire line?  Let's make it optional,
+since it's good for some things."
+  (let ((col (if keep-col-p
+		 (current-column)
+	       0)))
+    (dp-func-on-region-or-line func text-only-p no-newline-p keep-col-p)
     (move-to-column col)))
 
+;; @todo XXX Why aren't ...kill... and ...delete... nearly indentical?
 (defun dp-kill-entire-line ()
   "Kill the entire line."
   (interactive "*")
-  (dp-operate-on-entire-line 'kill-region))
+  (dp-operate-on-entire-line 'kill-region nil nil keep-col-p))
 
-(defun dp-delete-entire-line (count &optional text-only-p no-newline-p)
+(defun dp-delete-entire-line (count &optional text-only-p
+				    no-newline-p keep-col-p)
   "Delete the entire line, ala A-D in Slick."
   (interactive "*p")
 
@@ -1102,7 +1111,7 @@ FUNC must take two args, beginning and end buffer positions."
 			       (dp-minibuffer-p)))))
     (loop repeat count do
 	  (dp-operate-on-entire-line 'delete-region text-only-p
-				     no-newline-p))))
+				     no-newline-p keep-col-p))))
 
 
 (defun dp-mark-line-if-no-mark (&optional text-only-p no-newline-p)
@@ -5479,7 +5488,10 @@ you've added enough info for set-auto-mode to figure it out.."
 (defalias 'rmm 'dp-reset-major-mode)
 
 (defun dp-nuke-fill-prefix ()
-  "If `fill-prefix' gets set somehow, it fucks up `lisp-mode's ability to, for one thing, fill docstrings properly."
+  "If `fill-prefix' gets set somehow, it fucks up a lot.
+
+E.g. the ability to fill docstrings and comments properly,
+@todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
   (interactive)
   (setq fill-prefix nil))
 
@@ -13739,6 +13751,7 @@ find-file\(-at-point) and then, if it fails, this function??"
     (dp-order-cons (cons block-start block-end))))
 
 (defun dp-embedded-block-op (op &optional limit-text skip-n-lines)
+  "`funcall' OP on `dp-delimit-embedded-block'd block."
   (interactive)
   (let ((beg-end (dp-delimit-embedded-block limit-text skip-n-lines)))
     (funcall op (car beg-end) (cdr beg-end))))
