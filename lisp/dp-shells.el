@@ -195,16 +195,15 @@ prompt.  We don't want to stomp on them.")
 ;pending dirtrack confirmation. regexp>^davep@vilya:\([~/].*[^/]$\)<
 ;pending dirtrack confirmation. default-directory>/home/davep/lisp/<
 ;pending dirtrack confirmation. match-string[1]>~/lisp (elpy-dev)
-<
 
 ;pending dirtrack confirmation. I have no idea why the prompt (output from __git_ps1) would end with 
-.
+
 ;pending dirtrack confirmation. Because it doesn't come from __git_ps1:
 ;pending dirtrack confirmation. 2762/0001> __git_ps1 | hd
 ;pending dirtrack confirmation. 00000000: 20 28 65 6c 70 79 2d 64 65 76 29                |  (elpy-dev)
 
 ;pending dirtrack confirmation. There's a \n in my overly baroque prompt, but that's not a 
- is it?
+; is it?
 
 ;pending dirtrack confirmation. cd has a mode where it can use shell variables (not as good as my
 ;pending dirtrack confirmation. `g' util), so does that work to set `default-directory'?
