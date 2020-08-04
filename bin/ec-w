@@ -2,12 +2,16 @@
 
 . script-x
 #echo 1>&2 "$0: @>$@<"
+: ${LOG_FILE:=/dev/null}
+set -x
+{
+    echo "========== $(date) ============"
+    [[ "$1" =~ "^((-(h|-help))|)$" ]] && {
+	echo " Edit file in XEmacs via gnuserv with the ec utility and wait for
+	 the edit to be completed."
+	exit 0
+    }
 
-[[ "$1" =~ "^((-(h|-help))|)$" ]] && {
-    echo " Edit file in XEmacs via gnuserv with the ec utility and wait for
- the edit to be completed."
-    exit 0
-}
-
-ec -1 -w "$@"
+    ec -1 -w "$@"
+} >> ${LOG_FILE}
 
