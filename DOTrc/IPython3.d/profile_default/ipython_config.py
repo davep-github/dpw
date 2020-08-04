@@ -5,7 +5,7 @@
 #------------------------------------------------------------------------------
 
 ## Discovery!
-## print("c: {}: {}".format(type(c), c))
+##print("c: type:{}: value:{}".format(type(c), c))
 ## print("dir: {}".format(dir(c)))
 ## print("c.InteractiveShellApp>{}<".format(c.InteractiveShellAppXXX))
 ## print("dir(c.InteractiveShellApp)>{}<".format(dir(c.InteractiveShellAppXXX)))
