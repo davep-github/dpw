@@ -4019,3 +4019,89 @@ nil
 
 
 ()
+
+========================
+Monday August 03 2020
+--
+(defvar dp-py-class-or-def-regexp-format-str
+  (concat
+   "\\(^"                               ; <ms1
+   "\\(\\s-*\\)"                        ;   <ms2></ms2>
+   "%s\\s-+"                            ; Keywords we're interested in.
+   "[a-zA-Z_][a-zA-Z_0-9]*\\)"          ; ms1> def or class name
+   ;; look for what's after the def/class name.
+   ;; We're interested in:
+   ;; "(", "(text", "(text)", "()"
+   "\\("                                ; <ms3
+   "\\(?:\\s-*\\)"
+   "\\(?:"                              ; | <shy
+   "(\\(.*?\\))"                        ; | xxx()
+   "\\)"                                ; | shy>
+   "\\|"                                ; |
+   "\\(?:"                              ; | <shy
+;;   "(\\(\\S-*\\)"                       ; | xxx(
+   "(\\(.*?\\)\\s-*\\($\\|\\(#.*$\\)?\\)"
+   "\\)"                                ; | shy>
+   "\\|"                                ; |
+   "\\(?:"                              ; | <shy
+   ")"                                  ; | xxx)  <== ignore
+   "\\)"                                ; | shy>
+   "\\|"                                ; |
+   "\\(?:"                              ; | <shy
+   "[^()].*?"                             ; | ;; Added .* Tuesday June 24 2008
+   "\\)"                                ; | shy>
+   "\\)?"                               ; ms3>
+   "\\(\\s-*\\(#.*\\|$\\)\\)"           ; <ms4 <ms5>>
+
+   )
+  "Get to the parts of a Python def or class:
+ms2: indentation (if in class, and block keyword is def --> method)
+ms3: block keyword
+ms4: existing parens
+ms5 or ms6: params with parens (depends on current state of kw)
+ms9: rest of line after program text -- includes ws and comment
+ms10: comment char to end of line
+"
+========================
+2020-08-03T11:53:29
+--
+(cl-pp dp-py-class-or-def-regexp)
+
+"\\(^\\(\\s-*\\)\\(def\\|class\\)\\s-+[a-zA-Z_][a-zA-Z_0-9]*\\)\\(\\(?:\\s-*\\)\\(?:(\\(.*?\\))\\)\\|\\(?:(\\(.*?\\)\\s-*\\($\\|\\(#.*$\\)?\\)\\)\\|\\(?:)\\)\\|\\(?:[^()].*?\\)\\)?\\(\\s-*\\(#.*\\|$\\)\\)"nil
+
+
+
+
+
+
+"\\(^					; >1 ws+{def|class}ws+[name]
+  \\(\\s-*\\)				; 2  ws+
+  \\(def\\|class\\)			; 3     {def|class}
+  \\s-+[a-zA-Z_][a-zA-Z_0-9]*		;                  ws+[name]
+\\)					; <1
+
+\\(					; 4 '(' params ')'
+\\(?:\\s-*\\)				; x
+\\(?:					; x
+  (  					; a '(', real paren
+  \\(.*?\\))				; 5     params
+\\)
+\\|
+\\(?:					; x
+  \\(.*?\\)				; 6
+  \\s-*
+  \\($\\|				; >7
+    \\(#.*$\\)?				; 8
+  \\)          				; <7
+\\)
+\\|
+\\(?:					; x
+\\)  					; real paren,  ')'
+\\|\\(?:[^()].*?\\)			; x
+\\)?
+\\(\\s-*				; >9
+  \\(#.*\\|$\\)				; 10 '#' chars* | $
+\\)
+
+"            			; <9
+

@@ -63,6 +63,7 @@
     "^dp-error: "
     "Keyboard macro terminated by a command ringing the bell$"
     "No cross references in this node"
+    "No previous help buffer"
     "There is no next link"
     "wconfig-rotate-yank-pointer): Window configuration save ring is empty"
     "(wconfig-delete-pop): Window configuration save ring is empty"
