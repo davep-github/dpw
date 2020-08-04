@@ -151,7 +151,7 @@ Inserts `dp-python-new-file-template-file' by default."
 
       )
   ;; else my olde/XEmacs hacked together Python/IPython dev environment.
-  (require 'dp-olde-python)
+  (require 'dp-olde-python)	       ; should rename to dp-XEmacs-python.el
 )
 
 ;; @todo XXX common or olde?
@@ -172,6 +172,7 @@ Inserts `dp-python-new-file-template-file' by default."
   "Set up python *my* way."
   (interactive)
   ;; Python has a problem with my  `dp-fix-comments' function.
+  (dmessage "Entering `dp-python-mode-hook'.")
   (setq dp-il&md-dont-fix-comments-p t)
   (filladapt-mode)
   (setq-ifnil dp-orig-python-tab-binding (key-binding (kbd "TAB")))
