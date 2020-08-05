@@ -4079,13 +4079,13 @@ ms10: comment char to end of line
   \\(def\\|class\\)			; 3     {def|class}
   \\s-+[a-zA-Z_][a-zA-Z_0-9]*		;                  ws+[name]
 \\)					; <1
-
-\\(					; 4 '(' params ')'
+\\(					; >4 '(' params ')'
 \\(?:\\s-*\\)				; x
-\\(?:					; x
-  (  					; a '(', real paren
-  \\(.*?\\))				; 5     params
-\\)
+\\(?:					; >x1
+  (  					; a  '(', real paren
+  \\(.*?\\)				; 5      params
+  )                                     ;               ')'
+\\)                                     ; <x1
 \\|
 \\(?:					; x
   \\(.*?\\)				; 6
@@ -4098,10 +4098,9 @@ ms10: comment char to end of line
 \\(?:					; x
 \\)  					; real paren,  ')'
 \\|\\(?:[^()].*?\\)			; x
-\\)?
+\\)?                                    ; <4
 \\(\\s-*				; >9
   \\(#.*\\|$\\)				; 10 '#' chars* | $
-\\)
-
-"            			; <9
+\\)                                     ; <9
+"
 
