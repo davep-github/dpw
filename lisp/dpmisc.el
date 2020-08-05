@@ -11263,8 +11263,6 @@ passing SPECIAL-CHARS."
   (interactive)
   (let ((case-fold-search nil)
         (trailing-chars "")
-        (open-paren "")
-        (close-paren "")
         (block-kw-p t)
         replacement
         (add-here (dp-py-end-of-code-pos))
@@ -11288,7 +11286,7 @@ passing SPECIAL-CHARS."
             stat
           (beginning-of-line)
           (setq something-special-p t
-                colon-pos (dp-py-end-of-code-pos))
+                colon-pos (dp-mk-marker (dp-py-end-of-code-pos) nil t))
           nil))
       ;; In a `cond' , nothing here causes the last return value (ie of
       ;; predicate) to be propagated.
@@ -11306,7 +11304,7 @@ passing SPECIAL-CHARS."
                                :start (line-beginning-position))))
           ;; This colon-pos value is used for simple line opening.
           (setq something-special-p t
-                colon-pos (dp-mk-marker (match-end 1))
+                colon-pos (dp-mk-marker (match-end 1) nil t)
                 kword (match-string 2))
           ;; We know we're a block type statement.  We can split all of them
           ;; here and then handle the def and class as needed.
@@ -11345,6 +11343,10 @@ passing SPECIAL-CHARS."
                      (not (dp-py-code-text-ends-with-special-char-p
                            :new-pos colon-pos
                            :except ")")))
+	    ;; We're interested in the character after the closing ')'
+	    (setq colon-pos (dp-mk-marker (match-end 4) nil t)
+		  )
+
             ;; replace match mangles strings from files like:
             ;;      def tail(self, join_with="\n", ofile=sys.stdout)
             ;; Even with literal set, the "\n" becomes "n"
@@ -11361,7 +11363,6 @@ passing SPECIAL-CHARS."
             ;;(replace-match (format "\\1(%s)\\9%s" parameters rest-of-line))
             ;; set to end of class/def(...)
             ;; +2 for 2 new parens
-            (setq colon-pos (+ (match-end 1) (length parameters) 2))
             (goto-char colon-pos))
           (unless (dp-looking-back-at ":")
             (when class-def-p
@@ -14912,7 +14913,7 @@ JFC."
     (setq buf (read-buffer "buffer name: " (dp-buffer-name) 'require-match)))
   (setq buf (dp-get-buffer buf))
   (with-current-buffer buf
-    (message ">%s<'s major-mode>%s<" (dp-buffer-name buf) major-mode)))
+    (message "buffer >%s<'s major-mode >%s<" (dp-buffer-name buf) major-mode)))
 
 (defun dp-upcase-region (&rest r) ;;>>beg end &optional region-noncontiguous-p)
   (interactive "r")
