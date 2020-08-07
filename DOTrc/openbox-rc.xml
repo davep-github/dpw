@@ -346,6 +346,12 @@
         <command>attempt-to-raise-emacs</command>
       </action>
     </keybind>
+    <!-- Select and raise a Jupyter QT Console window. -->
+    <keybind key="W-j">
+      <action name="Execute">
+        <command>run-iff -r -n "Jupyter QtConsole" jupyter-qtconsole</command>
+      </action>
+    </keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
     <!-- NB: run-iff uses findprog(dp1) to find the executable, so it
          looks "intelligently" only at the program field of the ps
