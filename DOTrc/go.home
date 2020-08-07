@@ -361,7 +361,6 @@ Ee|gnupg|       ${davep}/.gnupg/
 Ee|passs|pwds|pws|       ${davep}/.password-store/
 Ee|incoming|       /media/audio/mvsik/incoming/
 Ee|dpcd|           ${davep}/lisp/dp-themes.d/dp-challenger-deep-theme.el
-Ee|localemacs26|gitemacs26|lemacs|lem|gmacs|gem|emgit|    /home/davep/local/build/emacs-26/
 Ee|stgtut|       /home/davep/tmp/stgit/tutorial/stgit/
 Ee|gitted|       /home/davep/local/build/gitted/
 Ee|gitbld|bldgit|gittedgit|       /home/davep/local/build/gitted/git/
@@ -372,9 +371,8 @@ Ee|gitgit|       /home/davep/local/build/gitted/git/
 Ee|amdk|       /home/davep/work/amd/amdgpu/kernel-git/linux/
 Ee|amdl|       /home/davep/work/amd/amdgpu/kernel-git/linux/
 Ee|locgit|gitloc|       /home/davep/local/build/gitted/
-Ee|emacs26|       /home/davep/local/build/gitted/emacs-26/
-Ee|e26|       /home/davep/local/build/gitted/emacs-26/
-Ee|em26|       /home/davep/local/build/gitted/emacs-26/
+Ee|gittedemacs26|          /home/davep/local/build/gitted/emacs-26/
+Ee|localemacs26|gitemacs26|lemacs|lem|gmacs|gem|emgit|e26|em26| ${gittedemacs26}
 Ee|mpd|       /home/davep/local/build/gitted/MPD/
 Ee|mpdsrc|       /home/davep/local/build/gitted/MPD/
 Ee|mpdgit|       /home/davep/local/build/gitted/MPD/

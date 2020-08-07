@@ -4104,3 +4104,57 @@ ms10: comment char to end of line
 \\)                                     ; <9
 "
 
+
+========================
+Wednesday August 05 2020
+--
+(defun comint-simple-send (proc string)
+  "Default function for sending to PROC input STRING.
+This just sends STRING plus a newline.  To override this,
+set the hook `comint-input-sender'."
+  (let ((send-string
+         (if comint-input-sender-no-newline
+             string
+           ;; Sending as two separate strings does not work
+           ;; on Windows, so concat the \n before sending.
+           (concat string "\n"))))
+    (comint-send-string proc send-string))
+  (if (and comint-input-sender-no-newline
+	   (not (string-equal string "")))
+  ;;;;;    (dmessage "NO eof for you!")
+      (process-send-eof)
+    ))
+
+
+========================
+Thursday August 06 2020
+--
+(python-shell-interpreter "jupyter")
+(python-shell-interpreter-args "console --simple-prompt")
+
+(progn
+  (setq python-shell-interpreter "ipython")
+  (setq python-shell-interpreter-args "") ; "console --simple-prompt --debug")
+  )
+
+
+========================
+Friday August 07 2020
+--
+(let ((new-position "c"))
+  ;;  (string= "c" new-position))
+  (when (string= "c" new-position)
+    (avy-goto-char))
+
+  (cond
+    ((string= "c" new-position)
+     (avy-goto-char))
+    ((string= "l" new-position)
+     (avy-goto-line))
+    (t (princf "FOAD"))))
+
+
+
+
+
+
