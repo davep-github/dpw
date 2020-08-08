@@ -5401,6 +5401,13 @@ a line number.  Prefix w/+ or - to do a relative line jump."
       (goto-line (string-to-int new-position)))
      ((string-match "[+-][0-9]" new-position)
       (goto-line (+ (line-number) (string-to-int new-position))))
+     ((string-match "a\\s-*\\([cl]\\)" new-position)
+      (goto-line (+ (line-number) (string-to-int new-position))))
+     ((cond
+       ((string= "c" new-position)
+	(call-interactively 'avy-goto-char))
+       ((string= "l" new-position)
+	(call-interactively 'avy-goto-line))))
      (t (dp-set-or-goto-bm (if (string-match "\\([>/:]\\)\\([0-9]+\\)"
                                              new-position)
                                (match-string 2 new-position)
