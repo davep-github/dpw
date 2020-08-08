@@ -1223,7 +1223,7 @@ minibuffer history list `bookmark-history'."
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
 
-(defun dp-stuff-that-needs-to-done-after-init ()
+(defun dp-stuff-that-needs-to-done-after-init.el ()
   "Some things need to be done after the processing of `init.el'...
 
 ... after control returns to the inscrutable and unfathomable
@@ -1254,6 +1254,6 @@ to do that before.'"
 
 ;; See `dp-set-frame-height' for far too many ways the height might be
 ;; overridden.
-(run-with-idle-timer 2 nil #'dp-stuff-that-needs-to-done-after-init)
+(run-with-idle-timer 2 nil #'dp-stuff-that-needs-to-done-after-init.el)
 
 (message "dpmacs.el...finished.")
