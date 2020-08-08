@@ -18,7 +18,12 @@ if (($# > 0))
 then
     wmctrl_patterns=("$@")
 else
-    wmctrl_patterns=(Serv/Emacs@)
+    # We may not only want to raise a server type *macs window, so check for
+    # the existence of other "kinds."  We try to find the first one in some
+    # kind of "useful" order.  If what was the server is killed while another
+    # (non-server, d'uh) then the other won't have a "Serv" prefix.  I saw
+    # emacs@ once, and I don't know how that title got set.
+    wmctrl_patterns=(Serv/Emacs@ /Emacs@ emacs@)
 fi
 EExec_verbose_msg "#:" "${#wmctrl_patterns[@]}"
 #
@@ -43,6 +48,7 @@ EExec_verbose_msg "#:" "${#wmctrl_patterns[@]}"
 # Drat. I could've been using this for years.
 # If I can use ec (which uses) gnuclient or equivalent, then I can use this
 # to raise the server's frame.
+# This also doesn't fail with the new (to me) elisp server code.
 
 if type wmctrl >/dev/null 2>&1
 then
