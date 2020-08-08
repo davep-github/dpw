@@ -1172,6 +1172,7 @@ main(
   (local-set-key [(meta left)] 'dp-beginning-of-def-or-class)
   (dp-auto-it?))
 
+;; @todo XXX Make defcustom.
 (defvar dp-use-standard-emacs-python-mode-p t
   "Use the python-mode defined in python.el.
 This is used in Emacs 24.{3 or 4 or so}.

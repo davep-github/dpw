@@ -136,7 +136,8 @@ not."
     (dp-rm-editing-server-ipc-file)))
 
 (defun* dp-start-editing-server (&optional server-fate force-serving-p)
-  "Start a server to edit files for remote clients.  Prefer `gnuserv'.
+  "Start a server to edit files for remote clients.  
+Prefer `gnuserv' for XEmacs.  Emacs now has one built in written in elisp.
 SERVER-FATE (prefix arg) says nuke any existing child server and
 start a new one."
   (interactive "P")
