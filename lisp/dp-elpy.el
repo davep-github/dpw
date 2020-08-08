@@ -2,6 +2,8 @@
 ;;; Setup the Emacs Lisp PYthon development environment.
 ;;;
 
+;; Ease of use for experimentation.  Eventually it will "wither away."
+(setq dp-use-elpy-mode-p t)
 (when (bound-and-true-p dp-use-elpy-mode-p)
   (elpy-enable)
 
