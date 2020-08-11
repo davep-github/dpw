@@ -53,11 +53,11 @@ EExec_verbose_msg "#:" "${#wmctrl_patterns[@]}"
 if type wmctrl >/dev/null 2>&1
 then
     # Try all options
-    echo "# " "${#wmctrl_patterns[@]}"
-    for p in "${wmctrl_patterns[@]}"
-    do
-	echo "p>${p}<"
-    done
+    EExec_verbose_msg "# " "${#wmctrl_patterns[@]}"
+    #for debug for p in "${wmctrl_patterns[@]}"
+    #for debug do
+    #for debug 	echo "p>${p}<"
+    #for debug done
     for p in "${wmctrl_patterns[@]}"
     do
 	EExec -k wmctrl -a "${p}" && exit 0
