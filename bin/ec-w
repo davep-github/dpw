@@ -3,7 +3,7 @@
 . script-x
 #echo 1>&2 "$0: @>$@<"
 : ${LOG_FILE:=/dev/null}
-set -x
+# set -x
 {
     echo "========== $(date) ============"
     [[ "$1" =~ "^((-(h|-help))|)$" ]] && {

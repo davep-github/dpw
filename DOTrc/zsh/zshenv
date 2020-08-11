@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+# define PS1/PROMPT to be the same as my BASH prompt, which looks like this:
+# davep@vilya:~/local/build/gitted/zsh (master)
+# 2875/0001>
+# Look @ ~/.rc/bashrc to see all of the, ummm, stuff that's accumulated after
+# years of OS/machine types and names (and naming conventions within farms
+# with too many names to hand-le by hand.
+# Let's start anew, and cruft it as we need to.
+# (zsh) is just for testing so I can tell if I'm in bash or zsh.
+# !NB! XXX the first line of the prompt must look like:
+# <user>@<short-hostname>:<path-name>
+# In order for Emacs' dirpath hack (I did it years ago and was kind of
+# embarrassed by its fragility.  However, it does work well in all cases
+# where a dir is changed, no matter the method, as long as we can parse the
+# dir out of the prompt.  The second line and any possible subsequent lines
+# "are notta imaportanta"
+
+#a keeper PS1="%B%n@%m:%~%b
+#a keeper (zsh)%!/%?> "
+
+#keeperer PS1="%B%n@%m:%~%b
+#keeperer (zsh): %!%(0?||/%?)> "
+
+PS1="%B%n@%m:%~%b
+(zsh): %!%(0?||?%S%?%s)> "
+
+true

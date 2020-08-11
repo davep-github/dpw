@@ -1,0 +1,8 @@
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=7890
+setopt appendhistory beep nomatch
+unsetopt autocd
+bindkey -e
+# End of lines configured by zsh-newuser-install
