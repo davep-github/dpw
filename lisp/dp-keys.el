@@ -294,7 +294,6 @@ Bind any keys in KEYS via `dp-define-keys'."
 ; 					 'dp-mark-sexp))
 ; I always mark first
 ;;;(global-set-key [(control meta c)] 'dp-copy-sexp)
-;;;(global-set-key [(control meta c)] 'dp-copy-rectangle-as-kill)
 (global-set-key [(control ?x) ?r (meta ?o)] 'dp-copy-rectangle-as-kill)
 (global-set-key [(meta ?c)] 'dp-toggle-capitalization)
 (global-set-key [(meta ?C)] 'dp-change-one-hump)
