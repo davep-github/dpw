@@ -21,7 +21,15 @@ Ee|crontab|           ${etc}crontab
 Ee|tmp|               ${davep}tmp/
 Ee|rc|                ${davep}/.rc/
 Ee|gitc|              ${rc}/gitconfig
-Ee|bashrc|brc|        ${rc}/bashrc
+Ee|bashrc|brc|                  ${rc}/bashrc
+Ee|bashprofile|bashpro|bpro|    ${rc}/bash_profile
+Ee|bashlogout|bashlo|blo|       ${rc}/bash_logout
+Ee|bashcomp|                    /usr/share/bash-completion/
+Ee|zsh|                         ${zsh}/zshrc
+Ee|zshrc|brc|                   ${zsh}/zshrc
+Ee|zshprofile|zshpro|bpro|      ${zsh}/zsh_profile
+Ee|zshlogout|zshlo|blo|         ${zsh}/zsh_logout
+Ee|zshcomp|                     /usr/share/zsh-completion/
 Ee|patches|           ${davep}patches/
 Ee|wdylan|            ${davep}work/dylan/
 Ee|x7|                ${davep}work-xfer/exp07/
@@ -316,7 +324,6 @@ Ee|kdeb|       /usr/portage/kde-base/
 Ee|MH|       ${davep}/MH/
 E|sp|       ${davep}/MH/singlepower/
 Ee|envd|       /etc/env.d/
-Ee|bashcomp|       /usr/share/bash-completion/
 E|wipx|       ${davep}/work-is-play/
 Ee|wiph|wipinc|       ${davep}/work-is-play/include/
 E|usd|       /usr/share/doc/
@@ -393,6 +400,7 @@ Ee|wip|       /home/davep/dev/wip/
 Ee|py3lib|       /usr/lib/python3/
 Ee|ipy3|       /usr/lib/python3/dist-packages/IPython/
 Ee|py3ipy|       /usr/lib/python3/dist-packages/IPython/
+Ee|gitsrc|       /home/davep/local/build/gitted/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
