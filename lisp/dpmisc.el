@@ -11710,6 +11710,14 @@ An `undo-boundary' is done before the template is used."
   :group 'dp-vars
   :type 'string)
 
+;need to work out interaction with bash (defcustom dp-zsh-new-file-template-file
+;need to work out interaction with bash   (expand-file-name "~/bin/templates/zsh-template.sh")
+;need to work out interaction with bash   "A file to stuff into each new zsh script file created with `zshit'
+;need to work out interaction with bash or a list: \(function args).
+;need to work out interaction with bash An `undo-boundary' is done before the template is used."
+;need to work out interaction with bash   :group 'dp-vars
+;need to work out interaction with bash   :type 'string)
+
 (defun __shit ()
   (interactive)
   (dp-script-it "/bin/sh" nil
@@ -11721,6 +11729,12 @@ An `undo-boundary' is done before the template is used."
   (dp-script-it "bash" 'run-with-/usr/bin/env-p
                 :template 'dp-insert-new-file-template
                 :template-args (list dp-bash-new-file-template-file)))
+
+;need to work out interaction with bash (defun zshit ()
+;need to work out interaction with bash   (interactive)
+;need to work out interaction with bash   (dp-script-it "zsh" 'run-with-/usr/bin/env-p
+;need to work out interaction with bash                 :template 'dp-insert-new-file-template
+;need to work out interaction with bash                 :template-args (list dp-zsh-new-file-template-file)))
 
 (defun perlit ()
   (interactive)
