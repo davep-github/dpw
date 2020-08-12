@@ -22,7 +22,30 @@
 #keeperer PS1="%B%n@%m:%~%b
 #keeperer (zsh): %!%(0?||/%?)> "
 
+# Non-emacs shell buffer prompt.
+PS1_template="%B%n@%m:%~%b
+(zsh): %!%(0?||<%S%?%s)> "
+
 PS1="%B%n@%m:%~%b
-(zsh): %!%(0?||?%S%?%s)> "
+(zsh): %!%(0?||<%S%?%s)> "
+
+# WIP
+false && {
+# PATH stuff.  Gonna be big.
+# @todo XXX make read only.
+# @todo XXX ??? Put in it's own file so it can be fixed alone?
+: ${DP_ENV_ORIGINAL_PATH:=$PATH}
+export DP_ENV_ORIGINAL_PATH
+PATH="${DP_ENV_ORIGINAL_PATH}"
+
+# We don't want a leading or trailing : to be added.
+# But we do want at least what I consider to be a vital path.
+if [ -z "$PATH" ]
+then
+    PATH="$most_basic_path"
+else
+    PATH="$most_basic_path:$PATH"
+fi
+}
 
 true
