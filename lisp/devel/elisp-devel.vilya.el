@@ -1,4 +1,4 @@
-(defun magit-log-format-margin (author date)
+ (defun magit-log-format-margin (author date)
   (-when-let (option (magit-margin-option))
     (-let [(_ style width details details-width)
            (or magit-buffer-margin
@@ -4157,4 +4157,132 @@ Friday August 07 2020
 
 
 
+
+
+========================
+Wednesday August 12 2020
+--
+M-C-y doesn't work.  No wrap, kb input, etc.
+insert here>
+
+      (setq buffer-read-only nil) <----- IMO, direct access to
+      vars like this is a "Bad Thing(R)"
+
+      -vs-
+
+      (toggle-read-only 0) <-------------------- OBSOLETE.
+
+      
+      (let ((x 99)
+	    (y 'i-am-yoot)
+	    (nilz nil))
+	(princf "x: is symbol: %s, %s" (symbolp x) x)
+	(princf "y: is symbol: %s, %s" (symbolp y) y)
+	(princf "n: is symbol: %s, %s" (symbolp nilz) nilz))
+x: is symbol: nil, 99
+y: is symbol: t, i-am-yoot
+n: is symbol: t, nil
+nil
+
+(defun dp-toggle-val (arg val &optional verbose-p)
+"Toggle value of VAL in the canonical manner as a function of ARG.
+If ARG is nil, toggle value of VAL.
+If ARG is > 0, or t then set value of VAL to t.
+If ARG is <= 0, set value of VAL to nil.
+If VERBOSE-P is non-nil, show new value of VAL."
+  (interactive "P")
+  (setq olde-val val
+	val (if arg
+		(or (eq arg t)		; t if, well, t.
+		    (and (numberp arg)
+			 (> arg 0)))	; t if >, nil if <=
+	      ;; Just toggle.
+	      (not val)))
+  (when verbose-p
+    (message "val was: %s, now %s." olde-val val))
+  val)
+
+(defun* dp-toggle-read-only (&optional toggle-flag (colorize-p t))
+  "Toggle read only. Set color accordingly if COLORIZE-P is non-nil.
+NB: for the original `toggle-read-only', t --> 1 --> set RO because
+\(prefix-numeric-value t) is 1."
+  (interactive "P")
+  (let ((original-read-only buffer-read-only))
+    (dp-toggle-var 'buffer-read-only)
+    (when (and colorize-p buffer-read-only)
+      (dp-colorize-found-file-buffer))))
+
+					; arg val
+
+(dp-toggle-val nil -1)
+nil
+
+nil
+
+t
+
+nil
+
+nil
+
+
+
+
+(princf "%s" 1)
+1
+nil
+
+49
+nil
+
+========================
+Thursday August 13 2020
+--
+(dp-toggle-val 'x t)
+t
+
+t
+(setq dp-yadda t)
+(dp-toggle-var 'dp-yadda -1)
+nil
+
+nil
+dp-yadda
+nil
+
+nil
+
+(progn
+  (message "111;;;;;;;;;;;;")
+  (message "B: mark_kboards (void)buffer-read-only: %s" buffer-read-only)
+  (dp-toggle-read-only -1 nil)
+  (message "A: buffer-read-only: %Some of the quotes quotes said the numbers would be much lower if he had
+pushed universal mitigation: masks, social distancing, staying inside,
+washing hands, in effect everything the CDC, etc, said.  trump never pushed
+these.  Hell, he never wore a mask to influence people to disbelieve the
+pandemic was as bad as was said, to pretend that he had fixed it.  What about
+the states he encouraged to open?  The numbers are bigger than they were,
+thanks to him.  Now it's red states and people in the WH.  Suddenly he begins
+to wear a mask.  And he encourage people to participate in rallys (for his
+ego, he's already going to be the red nominee), a environment that is almost
+designed to spread covid.  Also, why did he insist on being the only one to
+see the data from the hospitals, etc?  If his numbers are so good, they'd be
+on every billboard as far as the eye can see.
+
+s" buffer-read-only)
+)
+
+(progn
+  (message "222;;;;;;;;;;;;")
+  (message "B: dp-yadda: %s" dp-yadda)
+  (dp-toggle-var 'dp-yadda -1 nil)
+  (message "A: dp-yadda: %s" dp-yadda)
+)
+
+(progn
+  (message "333;;;;;;;;;;;;")
+  (message "B: buffer-read-only: %s" buffer-read-only)
+  (dp-toggle-var 'buffer-read-only -1 nil)
+  (message "A: buffer-read-only: %s" buffer-read-only)
+)
 
