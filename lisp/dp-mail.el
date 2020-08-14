@@ -275,14 +275,13 @@ Returns list of all addrs."
 
 (defun dp-mail-skip-per-recipient-hooks (&optional arg)
   (interactive)
-  (dp-toggle-var arg 'dp-mail-skip-per-recipient-hooks))
+  (dp-toggle-var 'dp-mail-skip-per-recipient-hooks arg))
 
 (defvar dp-mail-skip-rewrite-from nil)
 
 (defun dp-mail-skip-rewrite-from (&optional arg)
   (interactive)
-  (dp-toggle-var arg 'dp-mail-skip-rewrite-from))
-
+  (dp-toggle-var 'dp-mail-skip-rewrite-from arg))
 
 (defun dp-mail-run-per-recipient-hooks (recip-string hook-alist)
   "@todo fix this:

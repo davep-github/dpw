@@ -809,7 +809,7 @@ nil -- disabled by removing `dp-xemacs-like-eol-cursor' from `post-command-hook.
 (defun dp-setup-end-of-line-cursor (&optional enable-p)
   "Setup end of line cursor support."
   (interactive "P")
-  (dp-toggle-var enable-p 'dp-xemacs-like-eol-cursor-state)
+  (dp-toggle-var 'dp-xemacs-like-eol-cursor-state enable-p)
   (if dp-xemacs-like-eol-cursor-state
       (add-hook 'post-command-hook 'dp-xemacs-like-eol-set-cursor)
     (remove-hook 'post-command-hook 'dp-xemacs-like-eol-set-cursor)

@@ -159,7 +159,10 @@ functions called, e.g. to set up usage-specific key bindings.")
 ;; to insert elsewhere if the user changes their mind.
 ;; A slight problem is that the highlighting of point in the dest buffer
 ;;  is not updated when point moves.
-;; Could check on every keystroke or in post-command-hook for moved point.
+;; Could check on every keystroke or in post-command-hook for moved point,
+;; but only if this mode is active? Hook in at start of mode, remove @ end?
+;; The hooking mentioned above will need to wrap that in the safest
+;; `condition-case' like thing.  unwind-protect?
 ;;
 (dp-defcustom-local dp-sel2:goto-target-original-point nil
   "*Controls whether or not we go to where ever point was in the
@@ -589,7 +592,7 @@ Does not insert any text."
 (defun dp-sel2:insert-line (item &optional squish-p use-squish-face-p
 				 trunc-len)
   "Insert and format the ITEM into the listing buffer."
-  ;; remove all extens from the items for display since things like a
+  ;; remove all extents from the items for display since things like a
   ;; read-only extent can hose things.  NB: this means that regions
   ;; selected and inserted from the sel-buf will not have the original
   ;; text's properties.  Using view-item will allow text props to be
@@ -654,9 +657,18 @@ the item is displayed."
       (setq dp-sel2:items-offset-list nil
 	    dp-sel2:items-num-offsets 0)
 
-      (dp-toggle-read-only 0 nil)
+      ;; I just spent hours chasing down a read-only character in a pastie buffer.  The dumbass (from what I can see) read-only changes didn't help.
+      ;; The inhibit-read-only allows us to delete chars/overlays/etc/ that
+      ;; have a read-only type property.
+      (let ((inhibit-read-only t))
+	(dp-erase-buffer))
 
-      (dp-erase-buffer)
+      ;; Make us read/write.  We may be reusing a pastie buffer that is read
+      ;; only or has something in it with a read only property.  We could
+      ;; live in the (let ((inhibit-read-only t))...) but individual RO... RW
+      ;; calls seem more obvious.
+      (dp-toggle-read-only -1 nil)
+
       (goto-char (point-min))
       ;;
       ;; Stuff all list items into the list buffer.
@@ -684,8 +696,8 @@ the item is displayed."
 	    (nreverse dp-sel2:items-offset-list))
       (when (> (1- (point-max )) 0)
 	(delete-region (- (point-max) 1) (point-max)))
-      sel-buf
-      )))
+      (dp-toggle-read-only t nil)
+      sel-buf)))
 
 (defun dp-sel2:off-to-index (&optional off)
   "Convert offset in buffer to index used to select
@@ -720,8 +732,9 @@ BY gives number of items to move."
 
 (defun dp-sel2:index-as-int ()
   "Convert a list of reversed digits into an integer.
-There's got to be a better way. I wrote this when I was a 1st level
-Elispomancer."
+There's got to be a better way. I wrote this when I was a 1st^H^H^H 0th level
+Elispomancer.
+@todo XXX Use concat to add chars to the index, and substring to remove them."
   ;; There is.
   (1+ (string-to-int (apply 'string (reverse dp-sel2:index)))))
 ;;leveled up!;   (let ((i 0)
@@ -752,11 +765,11 @@ E.g. typing `1' `2' will send us to item 1 and then to
 item 12."
   (interactive)
   (setq dp-sel2:preserve-index t)
-;;;  (message "0i: %S" dp-sel2:index)
-;;;  (message "0c: %S" (dp-last-command-char))
-;;;  (message "0c2:%S" last-input-char)
-;;;  (message "0k: %s" (this-command-keys))
-  (setq dp-sel2:index (cons last-input-char dp-sel2:index))
+  ;; (message "dp-sel2:index: %S" dp-sel2:index)
+  ;; (message "(dp-last-command-char): %S" (dp-last-command-char))
+;;;  (message "0c2:%S" last-input-char) <<<< XEmacs only.
+  ;; (message "(this-command-keys): %s" (this-command-keys))
+  (setq dp-sel2:index (cons (dp-last-command-char) dp-sel2:index))
 
   ;;  (message "1i: %S" dp-sel2:index)
   ;; the call will fail if the new index is too big.  If so, we remove the
@@ -813,7 +826,7 @@ we started.  The strings are in the same order that a series of
 	  (setq l kill-ring))
       (if (eq l kill-ring-yank-pointer)
 	  (setq el nil)
-	(setq el (car l))
+	(setq el (substring-no-properties (car l)))
 	(setq l (cdr l))))
     ;; reverse list for return
     (nreverse ret-list)))
@@ -969,7 +982,8 @@ yank ring."
     (let ()				;(sel-item)
       (if (not kill-ring)
 	  (message "Nothing in kill-ring.")
-	(dp-rehighlight-point :id-prop dp-sel2-arrow-id)
+	(save-excursion
+	  (dp-rehighlight-point :id-prop dp-sel2-arrow-id))
 	(dp-sel2 "*pasties*"		;Buffer name prefix.
 		 ;; Item generator function
 		 'dp-sel2:list-pastes

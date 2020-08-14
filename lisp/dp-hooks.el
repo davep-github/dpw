@@ -1805,7 +1805,7 @@ So there."
   (interactive "P")
   (if arg
       (setq dp-query-kill-buffer-p arg)
-    (dp-toggle-var arg 'dp-query-kill-buffer-p)))
+    (dp-toggle-var 'dp-query-kill-buffer-p arg)))
 
 ;; @todo ecb debugging
 ;;;;(add-hook 'kill-buffer-query-functions 'dp-kill-buffer-query-function)

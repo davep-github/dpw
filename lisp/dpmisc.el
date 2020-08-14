@@ -6925,7 +6925,7 @@ LIMIT, NOERROR, COUNT, and BUFFER are as per `re-search-*'."
 (defun dp-toggle-truncate (&optional arg)
   "Toggle value of `truncate-lines'."
   (interactive "P")
-  (dp-toggle-var arg 'truncate-lines))
+  (dp-toggle-var 'truncate-lines arg))
 (defalias 'trunc 'dp-toggle-truncate)
 
 (defun dp-repeat-complex-command (arg)
@@ -8027,12 +8027,16 @@ The highlight will be removed after the next command."
 
 
 ;; toggle algorithm copped from view-mode
-(defun dp-toggle-val (arg val &optional verbose-p)
-"Toggle value of VAL in the canonical manner as a function of ARG.
-If ARG is nil, toggle value of VAL.
+(defun dp-toggle-val (val &optional arg verbose-p)
+"Toggle and return value of VAL in the canonical manner as a function of ARG.
+
+If ARG is nil or not provided, VAL is changed from non-nil to nil or nil to t.
 If ARG is > 0, or t then set value of VAL to t.
 If ARG is <= 0, set value of VAL to nil.
-If VERBOSE-P is non-nil, show new value of VAL."
+If VERBOSE-P is non-nil, show old and new values.
+A good style is no arg to toggle, t --> t and 0/-1 --> nil.
+0 is good since 0 is false in many other languages, and -1 is good
+since it stands out more and 0 is non-nil and in lisp is associated with \"true\"."
   (interactive "P")
   (setq olde-val val
 	val (if arg
@@ -8045,15 +8049,18 @@ If VERBOSE-P is non-nil, show new value of VAL."
     (message "val was: %s, now %s." olde-val val))
   val)
 
-(defun dp-toggle-var (arg var-sym &optional quiet-p)
+(defun dp-toggle-var (var-sym &optional arg quiet-p)
 "Toggle value of VAR-SYM in the canonical manner as a function of ARG.
 
+Also returns the new value of var-sym.  This is more of a M-x
+type `trunc'== toggle-truncation, hence the default verbosity
 See `dp-toggle-val' for details."
   (interactive "P")
   (let ((val (symbol-value var-sym)))
-    (set var-sym (dp-toggle-val arg val nil))
+    (set var-sym (dp-toggle-val val arg t))
     (unless quiet-p
-      (message "%s was: %s, now %s." var-sym val (symbol-value var-sym)))))
+      (message "`%s' was: %s, now %s." var-sym val (symbol-value var-sym)))
+    (symbol-value var-sym)))
 
 (defun key-id ()
   (interactive)
@@ -10226,8 +10233,8 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
   "Cause the Makefile in the current buffer to be the one to use in this tree."
   (interactive "P")
   (with-current-buffer (dp-get-buffer buf-or-name-of-makefile)
-    (dp-toggle-var toggle-var 'dp-primary-makefile-p)
-    (dp-toggle-read-only (if dp-primary-makefile-p 1 0))
+    (dp-toggle-var 'dp-primary-makefile-p toggle-var)
+    (dp-toggle-read-only (if dp-primary-makefile-p 1 -1))
     (if dp-primary-makefile-p
         (dp-define-buffer-local-keys '([(meta ?-)]
                                        dp-bury-or-kill-buffer)
@@ -14260,7 +14267,10 @@ it. Whitespace diffs are easy to ignore during reviews"
   "Per-buffer disablement.")
 
 (defun dp-disable-whitespace-cleanup (&optional arg)
-  (dp-toggle-var arg 'dp-white-space-cleanup-disabled-in-this-buffer-p))
+  "Change the state of `*whitespace-cleanup*' based on ARG.
+
+See `dp-toggle-var' for a description of how ARG works."
+  (dp-toggle-var 'dp-white-space-cleanup-disabled-in-this-buffer-p arg))
 
 (dp-defaliases 'dp-disable-ws-cleanup 'disable-ws-cleanup
                'dwsc
@@ -14454,11 +14464,14 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 \(prefix-numeric-value t) is 1."
   (interactive "P")
   (let ((original-read-only buffer-read-only))
-    (toggle-read-only toggle-flag)
+    (dp-toggle-var 'buffer-read-only toggle-flag)
     (when (and colorize-p
                (not (equal original-read-only buffer-read-only)))
       (dp-colorize-found-file-buffer))))
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (dp-defaliases 'dp-tro 'dptro 'dptogglero 'dptogro
 	       'dp-trw 'dptrw 'dptogglerw 'dptogrw
 	       'dp-toggle-read-write
@@ -15007,8 +15020,8 @@ Of course, I'll forget the name of this function and its aliases, too."
 
 (defun dp-show-trailing-whitespace (&optional on-off quiet-p)
   (interactive "P")
-  (dp-toggle-var on-off
-		 'show-trailing-whitespace
+  (dp-toggle-var 'show-trailing-whitespace
+		 on-off
 		 (or (not (interactive-p))
 		     quiet-p)))
 

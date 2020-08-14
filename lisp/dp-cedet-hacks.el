@@ -232,7 +232,7 @@ OR a list of the above."
 (defun dp-cedet-toggle-semantic-inhibit (&optional command-flag)
   "Toggle or set mode as per `dp-toggle-var'."
   (interactive "P")
-  (dp-toggle-var command-flag 'dp-cedet-semantic-inhibited-p))
+  (dp-toggle-var 'dp-cedet-semantic-inhibited-p command-flag))
 
 (dp-deflocal dp-cedet-ede-ignored-p 'unset
   "Have we played this game before?")
@@ -260,7 +260,7 @@ OR a list of the above."
 (defun dp-cedet-toggle-ede-ignore (&optional command-flag)
   "Toggle or set mode as per `dp-toggle-var'."
   (interactive "P")
-  (dp-toggle-var command-flag 'dp-cedet-ede-ignored-p))
+  (dp-toggle-var 'dp-cedet-ede-ignored-p command-flag))
 
 
 (add-hook 'dp-post-dpmacs-hook (lambda ()
