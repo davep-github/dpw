@@ -5378,7 +5378,7 @@ Here, first means the car of the list."
 ;; other units that emacs understands.
 (defun dp-goto-line (new-position &optional nada) ;<:dgl|goto line:>
   "Goto line, char pos or bookmark. Saves current position on go-back first.
-Append \"c\" to NEW-POSITION or prefix with [=.#] to use it as a point value vs
+APPEND \"c\" to NEW-POSITION or prefix with [=.#] to use it as a point value vs
 a line number.  Prefix w/+ or - to do a relative line jump."
   (interactive (dp-get-bm-interactive
                 (format "line# (or w/suffix: c -> char) or bm (%s): "
