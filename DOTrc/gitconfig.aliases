@@ -86,7 +86,7 @@
         lo5 = log -n 5 --oneline
         lo11 = log -n 11 --oneline
         lo12 = log -n 12 --oneline
-        #lon = log --oneline -n
+        lonn = log --oneline -n
         l1n = log --oneline -n
         lon5 = log -n 5 --oneline
         lon11 = log -n 11 --oneline
