@@ -575,9 +575,9 @@ This variable is used to identify things like view bufs.")
 (defsubst dpj-topic-info-end (info)
   (nth 3 info))
 (defun dpj-topic-info-timestamp (info)
-  (buffer-substring (+ (dpj-topic-info-record-start info)
-		       dp-stamp-leader-len)
-		    (dpj-topic-info-topic-start info)))
+  (buffer-substring-no-properties (+ (dpj-topic-info-record-start info)
+				     dp-stamp-leader-len)
+				  (dpj-topic-info-topic-start info)))
 
 ;; NB: must retain side effect of moving point to topic start!!!
 (defsubst dpj-get-current-timestamp-pos ()
@@ -590,7 +590,8 @@ Return CONS (ts-text . ts-position)."
   (save-excursion
     (let ((ts-start (dpj-get-current-timestamp-pos)))
       (when ts-start
-	(cons (buffer-substring ts-start (1- (point))) ts-start)))))
+	(cons (buffer-substring-no-properties
+	       ts-start (1- (point))) ts-start)))))
 
 (defun dpj-find-topic (searchf movef skip-current &optional topic-re count
 			       skip-re)
@@ -1158,11 +1159,18 @@ on disk."
 			       (mapcar
 				(function
 				 (lambda (el)
-				   ;;(dmessage "el>%s<" el)
-				   (if (string-match dpj-private-topic-re
-						     (car el))
-				       nil
-				     el)))
+				   (let ((s (substring-no-properties(car el))))
+				     (dmessage "el>%s<" el)
+				     (dmessage "s>%s<" s)
+				     (if (not (listp el))
+					 (progn
+					   (dmessage "el>%s< not a list, %s" el
+						     "discarding")
+					   nil)
+				       (if (string-match dpj-private-topic-re s)
+					   nil
+					 ;; Write the topic string sans props.
+					 (cons s (cdr el)))))))
 				dpj-topic-list)))
 ;;    (setq dpj-topic-list (delq nil dpj-topic-list))
     (if dp-journal-sort-topics-p
@@ -1173,6 +1181,7 @@ on disk."
       (dp-erase-buffer)
       (insert ";; -*-emacs-lisp-*-\n")
       (insert dpj-topic-file-id-magic "\n")
+      (insert ";; " (dp-timestamp-string) "\n")
       (let ((standard-output (current-buffer)))
 	(pp `(setq dpj-topic-list (quote ,dpj-topic-list))))
       (insert "\n; topic abbrevs\n")
@@ -1188,6 +1197,7 @@ on disk."
       (setq dpj-last-written-topic-list dpj-topic-list)
       (setq dpj-abbrev-list-modified-p nil)
       (setq dpj-topic-list-read-time (dpj-topic-file-mod-time)))))
+
 
 (defun dpj-merge-all-topics (&optional list write-em)
   "Merge all of the topics into a single list.
@@ -1336,7 +1346,7 @@ non-nil otherwise get the current list topics."
 (defalias 'dpj-repl-topic 'dpj-get-and-replace-current-topic)
 
 (defun dpj-extract-a-record (record-info buffer)
-  (buffer-substring
+  (buffer-substring-no-properties
    (dpj-topic-info-record-start record-info)
    (dpj-topic-info-end record-info)
    buffer))
@@ -2111,8 +2121,9 @@ continuation of a topic at a later time."
   ;;
   (interactive)
   (let ((boundaries (dp-region-or-line-boundaries)))
-    (dpj-clone-topic 'link-too-p (buffer-substring (car boundaries)
-						 (cdr boundaries)))))
+    (dpj-clone-topic 'link-too-p (buffer-substring-no-properties
+				  (car boundaries)
+				  (cdr boundaries)))))
 
 (defun dpj-current-topic-or-todo ()
   "Get the topic currently under point.
@@ -2194,7 +2205,7 @@ The string is in my embedded lisp format."
 ;   (interactive)
 ;   (unless link
 ;     (save-excursion
-;       (setq link (dp-bracketed-buffer-substring
+;       (setq link (dp-bracketed-buffer-substring-no-properties
 ;		  dpj-link-left-delim dpj-link-right-delim))))
 ;   (dp-push-go-back "dpj-goto-link")
 ;   (dpj-goto-topic-backward link))
@@ -2294,8 +2305,8 @@ The string is in my embedded lisp format."
   (mapcar
    (function
     (lambda (info)
-      (buffer-substring (dpj-topic-info-record-start info)
-			(dpj-topic-info-end info))))
+      (buffer-substring-no-properties (dpj-topic-info-record-start info)
+				      (dpj-topic-info-end info))))
    topic-list))				; ??? @todo was topics?
 
 (defun dpj-insert-topics-sorted (topics-str)
