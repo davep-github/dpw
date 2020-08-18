@@ -6039,6 +6039,12 @@ Similar here means the same file-name with a user specified completion."
     (setq end (1- (match-beginning 0)))
     (buffer-substring start end)))
 
+(defun dp-bracketed-buffer-substring-no-properties (open close
+							 &optional
+							 left-limit right-limit)
+  (substring-no-properties (dp-bracketed-buffer-substring
+			    open close left-limit right-limit)))
+
 (defun dp-beginning-of-line-if-not-bolp ()
   (interactive)
   (if (and (not defining-kbd-macro)
