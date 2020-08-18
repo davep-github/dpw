@@ -803,8 +803,13 @@ nil -- disabled by removing `dp-xemacs-like-eol-cursor' from `post-command-hook.
   "`post-command-hook' function that changes cursor state."
   (if (and (eolp)
 	   (not force-off-p))
-      (setq cursor-type (cons 'bar 6))
-    (setq cursor-type 'box)))
+      (progn
+	(setq cursor-type (cons 'bar 6))
+	;;(set-cursor-color "red")
+	)
+    (setq cursor-type 'box)
+    ;;(set-cursor-color "gold")
+    ))
 
 (defun dp-setup-end-of-line-cursor (&optional enable-p)
   "Setup end of line cursor support."
