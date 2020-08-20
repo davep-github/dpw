@@ -4286,3 +4286,1003 @@ s" buffer-read-only)
   (message "A: buffer-read-only: %s" buffer-read-only)
 )
 
+
+========================
+Monday August 17 2020
+--
+(defun dp-savehist-printable (value)
+  "Return non-nil if VALUE is printable."
+  (cond
+   ;; Quick response for oft-encountered types known to be printable.
+   ((numberp value))
+   ((symbolp value))
+   ;; String without properties
+   ((and (stringp value)
+	 (equal-including-properties value (substring-no-properties value))))
+   (t
+    ;; For others, check explicitly.
+    (with-temp-buffer
+      (condition-case nil
+	  (let ((print-readably t) (print-level nil))
+	  ;; Print the value into a buffer...
+	  (prin1 value (current-buffer))
+	  ;; ...and attempt to read it.
+	  (read (point-min-marker))
+	  ;; The attempt worked: the object is printable.
+	  (message "Bad value{[(%s)]} " val)
+	  t)
+	;; The attempt failed: the object is not printable.
+	(error nil))))))
+
+(dolist (val kill-ring)
+  (dp-savehist-printable val))
+
+
+
+nil
+
+
+nil
+
+(dp-savehist-printable kill-ring)
+
+finish me!!!
+created bm `1' at Line=29, point=129157
+Bad value:(format "%s" val)
+Bad value:	;; The attempt failed: the object is not printable.
+	((princf "bad val: %s" value)
+	 (error nil))))))
+
+Bad value:defun savehist-printable (value)
+  "Return non-nil if VALUE is printable."
+  (cond
+   ;; Quick response for oft-encountered types known to be printable.
+   ((numberp value))
+   ((symbolp value))
+   ;; String without properties
+   ((and (stringp value)
+	 (equal-including-properties value (substring-no-properties value))))
+   (t
+    ;; For others, check explicitly.
+    (with-temp-buffer
+      (condition-case nil
+	  (let ((print-readably t) (print-level nil))
+	  ;; Print the value into a buffer...
+	  (prin1 value (current-buffer))
+	  ;; ...and attempt to read it.
+	  (read (point-min-marker))
+	  ;; The attempt worked: the object is printable.
+	  t)
+	;; The attempt failed: the object is not printable.
+	(error nil))))))
+Bad value:savehist-additional-variables [2 times]
+Bad value:`savehist-file'.
+Bad value:(fboundp 'savehist-autosave)
+Bad value:(set-cursor-color COLOR-NAME)
+Bad value:Saved working directory and index state WIP on elpy-dev: d5ba02f4 Comment change.
+Bad value:269bbd2f
+Bad value:269bbd2f..246e78fa
+Bad value:actually not toggling except in one case).
+Bad value:56e7610d
+Bad value:git show --pretty="format:" --name-only $FROM -- $WHAT | wc -l
+Bad value:$(screen-lines 2/)
+Bad value:git lonn $(screen-lines 2/)
+Bad value:shell-prompt-pattern
+Bad value:comint-use-prompt-regexp
+Bad value:0 k 51 1* p
+Bad value:0 k 51 *1 p
+Bad value:"${prec} k $LINES $@ p"
+Bad value:echo 0 k 51 4- * p
+Bad value:51 0.5* 0k p
+Bad value:BRANCH=`git rev-parse --symbolic-full-name --abbrev-ref HEAD`
+Bad value:Fixed dp-sel2.
+
+The problem was uncovered by 2 characters with read-only properties.  Which
+revealed the use of an obsolete way of changing read-only-ness.  Yadda, etc.
+Then, a change was made to my toggle var function signature.  I think this
+file should be added to the previous commit because this combination of files
+won't work if we check out this commit.
+
+Bad value:# Your branch is ahead of 'dev' by 8 commits.
+
+Bad value: on-off
+Bad value:If ARG is nil or not specified, the state is toggled to non-nil
+to nil and nil to t.
+
+Bad value:If ARG is nil or not specified, the state is toggled to non-nil
+to nil and nil to t.
+
+Bad value: arg
+Bad value: 'dp-primary-makefile-p
+Bad value:list-processes
+Bad value:@@ 
+
+Bad value:(dp-toggle-read-only t nil)
+Bad value:mark_kboards (void)
+Bad value:  (message ";;;;;;;;;;;;")
+
+Bad value:(progn
+  (message ";;;;;;;;;;;;")
+  (message "B: dp-yadda: %s" dp-yadda)
+  (dp-toggle-var 'dp-yadda -1 nil)
+  (message "A: dp-yadda: %s" dp-yadda)
+)
+
+Bad value:  (message "B: dp-yadda: %s" dp-yadda)
+
+Bad value:(progn
+  (message "B: buffer-read-only: %s" buffer-read-only)
+  (dp-toggle-read-only -1 nil)
+  (message "A: buffer-read-only: %s" buffer-read-only)
+)
+
+Bad value:  (princf "buffer-read-only: %s" buffer-read-only)
+
+Bad value:(dp-toggle-read-only -1 nil)
+Bad value:    )
+
+Bad value:      ;; Make us read/write.  We may be reusing a pastie buffer that is read
+      ;; only.  We could live in the (let ((inhibit-read-only t))...) but seems
+      ;; more obvious.
+
+Bad value:      (dp-erase-buffer)
+
+Bad value:      (dp-toggle-read-only t nil)
+
+Bad value:'buffer-read-only
+Bad value:(dp-toggle-read-only 0 nil)
+Bad value:(dp-last-command-char)
+Bad value:(this-command-keys)
+Bad value:(dp-last-command-char)
+Bad value:dp-sel2:index
+Bad value:(defun dp-sel2:digit-argument ()
+
+Bad value:insert-buffer-substring-no-properties
+Bad value:(defun* dp-toggle-read-only (&optional toggle-flag (colorize-p t))
+  "Toggle read only. Set color accordingly if COLORIZE-P is non-nil.
+NB: for the original `toggle-read-only', t --> 1 --> set RO because
+\(prefix-numeric-value t) is 1."
+  (interactive "P")
+  (let ((original-read-only buffer-read-only))
+    ;;(toggle-read-only toggle-flag)	;@todo XXX OBSOLETE
+    (setq buffer-read-only (dp-toggle-val nil buffer-read-only))
+    (when (and colorize-p buffer-read-only)
+      (dp-colorize-found-file-buffer))))
+
+Bad value: val
+Bad value: arg
+Bad value:enable-p 
+Bad value:command-flag 
+Bad value:(symbol-value var-sym)
+Bad value:&optional 
+Bad value: &optional
+Bad value:(defun dp-toggle-val (arg val &optional verbose-p)
+"Toggle value of VAL in the canonical manner as a function of ARG.
+If ARG is nil, toggle value of VAL.
+If ARG is > 0, or t then set value of VAL to t.
+If ARG is <= 0, set value of VAL to nil.
+If VERBOSE-P is non-nil, show new value of VAL."
+  (interactive "P")
+  (setq olde-val val
+	val (if arg
+		(or (eq arg t)		; t if, well, t.
+		    (and (numberp arg)
+			 (> arg 0)))	; t if >, nil if <=
+	      ;; Just toggle.
+	      (not val)))
+  (when verbose-p
+    (message "val was: %s, now %s." olde-val val))
+  val)
+Bad value:(defun* dp-toggle-read-only (&optional toggle-flag (colorize-p t))
+  "Toggle read only. Set color accordingly if COLORIZE-P is non-nil.
+NB: for the original `toggle-read-only', t --> 1 --> set RO because
+\(prefix-numeric-value t) is 1."
+  (interactive "P")
+  (let ((original-read-only buffer-read-only))
+    (toggle-read-only toggle-flag)	;@todo XXX OBSOLETE
+    (when (and colorize-p
+               (not (equal original-read-only buffer-read-only)))
+      (dp-colorize-found-file-buffer))))
+
+Bad value:	(princf "y: is symbol: %s, %s" (symbolp y) y))
+
+Bad value:(symbol-value var-sym)
+Bad value:cmd is NOT SET}
+Bad value:DP_NO_DP_INIT
+Bad value:DP_NO_DP_LISP_INIT
+Bad value:  (let ((inhibit-read-only t)
+
+Bad value:	(toggle-read-only 0)
+
+Bad value:      (setq buffer-read-only nil)
+
+Bad value:
+
+There are text properties here:
+  fontified            t
+  read-only            fence
+ [2 times]
+Bad value:ll researched answer with bated breath.␣…Especially the ones that support your claims precisely.
+ 76|Read *ALL* of the words in each article.␣…All disprove stump's 2M claim.␣…This will be the case for everything.␣…I'm just going down the list that google found given this search: "wh april press briefings trump save millions of lives" As is SOP for RWNJ, read something, find something that supports your biases and stop reading, even when the rest of the article disproves it.↵https://www.washingtonpost.com/politics/2020/07/21/mcenany-makes-new-indefensible-claim-trump-saved-3-4-million-lives/↵SOP↵https://www.c…
+ 77|Read *ALL* of the words in each article.␣…All disprove stump's 2M claim.␣…This will be the case for everything.␣…I'm just going down the list that google found given this search: "wh april press briefings trump save millions of lives" As is SOP for RWNJ, read something, find something that supports your biases and stop reading, even when the rest of the article disproves it.↵https://www.washingtonpost.com/politics/2020/07/21/mcenany-makes-new-indefensible-claim-trump-saved-3-4-million-lives/↵SOP↵https://www.c…
+ 78|Some of the quotes quotes said the numbers would be much lower if he had↵pushed universal mitigation: masks, social distancing, staying inside,↵washing hands, in effect everything the CDC, etc, said.␣…trump never pushed↵these.␣…Hell, he never wore a mask to influence people to disbelieve the↵pandemic was as bad as was said, to pretend that he had fixed it.␣…What about↵the states he encouraged to open?␣…The numbers are bigger than they were,↵thanks to him.␣…Now it's red states and people in the WH.␣…Suddenly he b…
+ 79|https://www.theguardian.com/us-news/2020/apr/04/trump-coronavirus-science-analysis
+ 80|rise
+ 81|https://www.whitehouse.gov/briefings-statements/remarks-president-trump-vice-president-pence-members-coronavirus-task-force-press-briefing-april-7-2020/
+ 82|As is SOP for RWNJ, read something, find something that supports your biases↵and stop reading, even when the rest of the article disproves it.↵
+ 83|Read *ALL* of it.␣…Disproves stump's 2M claim.␣…This will be the case for↵everything.␣…I'm just going down the list that google found given this↵search: "wh april press briefings trump save millions of lives"↵
+ 84|wh april press briefings trump save millions of lives
+ 85|Read *ALL* of it.␣…Disproves stump's 2M claim↵
+ 86|https://www.cnn.com/2020/05/11/politics/donald-trump-coronavirus-quarantine/index.html
+ 87|“In their estimates,” she said, “they had between 1.5 million and 2.2 million people in the United States succumbing to this virus without mitigation
+ 88|down to 100,000 to 200,000 deaths
+ 89|https://www.washingtonpost.com/politics/2020/07/21/mcenany-makes-new-indefensible-claim-trump-saved-3-4-million-lives/
+ 90|dp-orig-comint-input-sender
+ 91|SyntaxError[0m[0;31m:[0m unexpected EOF while parsing
+
+
+In [2]: def a():
+␣…File "<ipython-input-2-1e91c6a86c0c>", line 1
+␣…def a():
+␣…^
+SyntaxError: unexpected EOF while parsing
+
+
+In [3]: def a(aa):
+␣…File "<ipython-input-3-6727f5e7ca83>", line 1
+␣…def a(aa):
+␣…^
+SyntaxError: unexpected EOF while parsing
+
+
+In [4]: def a(): \
+␣…File "<ipython-input-4-d6a7ea8a5495>", line 1
+␣…def a():
+␣…^
+SyntaxError: unexpected EOF while parsing
+
+
+In [5]: print("Password:")
+Password:
+
+In [6]: -------------…
+Bad value:      (dp-toggle-read-only 0 nil)
+
+Bad value:      (dp-erase-buffer)
+
+Bad value:#!/usr/bin/env bash
+# should be sourced, but the shebang tells us and emacs what's up
+#
+#set -x
+#
+# pull in our generic functions
+#
+
+if [ "$USER" = "davep" ]
+then
+    # This is so I get my env in a sudo bash.
+    DP_RC_DIR=~davep/.rc
+else
+    DP_RC_DIR=$HOME/.rc
+fi
+
+dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
+
+alias ls_no_color="\ls -CF --color=never"
+alias ls_with_color='\ls -CF --color=tty'
+alias lca='\ls -CF --color=always'
+alias lnc='ls_no_color'
+alias lc='ls_with_color'        # @todo XXX deprecate this
+alias lwc='ls_with_color'
+#alias lf='ls_no_color'
+#alias lm='ls_no_color'
+alias ll='ls -l'
+alias l1='ls -1'
+alias l1t='ls -1t'
+alias la='ls -a'
+alias lla='ls -la'
+
+
+if [ -n "$dp_no_color" ]
+then
+    alias ls='ls_no_color'
+else
+    alias ls='ls_with_color'
+fi
+
+alias hdps='echo $PS1 | hd'
+alias lssmod='lsmod | less'
+alias hless='history | less'
+alias cls=clear
+alias bq='beagle-query'
+alias cx='chmod +x'
+alias editprof='vi ~/.bash_profile'
+alias eprof='vi ~/.bash_profile'
+alias sprof='. ~/.bash_profile' # source profile
+alias pro='. ~/.bash_profile' # source profile
+#alias gb='g back'
+alias gb='pushd'		# swaps top two elements, like g b
+alias pd='popd'
+alias h=page_of_history
+alias archie='archie -h $ARCHIE_HOST'
+alias vipath='typeset x=/tmp/vipath.$SECONDS; echo $PATH > $x && vi $x && PATH=`cat $x` && rm -f $x'
+alias vicd='typeset x=/tmp/vicd.$SECONDS; echo $PWD > $x && vi $x && cd `cat $x` && rm -f $x'
+alias alias_p="alias >/dev/null 2>&1"
+alias_iff()
+{
+    local name="$1"
+    shift
+    alias_p "$name" || { eval alias "$name"="$@"; }
+}
+for i in bind env alias func rc bashrc
+do
+  # What in NGC714's name was I thinking of?
+  #alias_iff "${i}rc" '"source_list $RC_DIR/$i \"\" \$locale_rcs"; true'
+  eval alias ${i}rc='"source_list $RC_DIR/$i \"\" \$locale_rcs .work"; true'
+done
+case $shell_name in
+    bash)
+	alias r='fc -e -'
+	alias print=echo
+	;;
+esac
+
+[ -f $RC_DIR/alias.${HOSTNAME} ] && . $RC_DIR/alias.${HOSTNAME}
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+alias rlogin='rlogin -8'
+alias setdisp='DISPLAY=`remote-disp`; export DISPLAY'
+##alias dirc='__olddir=`pwd`; while popd; do :;done >/dev/null 2>&1 ; cd $__olddir'
+alias dirc='dirs -c'
+alias dirsv='dirs -p -l -v'
+alias dirsl='dirs -p -l -v'
+alias dirsplv='dirs -p -l -v'
+
+#alias nh='export dp_NH=y; HISTFILE=; dp_NH_PS1_prefix=$PS1_prefix; PS1_prefix="(nh)$PS1_prefix"; PS1_title_prefix="-(NH)-"'
+alias hh='export dp_HH=y; HISTFILE=${PWD}/.histfile.here; dp_HH_PS1_prefix=$PS1_prefix; PS1_prefix="(hh)$PS1_prefix"; PS1_title_prefix="-(HH)-"'
+alias uh='unset dp_NH; HISTFILE=$DEF_HISTFILE; PS1_prefix=$dp_NH_PS1_prefix; PS1_title_prefix=""; PS1_prefix=""'
+alias scat='\show -showproc cat'
+
+alias ls1=lsl
+# -i is no longer an option.
+#alias uudecode='uudecode -i'
+
+#echo "TERM>$TERM<"
+#set -x
+
+grep_opts=
+: ${dp_grep_options:="--directories=skip"}
+
+if inside_emacs_p
+then
+    # --with-filename puts:
+    # 1) filename: in front of the match if it's in a file.
+    # 2) (standard input) if it's, well, you guess.
+    # They'll both take the same amount of parsing and the compile code to
+    # find/goto the location works. `-' allows "" to not be replaced.  Only
+    # unset vars are.
+    #!<@todo make standard util to parse a ^.*?:\d+:.*$ out of grep matches.
+    # ??? (\d+:)? and/or (^.*?:)?
+    : ${dp_emacs_grep_options:="-n --color=never ${dp_grep_options}"}
+    export dp_emacs_grep_options
+    #echo "dp_emacs_grep_options>$dp_emacs_grep_options<"
+    dp_emacs_dash_n_greps()
+    {
+#        source ${DP_RC_DIR}/grep-functions
+	###echo 1>&2 "in dp_emacs_dash_n_greps()"; echo_id dp_emacs_grep_options
+	local grep_options="${dp_emacs_grep_options}"
+        alias zgrep="zgrep ${grep_options}"
+        alias bzgrep="bzgrep ${grep_options}"
+	alias lzgrep="lzgrep ${grep_options}"
+	alias lzegrep="lzegrep ${grep_options}"
+	alias lzfgrep="lzfgrep ${grep_options}"
+	alias xzgrep="xzgrep ${grep_options}"
+	alias xzegrep="xzegrep ${grep_options}"
+	alias xzfgrep="xzfgrep ${grep_options}"
+	alias pcregrep="pcregrep ${grep_options}"
+	alias grep="grep $grep_options"
+	alias egrep="grep --directories=skip -E $grep_options"
+	alias fgrep="grep --directories=skip -F $grep_options"
+    }
+    export -f dp_emacs_dash_n_greps
+
+    # How to make this dependent on my dp-shells lisp flags so the always match up?
+    unalias ls
+    alias ls='ls_no_color'
+
+    #
+    # give certain programs more emacs friendly/useful options
+    #
+
+    #
+    # since I turn on compilation mode, having the greps
+    # use line numbers is very useful
+    # Line numbers are enables in emacs_shell_grepper.
+    # Currently, baroque also implies a little broke.
+    # e.g. grep ls get the expansion of ls rather than just 'ls'.
+    dp_emacs_baroque_greps()
+    {
+        # We also use --file-name, but this causes problems when stdin is
+        # used since we see a (stdin) as file name.  Change of heart: given
+        # we have the name for other files, this is not a problem.  They'll
+        # both take the same amount of parsing and the compile code to
+        # find/goto the location works.
+        alias grep="emacs_shell_grepper grep $grep_opts"
+        alias egrep="emacs_shell_grepper egrep $grep_opts"
+        alias fgrep="emacs_shell_grepper fgrep $grep_opts"
+    }
+    export -f dp_emacs_baroque_greps
+
+    dp_emacs_dash_n_greps
+
+    #alias less='cat'
+    alias less="$LESSOPEN_PROG"
+    alias more='cat'
+    alias show='scat'           # nmh command
+    alias man='emacs_man'
+    #
+    # turn off embedded colorization (-n) and other fiddle faddle.
+    alias esearch='esearch -n'
+    alias emerge='emerge --nospinner'
+    alias pkg-grep='pkg-grep -n'
+    alias eix='eix -n'
+    alias equery='equery -C'
+    alias lssz='ls -l --sort=size'
+    # XEmacs seems OK with these in color. Why did I disable it? Perhaps
+    # something intermittent or in certain cases? Or perhaps I fixed the
+    # colorization issues?
+#    alias lsl='kwa_LSL_COLOR="--color=never" lsl'
+#    alias ls1='kwa_LSL_COLOR="--color=never" lsl'
+#    alias lth='kwa_LSL_COLOR="--color=never" lth'
+    
+    alias ltl='ls -lt'          # xemacs makes a decent less.
+    alias lrl='ls -ltr'         # xemacs makes a decent less.
+    alias lsl='ls -1t'          # xemacs makes a decent less.
+    alias lslr='ls -1tr'        # xemacs makes a decent less.
+# ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
+
+else
+    #echo "dp_grep_options>$dp_grep_options<"
+    alias grep="grep $dp_grep_options"
+    alias egrep="grep -E $dp_grep_options"
+    alias fgrep="grep -F $dp_grep_options"
+fi
+
+alias npg=port-grep
+alias nmg=mgrep
+###alias isascreen='isascreen "$IMASCREENINSTANCE" "$ignoreeof"'
+alias imascreen=isascreen
+alias evalgo2env="go2rc"
+alias evalgo2="go2rc"
+alias hl='history | $PAGER'
+alias make_go='(cd ~; make go_aliases)'
+alias dfh='df -h'
+alias dfhd='dfh .'
+alias dfh.=dfhd
+alias dfhh=dfhd
+alias xx-ncmpc='xx ncmpc'
+
+alias fh='feh -sZF --next-button 2 --zoom-button 1'
+#alias pix=eix
+alias smv='sed-rename'
+alias re-mv='sed-rename'
+alias rpd='realpath .'
+alias rp='realpath'
+###alias mplayer='mplayer -vo x11 -framedrop'
+#alias pquery=equery
+#for i in 1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19
+#do
+#  eval alias k$i="'dp_kill_job_id_n $i'"
+#  eval alias k9$i="'dp_kill_job_id_n $i -9'"
+#??? why did I do this?  eval alias k9$i=\'kill -9 %$i ; wait %$i \'
+#done
+
+alias sed-path=sed_path
+alias bashhelp=help
+alias mkpath='mkdir -p'
+alias spv='sp -v'
+# XEmacs command handler.  Originally ef meant `emacs file'.
+alias xf=ef
+
+alias lvlmessages=lmsgs
+alias lvlm=lvlmessages
+alias tail-msgs=tail_var_log_messages
+alias tvlm=tail_var_log_messages
+alias grep-msgs=grep_var_log_messages
+alias gvlm=grep_var_log_messages
+alias hgrep='hist_grep'
+alias kkdm='kill-kdm'
+alias lesspb='less $HOME/etc/pydb/phonebook.py'
+alias subash='sudo -E bash'
+alias tail-fall='tail -n+1 -f'
+alias ascii='man ascii'
+alias md-p='mkdir -p'
+
+# Dirty rotten two-faced gits...
+alias gitbr='git branch'
+alias gcb='git-current-branch'
+alias gitco='git checkout'
+alias gitci='git commit'
+alias gitcia='git cia'
+alias gitstat='git status'
+alias gits='git status -uno'
+alias gitsu='git status'
+alias gitss='git status -s'
+alias gitsno='git status -uno'
+alias gitsn='git status -unormal'
+alias gitsy='git status -unormal'
+alias gitadd='git add'
+alias git+='git add'            # git+, git add.
+# NTMs: there is a real git revert command that is very different.
+alias gitrevert='git checkout --'  # Alternates use exact command.
+alias gitrescue='git checkout --'
+alias gitsub='git checkout --'  # Add. Subtract, get it? OppOsite of add.
+alias git-='git checkout --'
+alias gitdiff='git diff'        # Oooo 1 char... but gives us completion.
+alias gittag='git tag'
+alias gitconf='git config'
+alias gitls='git ls-files'      # Most common/useful ls variant?
+# Log will be more common than ls. Will completion be a PITA?
+alias gitlog='git log'
+alias gitl=gitlog               # Abbrevs use long form.
+alias gitremote='git remote'
+alias gitpush='git push'
+alias gitpull='git pull'
+alias githelp='gith'            # Remove ^H bolding/underlining
+alias gdn='git diff --name-only' # Just the file names only.
+
+# Quicksilver versioning service.
+alias hgs='hg status'
+alias hgh='hg help'
+alias hgcia='hg commit --addremove'
+alias hgci='hg commit'
+alias hgbr='hg branch'
+alias hgl='hg log'
+
+alias goabbrev=g
+alias cdrp='cd $(rpd)'
+alias gorp='cd $(rpd)'
+alias home_addr='eval echo "\$${DP_HOME_MACHINE}_ADDR"'
+alias home_user='eval echo "\$${DP_HOME_MACHINE}_USER"'
+alias dotfgrep='GLOBIGNORE=".:.."  fgrep'
+alias dotegrep='GLOBIGNORE=".:.."  egrep'
+alias dotjgrep='GLOBIGNORE=".:.."  grep' # just grep. Almost never used... egrep is preferred.
+alias dotgrep=dotfgrep        # fgrep is far and away my most common grepper.
+
+alias .fgrep=dotfgrep
+alias .egrep=dotegrep
+alias .jgrep=dotjgrep
+alias .grep=dotgrep
+alias fgrep.=dotfgrep
+alias egrep.=dotegrep
+alias jgrep.=dotjgrep
+alias grep.=dotgrep
+
+alias mex=me-expand-dest
+
+alias dp4-meld='dp4-diff --meld'
+# p4 diff with diff(1); just diff(1)
+alias p4dd='p4diffdiff'
+alias sandbox_root_dir="/${HOME}/lib/pylib/tree_root_relativity.py --find-root"
+alias sbroot=sandbox_root_dir
+alias treeroot=sandbox_root_dir
+alias sb-root=sandbox_root_dir
+alias tree-root=sandbox_root_dir
+
+alias myvncs='ls -l ~/.vnc/*.pid'
+
+alias gpg='dp-gpg-fe'
+
+## grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
+## This sucks so much because I used a simple grep to eliminate the grep
+## being used by dpgrep from the output.  Now it'll be more complex and
+## I'll stay up nights worring when it will change again and screw me over. Again.
+## Sigh.
+
+alias sagi='sudo apt-get install'
+
+alias nocolor='ul -t dumb'
+
+alias hinfo='host-info.py'
+alias dpmailer='send-mail-command-line.sh'
+alias dpclm=dpmailer
+
+# @todo XXX predicate this on gpg doing ssh.
+alias sshauthsock='gpgconf --list-dirs agent-ssh-socket'
+alias expauthsock='export SSH_AUTH_SOCK="$(sshauthsock)"'
+
+alias jcons='jupyter-console'
+true
+
+Bad value:# Non-emacs shell buffer prompt.
+PS1_template="%B%n@%m:%~%b
+(zsh): %!%(0?||<%S%?%s)> "
+
+PS1="%B%n@%m:%~%b
+(zsh): %!%(0?||<%S%?%s)> "
+
+Bad value:PS1="%B%n@%m:%~%b
+(zsh): %!%(0?||?%S%?%s)> "
+
+Bad value:# We don't want a leading or trailing : to be added.
+# But we do want at least what I consider to be a vital path.
+if [ -z "$PATH" ]
+then
+    PATH="$most_basic_path"
+else
+    PATH="$most_basic_path:$PATH"
+fi
+
+Bad value:: ${DP_ENV_ORIGINAL_PATH:=$PATH}
+export DP_ENV_ORIGINAL_PATH
+PATH="${DP_ENV_ORIGINAL_PATH}"
+
+Bad value:SH_WORD_SPLIT [2 times]
+Bad value:: ${DP_ENV_ORIGINAL_PATH:=$PATH}
+export DP_ENV_ORIGINAL_PATH
+PATH="${DP_ENV_ORIGINAL_PATH}"
+
+Bad value:"%B%n@%m:%~%b
+Bad value:#  1
+
+Bad value:#  1
+Bad value:PS1="%B%n@%m:%~%b
+(zsh): %!%(0?||/%?)> "
+
+Bad value:#a keeper PS1="%B%n@%m:%~%b
+#a keeper (zsh)%!/%?> "
+
+Bad value:PS1="%B%n@%m:%~%b
+(zsh)%!/%?> "
+
+Bad value:;; NB: q.v. rev f1ca57a1648b4a7542450f590e57ae87ecc914e0 if you're
+;; interested.  Is this a better idea than leaving (especially large) chunks
+;; of comment out code that changed for a reason that may be ephemeral.
+;; Throwing it away without leaving a reference to it seems foolish.  This
+;; depends heavily on the reason for the change, especially if it is not
+;; impossible that undoing the change will be needed.  With no imformation
+;; that a previous, *working*, piece of code exists and has been forgotten or
+;; in the case of a new person on the task, that is ever existed, it will
+;; need to be worked on again.  old Emacs incompatible for of tracking the
+;; cwd to stuff into `default-directory' It used the same idea, though.
+ [2 times]
+Bad value:f1ca57a1648b4a7542450f590e57ae87ecc914e0
+Bad value:davep@vilya:~
+2893/0001> rcgrep dp_setup_prompt
+
+Bad value:davep@vilya:~
+2893/0001> rcgrep dp_setup_prompt
+
+Bad value:2895/0001> echo ">$PS1_path_suffix<"
+><
+davep@vilya:~
+2896/0001> echo ">$PS1_prefix<"
+><
+davep@vilya:~
+2897/0001> echo ">$emph<"
+><
+davep@vilya:~
+2898/0001> echo ">$PS1_1<"
+><
+davep@vilya:~
+2899/0001> echo ">$PS1_path<"
+>:\w<
+davep@vilya:~
+2900/0001> echo ">$PS1_path_suffix<"
+><
+davep@vilya:~
+2901/0001> echo ">$PS1_bang_pre<"
+><
+davep@vilya:~
+2902/0001> echo ">$PS1_bang_suff<"
+>/0001<
+davep@vilya:~
+2903/0001> echo ">$PS1_terminator<"
+>><
+davep@vilya:~
+2904/0001> echo ">$PS1_terminator<"
+>><
+
+Bad value:echo "$PS1_path_suffix"
+Bad value:davep@vilya:~
+2884/0001> echo "$PS1_prefix"
+
+davep@vilya:~
+2885/0001> echo "emph"
+emph
+davep@vilya:~
+2886/0001> echo "$emph"
+
+davep@vilya:~
+2887/0001> echo "$PS1_1"
+
+davep@vilya:~
+2888/0001> echo "$PS1_path"
+:\w
+davep@vilya:~
+2889/0001> echo "$PS1_path_suffix"
+
+davep@vilya:~
+2890/0001> echo "$PS1_bang_pre"
+
+davep@vilya:~
+2891/0001> echo "$PS1_bang_suff"
+/0001
+davep@vilya:~
+2892/0001> echo "$PS1_terminator"
+>
+davep@vilya:~
+2893/0001> rcgrep dp_setup_prompt
+
+Bad value:davep@vilya:~/local/build/gitted/zsh (master)
+2875/0001> 
+Bad value:# The following lines were added by compinstall
+zstyle :compinstall filename '/home/davep/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+Bad value:# The following lines were added by compinstall
+zstyle :compinstall filename '/home/davep/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+
+Bad value:zshbuiltins.1.g
+Bad value:IGNORE_EOF
+Bad value:mw
+Error in post-command-hook (isearch-post-command-hook): (wrong-number-of-arguments message 0)
+Mark saved where search started
+
+
+(setq dp-str (car kill-ring))
+#("Mark saved where search started" 0 31 (fontified t face font-lock-string-face))
+#"
+
+(substring-no-properties dp-str 0 (length dp-str))
+"Mark saved where search started"
+
+
+"Mark saved where search starte"
+
+""
+
+"Mark saved where search starte"
+
+
+========================
+2020-08-17T19:00:19
+--
+(defun dpj-write-topic-file ()
+  "Save the topic-list into the topic file."
+  (save-excursion
+    ;;(dmessage "lwl>%s<" dpj-last-written-topic-list)
+    ;;(dmessage " tl>%s<" dpj-topic-list)
+    (dpj-visit-topic-file)
+    (setq dpj-topic-list (delq nil
+			       (mapcar
+				(function
+				 (lambda (el)
+				   (let ((s (substring-no-properties (car el))))
+				     ;;(dmessage "el>%s<" el)
+				     (if (string-match dpj-private-topic-re s)
+					 nil
+				       el))))
+				dpj-topic-list)))
+;;    (setq dpj-topic-list (delq nil dpj-topic-list))
+    (if dp-journal-sort-topics-p
+	(setq dpj-topic-list (sort dpj-topic-list 'dpj-topic<)))
+
+    (when (or (not (equal dpj-last-written-topic-list dpj-topic-list))
+	      dpj-abbrev-list-modified-p)
+      (dp-erase-buffer)
+      (insert ";; -*-emacs-lisp-*-\n")
+      (insert dpj-topic-file-id-magic "\n")
+      (let ((standard-output (current-buffer)))
+	(pp `(setq dpj-topic-list (quote ,dpj-topic-list))))
+      (insert "\n; topic abbrevs\n")
+      (insert-abbrev-table-description 'dpj-topic-abbrev-table)
+      (set-buffer-modified-p t)
+      (write-region (point-min) (point) dpj-topic-file nil 1)
+      (set-buffer-auto-saved)
+      (set-buffer-modified-p nil)
+      (if (buffer-file-name)
+	  (set-visited-file-modtime))
+
+      ;; this should be OK due to the way we add elements to the topic list.
+      (setq dpj-last-written-topic-list dpj-topic-list)
+      (setq dpj-abbrev-list-modified-p nil)
+      (setq dpj-topic-list-read-time (dpj-topic-file-mod-time)))))
+
+
+
+(defun dpj-write-topic-file ()
+  "Save the topic-list into the topic file."
+  (save-excursion
+    ;;(dmessage "lwl>%s<" dpj-last-written-topic-list)
+    ;;(dmessage " tl>%s<" dpj-topic-list)
+    (dpj-visit-topic-file)
+    (setq dpj-topic-list (delq nil
+			       (mapcar
+				(function
+				 (lambda (el)
+				   (setq el (substring (car el)
+					     0
+					     (length (car el))
+					     ))
+				   ;;(dmessage "el>%s<" el)
+				   (if (string-match dpj-private-topic-re el)
+				       nil
+				     el)))
+				dpj-topic-list)))))
+========================
+2020-08-17T20:41:52
+--
+(cl-pe dpj-topic-list)
+
+((#("dpj.test-of-quotes-\"\"\")(i-don't-care-do-y" 0 41 (fontified t face dp-journal-topic-face)) last-update:
+  "2020-08-17T19:04:17")
+(#("dpj.test-of-quotes-\"\"\")(" 0 24 (fontified t face dp-journal-topic-face)))
+(#("dpj.test-of-quotes-\"" 0 20 (fontified t face dp-journal-topic-face)))
+(#("dpj.test-of-quotes-\"\"" 0 21 (fontified t face dp-journal-topic-face)))
+(#("amd.work.umrsh" 0 14 (fontified t face dp-journal-topic-face)))
+(#("politics.2020.humor" 0 19 (fontified t face dp-journal-topic-face)))
+(#("emacs.elisp" 0 11 (fontified t face dp-journal-topic-face)))
+(#("zsh" 0 3 (fontified t face dp-journal-topic-face)))
+(#("python.completion" 0 17 (fontified t)))
+(#("emacs.elisp.python-mode" 0 23 (fontified nil)))
+(#("politics.2020.rwnj" 0 18 (fontified nil)))
+(#("python.ipython" 0 14 (fontified nil)))
+(#("elpy" 0 4 (fontified nil)))
+(#("physics.light" 0 13 (fontified nil)))
+#("dpj.test-of-quotes-\"\"\")(" 0 24 (face dp-journal-topic-face fontified t))
+#("dpj.test-of-quotes-\"" 0 20 (face dp-journal-topic-face fontified t))
+#("dpj.test-of-quotes-\"\"" 0 21 (face dp-journal-topic-face fontified t))
+#("amd.work.umrsh" 0 14 (face dp-journal-topic-face fontified t))
+#("politics.2020.humor" 0 19 (face dp-journal-topic-face fontified t))
+#("emacs.elisp" 0 11 (face dp-journal-topic-face fontified t))
+#("zsh" 0 3 (face dp-journal-topic-face fontified t))
+#("python.completion" 0 17 (fontified t))
+#("emacs.elisp.python-mode" 0 23 (fontified nil))
+#("politics.2020.rwnj" 0 18 (fontified nil))
+#("python.ipython" 0 14 (fontified nil))
+#("elpy" 0 4 (fontified nil))
+#("physics.light" 0 13 (fontified nil))
+"emacs.elisp.journal"
+"fsf.emacs.elisp"
+"games"
+"games.equipment.razer.trinity"
+"humor"
+"medical.back"
+"politics.2020"
+"python.elpy"
+"tools"
+"w")nil
+
+
+========================
+Tuesday August 18 2020
+--
+;;;;;;;;;;;;;;;;;
+(setq bozo 'bozo)
+
+(let ((el '(a))) ;; b)))
+(princf "el>%s<" el)
+(princf "(car el)>%s<" (car el))
+(princf "(cdr el)>%s<" (cdr el))
+(princf "(list (car el) (cdr el)>%s<" (list (car el) (cdr el)))
+(princf "(cons (car el) (cdr el)>%s<" (cons (car el) (cdr el)))
+)
+el>(a)<
+(car el)>a<
+(cdr el)>nil<
+(list (car el) (cdr el)>(a nil)<
+(cons (car el) (cdr el)>(a)<
+nil
+
+el>(a b)<
+(car el)>a<
+(cdr el)>(b)<
+(list (car el) (cdr el)>(a (b))<
+(cons (car el) (cdr el)>(a b)<
+nil
+
+
+
+(defun dpj-write-topic-file ()
+  "Save the topic-list into the topic file."
+  (save-excursion
+    ;;(dmessage "lwl>%s<" dpj-last-written-topic-list)
+    ;;(dmessage " tl>%s<" dpj-topic-list)
+    (dpj-visit-topic-file)
+    (setq dpj-topic-list (delq nil
+			       (mapcar
+				(function
+				 (lambda (el)
+				   ;;(dmessage "el>%s<" el)
+				   (if (string-match dpj-private-topic-re
+						     (car el))
+				       nil
+				     el)))
+				dpj-topic-list)))
+;;    (setq dpj-topic-list (delq nil dpj-topic-list))
+    (if dp-journal-sort-topics-p
+	(setq dpj-topic-list (sort dpj-topic-list 'dpj-topic<)))
+
+    (when (or (not (equal dpj-last-written-topic-list dpj-topic-list))
+	      dpj-abbrev-list-modified-p)
+      (dp-erase-buffer)
+      (insert ";; -*-emacs-lisp-*-\n")
+      (insert dpj-topic-file-id-magic "\n")
+      (let ((standard-output (current-buffer)))
+	(pp `(setq dpj-topic-list (quote ,dpj-topic-list))))
+      (insert "\n; topic abbrevs\n")
+      (insert-abbrev-table-description 'dpj-topic-abbrev-table)
+      (set-buffer-modified-p t)
+      (write-region (point-min) (point) dpj-topic-file nil 1)
+      (set-buffer-auto-saved)
+      (set-buffer-modified-p nil)
+      (if (buffer-file-name)
+	  (set-visited-file-modtime))
+
+      ;; this should be OK due to the way we add elements to the topic list.
+      (setq dpj-last-written-topic-list dpj-topic-list)
+      (setq dpj-abbrev-list-modified-p nil)
+      (setq dpj-topic-list-read-time (dpj-topic-file-mod-time)))))
+
+
+;installed (defun dpj-write-topic-file ()
+;installed   "Save the topic-list into the topic file."
+;installed   (save-excursion
+;installed     ;;(dmessage "lwl>%s<" dpj-last-written-topic-list)
+;installed     ;;(dmessage " tl>%s<" dpj-topic-list)
+;installed     (dpj-visit-topic-file)
+;installed     (setq dpj-topic-list (delq nil
+;installed 			       (mapcar
+;installed 				(function
+;installed 				 (lambda (el)
+;installed 				   (let ((s (substring-no-properties(car el))))
+;installed 				     (dmessage "el>%s<" el)
+;installed 				     (dmessage "s>%s<" s)
+;installed 				     (if (not (listp el))
+;installed 					 (progn
+;installed 					   (dmessage "el>%s< not a list, %s" el
+;installed 						     "discarding")
+;installed 					   nil)
+;installed 				       (if (string-match dpj-private-topic-re s)
+;installed 					   nil
+;installed 					 ;; Write the topic string sans props.
+;installed 					 (cons s (cdr el)))))))
+;installed 				dpj-topic-list)))
+;installed ;;    (setq dpj-topic-list (delq nil dpj-topic-list))
+;installed     (if dp-journal-sort-topics-p
+;installed 	(setq dpj-topic-list (sort dpj-topic-list 'dpj-topic<)))
+
+;installed     (when (or (not (equal dpj-last-written-topic-list dpj-topic-list))
+;installed 	      dpj-abbrev-list-modified-p)
+;installed       (dp-erase-buffer)
+;installed       (insert ";; -*-emacs-lisp-*-\n")
+;installed       (insert dpj-topic-file-id-magic "\n")
+;installed       (let ((standard-output (current-buffer)))
+;installed 	(pp `(setq dpj-topic-list (quote ,dpj-topic-list))))
+;installed       (insert "\n; topic abbrevs\n")
+;installed       (insert-abbrev-table-description 'dpj-topic-abbrev-table)
+;installed       (set-buffer-modified-p t)
+;installed       (write-region (point-min) (point) dpj-topic-file nil 1)
+;installed       (set-buffer-auto-saved)
+;installed       (set-buffer-modified-p nil)
+;installed       (if (buffer-file-name)
+;installed 	  (set-visited-file-modtime))
+
+;installed       ;; this should be OK due to the way we add elements to the topic list.
+;installed       (setq dpj-last-written-topic-list dpj-topic-list)
+;installed       (setq dpj-abbrev-list-modified-p nil)
+;installed       (setq dpj-topic-list-read-time (dpj-topic-file-mod-time)))))
+========================
+2020-08-18T10:31:48
+--
+(dp-timestamp-string)
+"2020-08-18T10:33:06"
