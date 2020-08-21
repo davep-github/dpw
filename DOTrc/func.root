@@ -340,7 +340,7 @@ prompt_command()
 {
     # Status is still set from the last command.
     local rc="$?"
-    PS1_path_suffix=$(__git_ps1) # ??? source of much slowness???
+    PS1_path_suffix=$(dp_stolen__git_ps1) # ??? source of much slowness???
     PS1_terminator="$BASE_PS1_terminator"
     # Have 0, the most common rc, be plain and simple.
     if [ "$rc" != 0 ]; then
@@ -376,96 +376,8 @@ export -f pathff
 
 # Copped from GIT shell on Windwoes.
 export dp_sourcing=t
-source $HOME/bin/__git_ps1
-export -f __git_ps1
-#pending above __git_ps1 () 
-#pending above { 
-#pending above     local g="$(__gitdir)";
-#pending above     if [ -n "$g" ]; then
-#pending above         local r;
-#pending above         local b;
-#pending above         if [ -f "$g/rebase-merge/interactive" ]; then
-#pending above             r="|REBASE-i";
-#pending above             b="$(cat "$g/rebase-merge/head-name")";
-#pending above         else
-#pending above             if [ -d "$g/rebase-merge" ]; then
-#pending above                 r="|REBASE-m";
-#pending above                 b="$(cat "$g/rebase-merge/head-name")";
-#pending above             else
-#pending above                 if [ -d "$g/rebase-apply" ]; then
-#pending above                     if [ -f "$g/rebase-apply/rebasing" ]; then
-#pending above                         r="|REBASE";
-#pending above                     else
-#pending above                         if [ -f "$g/rebase-apply/applying" ]; then
-#pending above                             r="|AM";
-#pending above                         else
-#pending above                             r="|AM/REBASE";
-#pending above                         fi;
-#pending above                     fi;
-#pending above                 else
-#pending above                     if [ -f "$g/MERGE_HEAD" ]; then
-#pending above                         r="|MERGING";
-#pending above                     else
-#pending above                         if [ -f "$g/BISECT_LOG" ]; then
-#pending above                             r="|BISECTING";
-#pending above                         fi;
-#pending above                     fi;
-#pending above                 fi;
-#pending above                 b="$(git symbolic-ref HEAD 2>/dev/null)" || { 
-#pending above                     b="$(
-#pending above 				case "${GIT_PS1_DESCRIBE_STYLE-}" in
-#pending above 				(contains)
-#pending above 					git describe --contains HEAD ;;
-#pending above 				(branch)
-#pending above 					git describe --contains --all HEAD ;;
-#pending above 				(describe)
-#pending above 					git describe HEAD ;;
-#pending above 				(* | default)
-#pending above 					git describe --exact-match HEAD ;;
-#pending above 				esac 2>/dev/null)" || b="$(cut -c1-7 "$g/HEAD" 2>/dev/null)..." || b="unknown";
-#pending above                     b="($b)"
-#pending above                 };
-#pending above             fi;
-#pending above         fi;
-#pending above         local w;
-#pending above         local i;
-#pending above         local s;
-#pending above         local u;
-#pending above         local c;
-#pending above         if [ "true" = "$(git rev-parse --is-inside-git-dir 2>/dev/null)" ]; then
-#pending above             if [ "true" = "$(git rev-parse --is-bare-repository 2>/dev/null)" ]; then
-#pending above                 c="BARE:";
-#pending above             else
-#pending above                 b="GIT_DIR!";
-#pending above             fi;
-#pending above         else
-#pending above             if [ "true" = "$(git rev-parse --is-inside-work-tree 2>/dev/null)" ]; then
-#pending above                 if [ -n "${GIT_PS1_SHOWDIRTYSTATE-}" ]; then
-#pending above                     if [ "$(git config --bool bash.showDirtyState)" != "false" ]; then
-#pending above                         git diff --no-ext-diff --quiet --exit-code || w="*";
-#pending above                         if git rev-parse --quiet --verify HEAD >/dev/null; then
-#pending above                             git diff-index --cached --quiet HEAD -- || i="+";
-#pending above                         else
-#pending above                             i="#";
-#pending above                         fi;
-#pending above                     fi;
-#pending above                 fi;
-#pending above                 if [ -n "${GIT_PS1_SHOWSTASHSTATE-}" ]; then
-#pending above                     git rev-parse --verify refs/stash >/dev/null 2>&1 && s="$";
-#pending above                 fi;
-#pending above                 if [ -n "${GIT_PS1_SHOWUNTRACKEDFILES-}" ]; then
-#pending above                     if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-#pending above                         u="%";
-#pending above                     fi;
-#pending above                 fi;
-#pending above             fi;
-#pending above         fi;
-#pending above         local f="$w$i$s$u";
-#pending above         local bb="${b##refs/heads/}"
-#pending above         [ "$bb" = "master" ] && bb="!${bb}!"
-#pending above         printf "${1:- (%s)}" "$c${bb}${f:+ $f}$r";
-#pending above     fi
-#pending above }
+source $HOME/bin/dp_stolen__git_ps1
+export -f dp_stolen__git_ps1
 
 __gitdir () 
 { 

@@ -1,11 +1,11 @@
 #-*-shell-script-*-
 # Source me.
-gtype=$(type -t __git_ps1) || return "B0rk3d"
+gtype=$(type -t dp_stolen__git_ps1) || return "B0rk3d"
 
 [ "${gtype}" = "function" ] && {
      return 0
 }
-__git_ps1 () 
+dp_stolen__git_ps1 () 
 { 
     [ "${1-}" = '-x' ] && {
         shift
