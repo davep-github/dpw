@@ -27,7 +27,7 @@ host=
 : ${EXEC:=exec}
 
 # This was so that FARM boxes would get the correct colors.
-# However, this is fixed in the host info file.
+# However, this is handled in the host info file.
 #bg="${inherited_dpxx_bg-}"
 #fg="${inherited_dpxx_fg-}"
 
@@ -57,7 +57,7 @@ set -u
 #
 # Shorter params are easier for klutzy typists.
 #
-all_options="st:f:g:n:F:B:h:Nx:w:o:LV"
+all_options="st:f:g:n:F:B:h:NX:w:o:LV"
 #set -- ) getopt $all_options "$@" )
 # New style getopt... fixes ugly quoting problems.
 q=$(getopt -o "$all_options" -- "$@")
@@ -79,7 +79,9 @@ do
 	-N) just_show=y;;
         -V) show_too_p=t;;
 	-o) extra_options="$extra_options $2"; shift ;;
-	-x) xterm_bin=$2; shift;;
+	# XXX -x is used by script-x.  Just an FYI.
+	# -x) xterm_bin=$2; shift;;
+	-X) xterm_bin=$2; shift;;
         -w) window=$2; shift;;
         -L) login_shell_p=;;
         --) shift ; break ;;
