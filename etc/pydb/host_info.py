@@ -174,7 +174,7 @@ home_family = e(
         'family_zone': 'home',
         'xterm_bg': HOME_BG_COLOR,
         'xterm_fg': HOME_FG_COLOR,
-        'xterm_bin': "xterm",
+        'xterm_bin': "lxterm",
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         #'xterm_font': "*NONE*",
         'cdrw-dev': '1001,1,0',             # dvd, etc. rw
