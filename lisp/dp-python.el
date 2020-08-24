@@ -151,7 +151,7 @@ Inserts `dp-python-new-file-template-file' by default."
 
       )
   ;; else my olde/XEmacs hacked together Python/IPython dev environment.
-  (require 'dp-olde-python)	       ; should rename to dp-XEmacs-python.el
+  (require 'dp-xemacs-python)
 )
 
 ;; @todo XXX common or olde?
