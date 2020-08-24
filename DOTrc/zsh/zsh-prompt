@@ -1,0 +1,20 @@
+: ${PS1_backup:=PS1}
+: ${PROMPT_backup:=PROMPT}
+unset PROMPT
+PROMPT="%B%n@%m:%~%b"
+PROMPT+='$(git_prompt_info)'
+PROMPT+="
+(zsh) %!%(0?||<%S%?%s)> "
+
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[white]%})%{$fg[red]%}"
+# @todo XXX Change the dirty indicator back to only one unicode character if
+# we can determine unicode support.  lxterm(1) claims to do that and use the
+# proper terminal, but doesn't.
+# If we can tell the difference twixt ASCII vs unicode, then we can choose
+# what to use for dirty, and other special states.
+ZSH_THEME_GIT_PROMPT_DIRTY+="*✗*"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[white]%})"
+
+
