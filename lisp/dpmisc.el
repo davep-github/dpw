@@ -1942,6 +1942,10 @@ on the go back ring."
   (unless no-save-pos-p
     (dp-push-go-back "dp-beginning-of-buffer"))
   (goto-char (point-min)))
+;; @todo XXX Will I like this?  IIR (it's spinal memory) I may use BOB to
+;; break out of a search.  But IRRBetter, I often BOB and search again, in
+;; which case, this will be perfect.
+(put 'dp-beginning-of-buffer isearch-continues t)
 
 (defun dp-blank-line-p ()
   "Pretty much what the name says: return non-nil if the line is blank.
@@ -1964,6 +1968,8 @@ on the go back ring."
   (unless no-save-pos-p
     (dp-push-go-back "dp-end-of-buffer"))
   (goto-char (point-max)))
+(put 'dp-end-of-buffer isearch-continues t)
+
 
 (dp-deflocal dp-il&md-dont-fix-comments-p nil
   "Some icky language [major modes] simply do not understand how to indent a
