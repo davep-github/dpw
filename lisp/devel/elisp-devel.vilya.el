@@ -5286,3 +5286,15 @@ nil
 --
 (dp-timestamp-string)
 "2020-08-18T10:33:06"
+
+========================
+Saturday August 22 2020
+--
+(car (read-from-string INPUT-STRING))
+
+(read-from-string '(eval "# "))
+
+
+(eval "# ")
+"# "
+

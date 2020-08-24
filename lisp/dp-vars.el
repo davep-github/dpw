@@ -637,7 +637,7 @@ colorization."
   :type 'string)
 
 (dp-defcustom-local dp-unicode-ellipsis (decode-char 'ucs #x2026)
-  "Character used to indicate truncated for display pasties"
+  "Character used to indicate elided chars for displayed pasties."
   :group 'dp-vars
   :type 'string)
 
@@ -716,7 +716,7 @@ dc(1) is assumed so anything else used needs must be compatible."
 (dp-defcustom-local dp-unicode-blank-symbol (decode-char 'ucs #x2422)
   "AKA \"substitute blank\", used as a word separator.
 Used in BCDIC, EBCDIC, ASCII-1963 etc. as word separator.
-WOW.  Sure is up-to-date."
+WOW.  Sure is long-lived."
   :group 'dp-vars
   :type 'character)
 

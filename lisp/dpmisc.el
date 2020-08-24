@@ -5090,17 +5090,31 @@ Note the spaces."
 		"")))))
 
 (defun dp-insert-ebang (&optional md-name cbeg cend)
-  "Add the elisp mode comment to a file"
+  "Add the elisp mode comment \(-*-<mode-name>-*-to\) a file."
   (interactive
    (list                         ; "smode name: \nscbeg: \nscend: ")
+    ;; (read-from-minibuffer PROMPT &optional INITIAL-CONTENTS KEYMAP READ
+    ;; HIST DEFAULT-VALUE INHERIT-INPUT-METHOD) The doc for
+    ;; `read-from-minibuffer' is fucked up somehow.  Following the doc, there
+    ;; is no way to get DEFAULT when just <return> is typed.  Setting READ to
+    ;; t and DEFAULT to "$ ", i.e. comment-start generates an error when READ
+    ;; eq t does what it says it will do.  Looking at the code, there is
+    ;; nothing predicated on both.  Using INITIAL-CONTENTS makes it work.
+    ;; This doesn't fit the semantics of the doc for `read-from-minibuffer'
+    ;; in XEmacs either, and I'm too lazy to look at a more primitive version
+    ;; of FSF Emacs.
     (read-from-minibuffer (dp-prompt-string-with-default "mode name" mode-name)
-                          nil nil nil nil nil mode-name)
+                          mode-name	; initial-contents
+			  nil		; keymap
+			  nil		; read
+			  nil		; hist
+			  mode-name)	; default
     (read-from-minibuffer (dp-prompt-string-with-default
                            "comment start" comment-start)
-                          nil nil nil nil nil comment-start)
+                          comment-start nil nil nil comment-start)
     (read-from-minibuffer (dp-prompt-string-with-default
                            "comment end" comment-end)
-                          nil nil nil nil nil comment-end)))
+                          comment-end nil nil nil comment-end)))
 
   (when (and (string-match "^\\(.*\\)\\(-mode\\)$" md-name)
              (y-or-n-p
@@ -7542,9 +7556,13 @@ If region is active, set width to that of the longest line in the region."
 
 (defalias 'sfh 'dp-set-frame-height)
 
-(defun dp-frame-dimensions (&optional copy-as-kill-p frame)
+(cl-defun dp-frame-dimensions (&optional copy-as-kill-p
+					 (frame (selected-frame)))
+  "Get the frame dimensions in form that -geometry would like, <width>X<height>.
+
+COPY-AS-KILL-P - Put the dimension string on the kill ring.
+FRAME - frame to use, `selected-frame' if nil."
   (interactive "P")
-  ;; Print in form that -geometry would like.
   (let ((dimensions (format "%dx%d"
 			    (frame-width frame) (frame-height frame))))
     (when copy-as-kill-p
@@ -15125,7 +15143,7 @@ Of course, I'll forget the name of this function and its aliases, too."
 (dp-defaliases 'ffcs 'cscope-find-this-symbol)
 (defalias 'dpgsmail 'dp-git-send-email-compose-prep)
 (defalias 'gsmail 'dp-git-send-email-compose-prep)
-
+(defalias 'gtm 'git-timemachine)
 ;;;;; <:aliases: add-new-ones-up-there:>
 
 (require 'dp-abbrev)
