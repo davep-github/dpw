@@ -5298,3 +5298,342 @@ Saturday August 22 2020
 (eval "# ")
 "# "
 
+
+========================
+Monday August 24 2020
+--
+(describe-minor-mode-completion-table-for-symbol)
+("dictionary-tooltip-mode" "isearch-mode" "defining-kbd-macro" "compilation-in-progress" "folding-mode" "filladapt-mode" "2C-mode" "git-timemachine-mode" "dired-omit-mode" "minibuffer-electric-default-mode" "dp-blm-minor-mode-5" "dp-blm-minor-mode-4" ...)
+
+
+(cl-pp minor-mode-list)
+
+(dictionary-tooltip-mode isearch-mode
+			 defining-kbd-macro
+			 compilation-in-progress
+			 folding-mode
+			 filladapt-mode
+			 2C-mode
+			 git-timemachine-mode
+			 dired-omit-mode
+			 minibuffer-electric-default-mode
+			 dp-blm-minor-mode-5
+			 dp-blm-minor-mode-4
+			 global-flycheck-mode
+			 flycheck-mode
+			 dimmer-mode
+			 buffer-face-mode
+			 text-scale-mode
+			 ivy-mode
+			 bug-reference-prog-mode
+			 bug-reference-mode
+			 magit-stgit-mode
+			 markdown-live-preview-mode
+			 outline-minor-mode
+			 dired-isearch-filenames-mode
+			 dp-blm-minor-mode-3
+			 dp-blm-minor-mode-2
+			 dirtrack-debug-mode
+			 dirtrack-mode
+			 ibuffer-auto-mode
+			 sh-electric-here-document-mode
+			 cursor-sensor-mode
+			 cursor-intangible-mode
+			 dp-blm-minor-mode-1
+			 git-attr-linguist-vendored-mode
+			 git-attr-linguist-generated-mode
+			 dp-blm-minor-mode-0
+			 electric-pair-mode
+			 yas-global-mode
+			 yas-minor-mode
+			 highlight-indentation-current-column-mode
+			 highlight-indentation-mode
+			 flymake-mode
+			 company-search-mode
+			 global-company-mode
+			 company-mode
+			 elpy-mode
+			 pyvenv-tracking-mode
+			 pyvenv-mode
+			 elpy-django
+			 ido-everywhere
+			 flyspell-mode
+			 xref-etags-mode
+			 savehist-mode
+			 xgtags-mode
+			 magit-popup-help-mode
+			 magit-blame-read-only-mode
+			 magit-blame-mode
+			 magit-blob-mode
+			 global-magit-file-mode
+			 magit-file-mode
+			 magit-wip-initial-backup-mode
+			 magit-wip-before-change-mode
+			 magit-wip-after-apply-mode
+			 magit-wip-after-save-mode
+			 magit-wip-after-save-local-mode
+			 magit-wip-mode
+			 smerge-mode
+			 diff-minor-mode
+			 diff-auto-refine-mode
+			 git-commit-mode
+			 global-git-commit-mode
+			 transient-resume-mode
+			 mml-mode
+			 mail-abbrevs-mode
+			 shell-command-with-editor-mode
+			 with-editor-mode
+			 async-bytecomp-package-mode
+			 shell-dirtrack-mode
+			 server-mode
+			 edebug-x-mode
+			 edebug-mode
+			 which-function-mode
+			 rectangle-mark-mode
+			 compilation-minor-mode
+			 compilation-shell-minor-mode
+			 ispell-minor-mode
+			 dired-hide-details-mode
+			 delete-selection-mode
+			 timeclock-mode-line-display
+			 show-paren-mode
+			 save-place-mode
+			 magit-auto-revert-mode
+			 global-auto-revert-mode
+			 auto-revert-tail-mode
+			 auto-revert-mode
+			 icomplete-mode
+			 global-hl-line-mode
+			 hl-line-mode
+			 global-cwarn-mode
+			 cwarn-mode
+			 display-time-mode
+			 url-handler-mode
+			 cl-old-struct-compat-mode
+			 tooltip-mode
+			 global-eldoc-mode
+			 eldoc-mode
+			 electric-quote-mode
+			 electric-layout-mode
+			 electric-indent-mode
+			 mouse-wheel-mode
+			 tool-bar-mode
+			 paragraph-indent-minor-mode
+			 global-prettify-symbols-mode
+			 prettify-symbols-mode
+			 use-hard-newlines
+			 menu-bar-mode
+			 file-name-shadow-mode
+			 horizontal-scroll-bar-mode
+			 jit-lock-debug-mode
+			 global-font-lock-mode
+			 font-lock-mode
+			 blink-cursor-mode
+			 window-divider-mode
+			 auto-composition-mode
+			 unify-8859-on-decoding-mode
+			 unify-8859-on-encoding-mode
+			 auto-encryption-mode
+			 auto-compression-mode
+			 temp-buffer-resize-mode
+			 visible-mode
+			 buffer-read-only
+			 size-indication-mode
+			 column-number-mode
+			 line-number-mode
+			 auto-fill-function
+			 global-visual-line-mode
+			 visual-line-mode
+			 transient-mark-mode
+			 next-error-follow-minor-mode
+			 completion-in-region-mode
+			 auto-save-visited-mode
+			 auto-save-mode
+			 auto-fill-mode
+			 abbrev-mode
+			 overwrite-mode
+			 view-mode
+			 hs-minor-mode)nil
+
+
+(cl-pp
+ (mapcar 'symbol-name minor-mode-list)
+ )
+
+("dictionary-tooltip-mode" "isearch-mode"
+ "defining-kbd-macro"
+ "compilation-in-progress"
+ "folding-mode"
+ "filladapt-mode"
+ "2C-mode"
+ "git-timemachine-mode"
+ "dired-omit-mode"
+ "minibuffer-electric-default-mode"
+ "dp-blm-minor-mode-5"
+ "dp-blm-minor-mode-4"
+ "global-flycheck-mode"
+ "flycheck-mode"
+ "dimmer-mode"
+ "buffer-face-mode"
+ "text-scale-mode"
+ "ivy-mode"
+ "bug-reference-prog-mode"
+ "bug-reference-mode"
+ "magit-stgit-mode"
+ "markdown-live-preview-mode"
+ "outline-minor-mode"
+ "dired-isearch-filenames-mode"
+ "dp-blm-minor-mode-3"
+ "dp-blm-minor-mode-2"
+ "dirtrack-debug-mode"
+ "dirtrack-mode"
+ "ibuffer-auto-mode"
+ "sh-electric-here-document-mode"
+ "cursor-sensor-mode"
+ "cursor-intangible-mode"
+ "dp-blm-minor-mode-1"
+ "git-attr-linguist-vendored-mode"
+ "git-attr-linguist-generated-mode"
+ "dp-blm-minor-mode-0"
+ "electric-pair-mode"
+ "yas-global-mode"
+ "yas-minor-mode"
+ "highlight-indentation-current-column-mode"
+ "highlight-indentation-mode"
+ "flymake-mode"
+ "company-search-mode"
+ "global-company-mode"
+ "company-mode"
+ "elpy-mode"
+ "pyvenv-tracking-mode"
+ "pyvenv-mode"
+ "elpy-django"
+ "ido-everywhere"
+ "flyspell-mode"
+ "xref-etags-mode"
+ "savehist-mode"
+ "xgtags-mode"
+ "magit-popup-help-mode"
+ "magit-blame-read-only-mode"
+ "magit-blame-mode"
+ "magit-blob-mode"
+ "global-magit-file-mode"
+ "magit-file-mode"
+ "magit-wip-initial-backup-mode"
+ "magit-wip-before-change-mode"
+ "magit-wip-after-apply-mode"
+ "magit-wip-after-save-mode"
+ "magit-wip-after-save-local-mode"
+ "magit-wip-mode"
+ "smerge-mode"
+ "diff-minor-mode"
+ "diff-auto-refine-mode"
+ "git-commit-mode"
+ "global-git-commit-mode"
+ "transient-resume-mode"
+ "mml-mode"
+ "mail-abbrevs-mode"
+ "shell-command-with-editor-mode"
+ "with-editor-mode"
+ "async-bytecomp-package-mode"
+ "shell-dirtrack-mode"
+ "server-mode"
+ "edebug-x-mode"
+ "edebug-mode"
+ "which-function-mode"
+ "rectangle-mark-mode"
+ "compilation-minor-mode"
+ "compilation-shell-minor-mode"
+ "ispell-minor-mode"
+ "dired-hide-details-mode"
+ "delete-selection-mode"
+ "timeclock-mode-line-display"
+ "show-paren-mode"
+ "save-place-mode"
+ "magit-auto-revert-mode"
+ "global-auto-revert-mode"
+ "auto-revert-tail-mode"
+ "auto-revert-mode"
+ "icomplete-mode"
+ "global-hl-line-mode"
+ "hl-line-mode"
+ "global-cwarn-mode"
+ "cwarn-mode"
+ "display-time-mode"
+ "url-handler-mode"
+ "cl-old-struct-compat-mode"
+ "tooltip-mode"
+ "global-eldoc-mode"
+ "eldoc-mode"
+ "electric-quote-mode"
+ "electric-layout-mode"
+ "electric-indent-mode"
+ "mouse-wheel-mode"
+ "tool-bar-mode"
+ "paragraph-indent-minor-mode"
+ "global-prettify-symbols-mode"
+ "prettify-symbols-mode"
+ "use-hard-newlines"
+ "menu-bar-mode"
+ "file-name-shadow-mode"
+ "horizontal-scroll-bar-mode"
+ "jit-lock-debug-mode"
+ "global-font-lock-mode"
+ "font-lock-mode"
+ "blink-cursor-mode"
+ "window-divider-mode"
+ "auto-composition-mode"
+ "unify-8859-on-decoding-mode"
+ "unify-8859-on-encoding-mode"
+ "auto-encryption-mode"
+ "auto-compression-mode"
+ "temp-buffer-resize-mode"
+ "visible-mode"
+ "buffer-read-only"
+ "size-indication-mode"
+ "column-number-mode"
+ "line-number-mode"
+ "auto-fill-function"
+ "global-visual-line-mode"
+ "visual-line-mode"
+ "transient-mark-mode"
+ "next-error-follow-minor-mode"
+ "completion-in-region-mode"
+ "auto-save-visited-mode"
+ "auto-save-mode"
+ "auto-fill-mode"
+ "abbrev-mode"
+ "overwrite-mode"
+ "view-mode"
+ "hs-minor-mode")nil
+
+
+("dictionary-tooltip-mode" "isearch-mode" "defining-kbd-macro" "compilation-in-progress" "folding-mode" "filladapt-mode" "2C-mode" "git-timemachine-mode" "dired-omit-mode" "minibuffer-electric-default-mode" "dp-blm-minor-mode-5" "dp-blm-minor-mode-4" ...)
+
+@@ -1,26 +1,100 @@
+-# The following lines were added by compinstall
+-
+-zstyle ':completion:*' auto-description 'specify: %d'
+-zstyle ':completion:*' completer _complete _ignored
+-zstyle ':completion:*' format 'Completing %d'
+-zstyle ':completion:*' group-name ''
+-zstyle ':completion:*' insert-unambiguous true
+-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+-zstyle ':completion:*' menu select=long-list select=0
+-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %l%s'
+-zstyle ':completion:*' squeeze-slashes true
+-zstyle ':completion:*' verbose true
+-zstyle :compinstall filename '/home/davep/.zshrc'
+-
+-autoload -Uz compinit
+-compinit
+-# End of lines added by compinstall
+-# Lines configured by zsh-newuser-install
+-HISTFILE=~/.histfile.zsh.vilya
+-HISTSIZE=1281
+-SAVEHIST=9846
+-setopt appendhistory extendedglob nomatch notify
+-unsetopt autocd
+-bindkey -e
+-# End of lines configured by zsh-newuser-install
