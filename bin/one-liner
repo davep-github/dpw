@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sed -rn 's/[[:space:]]+/\n/pg'
