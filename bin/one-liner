@@ -1,3 +1,23 @@
 #!/usr/bin/env bash
 
-sed -rn 's/[[:space:]]+/\n/pg'
+one_per_line()
+{
+    local pat="${1-'[[:space:]]+'}"
+    sed -rn "s/${pat}+/\n/pg"
+}
+
+main()
+{
+    local cmd
+    if [[ "$@" != '' ]]
+    then
+	cmd="${1}"
+	shift
+	echo "${cmd}" "$@" \
+	    | one_per_line
+    else
+	one_per_line
+    fi
+}
+
+main "$@"
