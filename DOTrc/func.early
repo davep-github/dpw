@@ -7,7 +7,7 @@ vunsetp()
 {
     [ -z "$*" ]
 }
-export -f vsetp vunsetp
+DP_EXPORT_FUNC vsetp vunsetp
 
 DP_TRUTH_VAL=t                  # Preferred
 true_p()
@@ -18,13 +18,13 @@ true_p()
     esac
     return 1
 }
-export -f true_p
+DP_EXPORT_FUNC true_p
 
 false_p()
 {
     ! true_p "$@"
 }
-export -f false_p
+DP_EXPORT_FUNC false_p
 
 tf_name()
 {
@@ -35,7 +35,7 @@ tf_name()
         echo false
     fi
 }
-export -f tf_name
+DP_EXPORT_FUNC tf_name
 
 tfnot_name()
 {
@@ -46,7 +46,7 @@ tfnot_name()
         echo true
     fi
 }
-export -f tfnot_name
+DP_EXPORT_FUNC tfnot_name
 
 echo_name_and_val()
 {
@@ -114,7 +114,7 @@ echo_name_and_val()
       "${echo_name_and_val_text}${echo_name_and_val_prefix}${echo_name_and_val_anno}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
     done
 }
-export -f echo_name_and_val
+DP_EXPORT_FUNC echo_name_and_val
 alias echo_nv=echo_name_and_val
 alias echo_nnv=echo_name_and_val
 #too short?# alias ennv=echo_name_and_val    # ???
@@ -155,7 +155,7 @@ eko_id2()
     eko_id_err "$@"
 }
 
-export -f echo_id echo_id_err echo_id2 echo_id_ornate
-export -f eko_id eko_id_err eko_id2
+DP_EXPORT_FUNC echo_id echo_id_err echo_id2 echo_id_ornate
+DP_EXPORT_FUNC eko_id eko_id_err eko_id2
 
 true

@@ -105,8 +105,7 @@ env_var_rw_p()
         false
     fi
 }
-
-export -f env_var_rw_p env_var_ro_p
+DP_EXPORT_FUNC env_var_rw_p env_var_ro_p
 
 maybe_set()
 {
@@ -202,7 +201,7 @@ screendir_hostroot()
     local host=${1-$HOSTNAME}
     echo "${SCREENDIR_ROOT}/${host}.d"
 }
-export -f screendir_hostroot
+DP_EXPORT_FUNC screendir_hostroot
 
 export SCREENDIR_HOSTROOT="$(screendir_hostroot)"
 [ -d "$SCREENDIR_HOSTROOT" ] || {
@@ -220,7 +219,7 @@ screendir_data()
 {
     echo "$(screendir_hostroot $@)/data.d"
 }
-export -f screendir_data
+DP_EXPORT_FUNC screendir_data
 alias screen_data_dir=screendir_data
 alias screen_dir_data=screendir_data
 
@@ -234,7 +233,7 @@ screendata_exchange()
 {
     echo "$(screendir_data $@)/screen-exchange"
 }
-export -f screendata_exchange
+DP_EXPORT_FUNC screendata_exchange
 
 export SCREENDATA_EXCHANGE="$(screendata_exchange)"
 
@@ -242,7 +241,7 @@ screendata_hardcopy_dir()
 {
     echo "$(screendir_data $@)/hardcopy.d"
 }
-export -f screendata_hardcopy_dir
+DP_EXPORT_FUNC screendata_hardcopy_dir
 
 export SCREENDATA_HARDCOPY_DIR="$(screendata_hardcopy_dir)"
 

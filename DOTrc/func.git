@@ -81,7 +81,7 @@ git_change_sandbox()
         echo "??? You may want to consider reindexing the code."
     fi
 }
-export -f git_change_sandbox
+DP_EXPORT_FUNC git_change_sandbox
 alias gcd="git_change_sandbox"
 alias gsb="git_change_sandbox"
 

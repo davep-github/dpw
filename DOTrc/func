@@ -73,26 +73,26 @@ yes_p()
     esac
     return $rc
 }
-export -f yes_p
+DP_EXPORT_FUNC yes_p
 
 shell_var_pred_t()
 {
     [ -n "$1" ]
 }
-export -f shell_var_pred_t
+DP_EXPORT_FUNC shell_var_pred_t
 
 shell_var_pred_nil()
 {
     ! shell_var_pred_t "$@"
 }
 
-export -f shell_var_pred_t
+DP_EXPORT_FUNC shell_var_pred_t
 
 nope_p()
 {
     ! yes_p "$1"
 }
-export -f nope_p
+DP_EXPORT_FUNC nope_p
 
 invert_shell_var_pred()
 {
@@ -102,27 +102,27 @@ invert_shell_var_pred()
         false
     fi
 }
-export -f invert_shell_var_pred
+DP_EXPORT_FUNC invert_shell_var_pred
 
 inv_truth_p()
 {
     dp_DEPRECATED "inv_truth_p-->invert_shell_var_pred"
     invert_shell_var_pred "$@"
 }
-export -f inv_truth_p
+DP_EXPORT_FUNC inv_truth_p
 
 not_disabled_p()
 {
     dp_DEPRECATED "not_disabled_p-->shell_var_pred_t"
     shell_var_pred_t "$1"
 }
-export -f not_disabled_p
+DP_EXPORT_FUNC not_disabled_p
 
 feature_requested_p()
 {
     not_disabled_p "$@"
 }
-export -f feature_requested_p
+DP_EXPORT_FUNC feature_requested_p
 
 empty_string_p()
 {
@@ -139,13 +139,13 @@ invert_flag()
 	true
     fi
 }
-export -f invert_flag
+DP_EXPORT_FUNC invert_flag
 
 dp_progname()
 {
     echo "${progname:-${prog_name:-${prog:-${0:-dp_progname: can\'t find program name}}}}"
 }
-export -f dp_progname
+DP_EXPORT_FUNC dp_progname
 
 dpio_echo ()
 {
@@ -173,7 +173,7 @@ dp_echo()
     local pname=${DP_ECHO_PROGNAME:-$(dp_progname)}
     echo "${dp_echo_prefix-}${pname}:" "$@"
 }
-export -f dp_echo
+DP_EXPORT_FUNC dp_echo
 
 dp_echo2 ()
 {
@@ -188,7 +188,7 @@ dp_echo2 ()
         } >> $DP_ERRLOG
     fi
 }
-export -f dp_echo2
+DP_EXPORT_FUNC dp_echo2
 
 alias dpe_echo=dp_echo2
 alias dp_echo_err=dp_echo2
@@ -292,15 +292,15 @@ dpe_warning()
     dpWARN "$@"
 }
 
-export -f expand_source_list source_list dpFATAL dp_die
-export -f dpdbg_echo dpio_echo dpWARN
-export -f dpe_error dpe_warn dpe_warning
+DP_EXPORT_FUNC expand_source_list source_list dpFATAL dp_die
+DP_EXPORT_FUNC dpdbg_echo dpio_echo dpWARN
+DP_EXPORT_FUNC dpe_error dpe_warn dpe_warning
 
 inside_emacs_p()
 {
     [ "$TERM" = "emacs" -o "$TERM" = "eterm" -o -n "${EMACS-}" ]
 }
-export -f inside_emacs_p
+DP_EXPORT_FUNC inside_emacs_p
 
 
 if inside_emacs_p; then
@@ -308,8 +308,8 @@ if inside_emacs_p; then
     {
         /usr/bin/man "$@" | col -b
     }
-    export -f emacs_man
-    
+    DP_EXPORT_FUNC emacs_man
+
     make()
     {
         /usr/bin/make "$@" 2>&1 | ul -t dumb
@@ -337,7 +337,7 @@ mk_go_path()
     # Remove the trailing :
     [ -n "$sep" ] && echo "$gp" | sed -r 's/(.*)(:)$/\1/'
 }
-export -f mk_go_path
+DP_EXPORT_FUNC mk_go_path
 
 g()
 {
@@ -406,11 +406,12 @@ case $TERM in
             /usr/bin/man "$@" | col -b
         }
         ;;
+
     *)
 	;;
 esac
-
-typeset -f -x g
+DP_EXPORT_FUNC g
+DP_BASH_ONLY typeset -f -x g
 
 dp_cd()
 {
@@ -470,7 +471,7 @@ viline_BAD()
 	cat $tmpfile && \
 	rm -f $tmpfile
 }
-export -f viline_BAD
+DP_EXPORT_FUNC viline_BAD
 
 vienv()
 {
@@ -638,25 +639,25 @@ src_controlled_p ()
         fi
     }
 }
-export -f src_controlled_p
+DP_EXPORT_FUNC src_controlled_p
 
 bash_knows_bracket_bracket_p()
 {
     false                       # For now
 }
-export -f bash_knows_bracket_bracket_p
+DP_EXPORT_FUNC bash_knows_bracket_bracket_p
 
 svn_p ()
 {
     src_controlled_p "./.svn" svn "$@"
 }
-export -f svn_p
+DP_EXPORT_FUNC svn_p
 
 cvs_p ()
 {
     src_controlled_p "./CVS" cvs "$@"
 }
-export -f cvs_p
+DP_EXPORT_FUNC cvs_p
 alias cvsp=cvs_p
 
 perforce_p()
@@ -707,13 +708,13 @@ do_src_control ()
     [ -n "$warning" ] && echo 2>&1 "WARNING: $warning"
     $sc "$@"
 }
-export -f do_src_control
+DP_EXPORT_FUNC do_src_control
 
 #just plain stupid cvs()
 #just plain stupid {
 #just plain stupid     do_src_control cvs $(sp cvs | head -n1) "$@"
 #just plain stupid }
-#just plain stupid export -f cvs
+#just plain stupid DP_EXPORT_FUNC cvs
 
 # For some reason, when running scripts via cron, variables exported in
 # .bashrc are not set and so this isn't set which causes an error. Cron is
@@ -744,7 +745,7 @@ svn ()
 
     do_src_control svn $SVN_BIN "$@"
 }
-export -f svn
+DP_EXPORT_FUNC svn
 
 pick_screen ()
 {
@@ -772,7 +773,7 @@ do_go2env()
         eval $(go2env)
     fi
 }
-export -f do_go2env
+DP_EXPORT_FUNC do_go2env
 
 do_sed_path()
 {
@@ -811,13 +812,13 @@ do_sed_path()
     echo "$path_to_sed" | sed --regexp-extended -e "$pat"
     [ -n "$verbose" -o -n "$DEBUG" ] && set +x
 }
-export -f do_sed_path
+DP_EXPORT_FUNC do_sed_path
 
 mkcd()
 {
     mkdir -p "$@" && cd "$1"
 }
-export -f mkcd
+DP_EXPORT_FUNC mkcd
 
 show_current_kde()
 {
@@ -835,7 +836,7 @@ hist_cat()
     echo "$prefix Output of history command..."
     history
 }
-export -f hist_cat
+DP_EXPORT_FUNC hist_cat
 
 hist_snap()
 {
@@ -843,7 +844,7 @@ hist_snap()
     snap_file=HSnap$(basename $HISTFILE)-$(dp-std-timestamp).snap
     hist_cat > $snap_file
 }
-export -f hist_snap
+DP_EXPORT_FUNC hist_snap
 
 : ${DP_FAV_GREPPER:=egrep}
 : ${DP_HIST_GREP_GREPPER:=$DP_FAV_GREPPER}
@@ -913,7 +914,7 @@ hist_emacs()
 
 alias hemacs='hist_emacs'
 
-export -f hist_grep hist_ggrep hist_fgrep hist_egrep
+DP_EXPORT_FUNC hist_grep hist_ggrep hist_fgrep hist_egrep
 
 emacs_shell_grepper()
 {
@@ -938,7 +939,7 @@ tdim()
     # Terminal dimensions as imagined by the environment.
     echo $LINES x $COLUMNS
 }
-export -f tdim
+DP_EXPORT_FUNC tdim
 
 spg()
 {
@@ -962,7 +963,7 @@ ps1()
 {
     echo "$PS1" | hd
 }
-export -f ps1
+DP_EXPORT_FUNC ps1
 
 mutt_with_inbox()
 {
@@ -1031,7 +1032,7 @@ dp_import()
 {
     DP_IMPORTING_P=t source "$@"
 }
-export -f dp_import
+DP_EXPORT_FUNC dp_import
 
 name_is___main__()
 {
@@ -1039,13 +1040,13 @@ name_is___main__()
     # My convention (not a BASH command), `innovated'(as per M$) from Python.
     [ -z "${DP_IMPORTING_P-}" ]
 }
-export -f name_is___main__
+DP_EXPORT_FUNC name_is___main__
 #alias dp_runme="name_is___main__"
 dp_runme()
 {
     name_is___main__ "$@"
 }
-export -f dp_runme
+DP_EXPORT_FUNC dp_runme
 
 #alias running_as_script="name_is___main__"
 #alias dp_importing="! name_is___main__"
@@ -1059,13 +1060,13 @@ running_as_script()
     name_is___main__ "$@"
 }
 # But the dumbass programmer needs to export the dumbass scripts.
-export -f running_as_script
+DP_EXPORT_FUNC running_as_script
 
 dp_ima_script()
 {
     name_is___main__ "$@"
 }
-export -f dp_ima_script
+DP_EXPORT_FUNC dp_ima_script
 
 invert_string_pred()
 {
@@ -1155,7 +1156,7 @@ nh()
     vunsetp $dp_NH_PS1_prefix && dp_NH_PS1_prefix=$PS1_prefix
     add_ps1_prefix nh NH
 }
-export -f nh
+DP_EXPORT_FUNC nh
 
 unset_by_re()
 {
@@ -1166,7 +1167,7 @@ unset_by_re()
       unset $(envgrep "${re}" | sed -rn 's/(.*)(=.*)/\1/p')
     done
 }
-export -f unset_by_re
+DP_EXPORT_FUNC unset_by_re
 
 unset_mesrc()
 {
@@ -1233,7 +1234,7 @@ exchange_ap_tree()
     shift
     "${op}" $(sed_ap_tree "$@")
 }
-export -f exchange_ap_tree
+DP_EXPORT_FUNC exchange_ap_tree
 alias xap='exchange_ap_tree g'
 alias cdap='exchange_ap_tree cd'
 
@@ -1252,7 +1253,7 @@ lessnew()
 {
     less $(newest-file "$@")
 }
-export -f lessnew
+DP_EXPORT_FUNC lessnew
 
 op_dir()
 {
@@ -1274,13 +1275,13 @@ gdir()
     op_dir g "$@"
 }
 
-export -f op_dir cddir gdir
+DP_EXPORT_FUNC op_dir cddir gdir
 
 de_screenify()
 {
     unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
 }
-export -f de_screenify
+DP_EXPORT_FUNC de_screenify
 alias descreenify='de_screenify'
 
 re_screenify()
@@ -1300,7 +1301,7 @@ Invoke this function with a name as an argument."
     }
     dp_setup_prompt
 }
-export -f re_screenify
+DP_EXPORT_FUNC re_screenify
 alias rescreenify='re_screenify'
 
 dp_mk_log_file()
@@ -1324,7 +1325,10 @@ dp_mk_log_file()
 
 nix_ccache()
 {
-    [ "${1-}" = "-x" ] && set -x
+    [ "${1-}" = "-x" ] && {
+	set -x
+	shift
+    }
     local echo_path_p=
     local keep_path_p=
     while (($# > 0))

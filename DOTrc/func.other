@@ -1,3 +1,4 @@
+# -*-Shell-script-*-
 
 qsubrc()
 {
@@ -41,27 +42,27 @@ me_dogo_op()
         ;;
     esac
 }
-export -f me_dogo_op
+DP_EXPORT_FUNC me_dogo_op
 
 mego() 
 {
     me_dogo_op pushd "$@"
 }
-export -f mego
+DP_EXPORT_FUNC mego
 
 mecd() 
 {
     me_dogo_op cd "$@"
 
 }
-export -f mecd
+DP_EXPORT_FUNC mecd
 
 tgen_go_latest_run()
 {
     mecd testgen
     cd $(tgen-latest-run "$@")
 }
-export -f tgen_go_latest_run
+DP_EXPORT_FUNC tgen_go_latest_run
 
 xx()
 {

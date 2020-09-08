@@ -85,13 +85,13 @@ sed_path()
 	return 1
     fi
 }
-export -f sed_path
+DP_EXPORT_FUNC sed_path
 
 sed_cd()
 {
     cd $(sed_path "$@")
 }
-export -f sed_cd
+DP_EXPORT_FUNC sed_cd
 alias cd-sed=sed_cd
 alias xcd=sed_cd
 
@@ -99,7 +99,7 @@ sed_go()
 {
     g $(sed_path "$@")
 }
-export -f sed_go
+DP_EXPORT_FUNC sed_go
 alias xdir=sed_go
 # go grep
 alias gg=sed_go
@@ -120,14 +120,14 @@ exchange_sandboxes()
         gr "$2"
     }
 }
-export -f exchange_sandboxes
+DP_EXPORT_FUNC exchange_sandboxes
 alias xsb=exchange_sandboxes
 
 sedp ()
 {
     pushd $(sed-path "$@")
 }
-export -f sedp
+DP_EXPORT_FUNC sedp
 
 bglq ()
 {
@@ -136,7 +136,7 @@ bglq ()
         | sed -r 's!^([0-9]+:)?file://(/[^#]*)(.*)$!\2!' \
         | tee /tmp/bglq-last.out
 }
-export -f bglq
+DP_EXPORT_FUNC bglq
 
 dp_kill_job_id_n ()
 {
@@ -151,7 +151,7 @@ dp_kill_job_id_n ()
 	kill -9 "$jid" && wait "$jid"
     fi
 }
-export -f dp_kill_job_id_n 
+DP_EXPORT_FUNC dp_kill_job_id_n 
 
 : ${DP_DEF_PIX_ARGS:=-FASs}
 : ${DP_PIX_COLORIZE:=-F}
@@ -192,7 +192,7 @@ pixi ()
 
     eval eix "$opts" "$@" $less_opt
 }
-export -f pixi
+DP_EXPORT_FUNC pixi
 alias ipix=pixi
 
 dashify()
@@ -209,7 +209,7 @@ dashify()
     done
     echo "$ret"
 }
-export -f dashify
+DP_EXPORT_FUNC dashify
 
 alias akrord=acroread
 
@@ -263,8 +263,8 @@ page_of_history()
     fi
     fc -l -$lines
 }
-export -f page_of_history
-typeset -f -x page_of_history
+DP_EXPORT_FUNC page_of_history
+DP_BASH_ONLY typeset -f -x page_of_history
 
 demerge()
 {
@@ -278,7 +278,7 @@ demerge()
 	equery d "$@"  # This may barf if any extra emerge options are used.
     } 1>&2
 }
-export -f demerge
+DP_EXPORT_FUNC demerge
 alias delmerge=demerge
 alias unmerge=demerge
 
@@ -366,18 +366,18 @@ prompt_command()
     return $rc
 }
 export PROMPT_COMMAND=prompt_command
-export -f prompt_command
+DP_EXPORT_FUNC prompt_command
 
 pathff()
 {
     PATH=$(cat "$@")
 }
-export -f pathff
+DP_EXPORT_FUNC pathff
 
 # Copped from GIT shell on Windwoes.
 export dp_sourcing=t
 source $HOME/bin/dp_stolen__git_ps1
-export -f dp_stolen__git_ps1
+DP_EXPORT_FUNC dp_stolen__git_ps1
 
 __gitdir () 
 { 
@@ -430,7 +430,7 @@ cdnew()
     xxx_newest cd "$@"
     return "$?"
 }
-export -f cdnew
+DP_EXPORT_FUNC cdnew
 alias cd_newest=cdnew
 
 go_newest()
@@ -438,7 +438,7 @@ go_newest()
     xxx_newest g "$@"
     return "$?"
 }
-export -f go_newest
+DP_EXPORT_FUNC go_newest
 alias gonew=go_newest
 
 xxx_newto()
@@ -451,20 +451,20 @@ xxx_newto()
     "${op}" "${dest}"
     return 0
 }
-export -f xxx_newto
+DP_EXPORT_FUNC xxx_newto
 
 cdnewto()
 {
     xxx_newto cd "$@"
     return "$?"
 }
-export -f cdnewto
+DP_EXPORT_FUNC cdnewto
 
 gnewto()
 {
     xxx_newto g "$@"
     return "$?"
 }
-export -f gnewto
-    
+DP_EXPORT_FUNC gnewto
+
 true

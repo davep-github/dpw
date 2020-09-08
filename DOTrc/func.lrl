@@ -26,6 +26,6 @@ ont()
     } 1>&2
     export LD_LIBRARY_PATH="$PWD"
     return 0
-}    
-export -f ont
-    
+}
+DP_EXPORT_FUNC ont
+

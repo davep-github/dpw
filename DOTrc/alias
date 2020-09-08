@@ -1,18 +1,14 @@
-#!/usr/bin/env bash
-# should be sourced, but the shebang tells us and emacs what's up
+# -*-Shell-script-*-
+
+# Should be sourced, but the ebang tells us and emacs what's up.
+# A shebang might do some things that might surprise us.
 #
 #set -x
 #
 # pull in our generic functions
 #
 
-if [ "$USER" = "davep" ]
-then
-    # This is so I get my env in a sudo bash.
-    DP_RC_DIR=~davep/.rc
-else
-    DP_RC_DIR=$HOME/.rc
-fi
+DP_ALIAS_RC="running as of $(date)"
 
 dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
 
@@ -133,7 +129,7 @@ then
 	alias egrep="grep --directories=skip -E $grep_options"
 	alias fgrep="grep --directories=skip -F $grep_options"
     }
-    export -f dp_emacs_dash_n_greps
+    DP_EXPORT_FUNC dp_emacs_dash_n_greps
 
     # How to make this dependent on my dp-shells lisp flags so the always match up?
     unalias ls
@@ -160,7 +156,7 @@ then
         alias egrep="emacs_shell_grepper egrep $grep_opts"
         alias fgrep="emacs_shell_grepper fgrep $grep_opts"
     }
-    export -f dp_emacs_baroque_greps
+    DP_EXPORT_FUNC dp_emacs_baroque_greps
 
     dp_emacs_dash_n_greps
 

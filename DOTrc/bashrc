@@ -82,9 +82,10 @@ COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
 most_basic_path="/bin:/usr/bin"
 prompt_command()
 {
+    # Dumby for now.
     :
 }
-export -f prompt_command
+DP_EXPORT_FUNC prompt_command
 
 # This will only be set once
 : ${DP_ENV_ORIGINAL_PATH:=$PATH}
@@ -99,7 +100,7 @@ then
 else
     PATH="$most_basic_path:$PATH"
 fi
-export -f prompt_command
+DP_EXPORT_FUNC prompt_command
 
 DP_BITCH_LOG="$DP_LOG/bitches"
 DP_SUGGESTION_BOX="$DP_LOG/suggestions"
@@ -224,7 +225,7 @@ dp_bitch() { dp_LOGGER "$DP_BITCH_LOG" bitch "$@"; }
 dp_suggest() { dp_LOGGER "$DP_SUGGESTION_BOX" "why not:"; }
 # &>> isn't in all bash versions# dp_BITCH() { echo &>> "$@"; dp_bitch "$@"; }
 dp_BITCH() { dp_bitch "$@"; }
-export -f dp_bitch dp_suggest dp_BITCH
+DP_EXPORT_FUNC dp_bitch dp_suggest dp_BITCH
 # Do this now so we can use my tools.
 export DAVEP_ENVIRONMENT_p=t
 
@@ -271,11 +272,10 @@ dp_add_to_path_iff()
     # add --> not (wasn't) present.
     $HOME/bin/pathadd2.py "$@"
 }
-export -f dp_add_to_path_iff
+DP_EXPORT_FUNC dp_add_to_path_iff
 
-export RC_DIR=$HOME/.rc
-export OSName=$(uname -s)	# our current os
-export Arch=$(uname -m)		# our current architecture
+DP_EXPORT_FUNC OSName=$(uname -s)	# our current os
+DP_EXPORT_FUNC Arch=$(uname -m)		# our current architecture
 case "$Arch" in
     *86*) genericArch_bin="bin.$OSName.x86";;
     *);;
@@ -321,8 +321,8 @@ DAVEP_BIN_VARIANTS="$arch_os_bin.$HOSTNAME,$arch_os_bin,$arch_bin.$HOSTNAME,$arc
 #eval echo $HOME/{$DAVEP_BIN_VARIANTS}
 #exit 99
 DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
-    $HOME/{local,yokel}/{$DAVEP_BIN_VARIANTS})
-    $HOME/.cargo/bin
+    $HOME/{local,yokel}/{$DAVEP_BIN_VARIANTS}) \
+    $HOME/.cargo/bin \
     $HOME/lib/pylib \
     $HOME/bree/bin \
     $HOME/bree/sbin \
@@ -396,7 +396,7 @@ else
              *) echo "-";;
         esac
     }
-    export -f host_info_func
+    DP_EXPORT_FUNC host_info_func
 fi > /dev/null 2>&1
 export HOST_INFO
 
@@ -485,7 +485,7 @@ tty_as_suffix()
     mytty | sed -rn 's!/dev/!!
 s!/!-!pg'
 }
-export -f tty_as_suffix
+DP_EXPORT_FUNC tty_as_suffix
 
 if tty -s
 then
