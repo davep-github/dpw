@@ -93,7 +93,7 @@ filter_dirs()
                 esac
                 echo -n "$dirs$fset$dir"
                 fset=" "
-                
+
            }
         }
     done
