@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+source script-x
+
 one_per_line()
 {
-    local pat="${1-'[[:space:]]+'}"
-    sed -rn "s/${pat}+/\n/pg"
+    local pat="${1-[[:space:]]+}"
+    sed -rn "s/${pat}/\n/pg"
 }
 
 main()
