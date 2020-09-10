@@ -1,18 +1,15 @@
 # -*-Shell-script-*-
-
-# # So I can share functions with bash.
-# DP_EXPORT_FUNC()
-# {
-#     :
-# }
-
-echo "0:fpath>${fpath}<" |& tee -a /tmp/zzz # @todo XXX
-source zshrc.pre-oh-my-zsh
-SH_WORD_SPLIT=1
-
 # If you come from bash you might have to change your $PATH.
 # Shouldn't this be in zshenv?  Yes, yes it should.  Away, away! To zshenv
 # with PATH!  export PATH=$HOME/bin:/usr/local/bin:$PATH
+# Actually into zsh_path
+
+# Do it by hand since we don't call this, zsh does.
+enter_rc_file "zshrc"
+
+dp_source ${DP_RC_DIR}/dp_shells_compat.sh
+dp_source ${DP_ZSH_RC_DIR}/zsh-path
+dp_source ${DP_ZSH_RC_DIR}/zsh-options
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -28,10 +25,11 @@ ZSH_THEME="robbyrussell"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
+CASE_SENSITIVE="true"
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+HYPHEN_INSENSITIVE="true"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
@@ -79,40 +77,9 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# Things to check out:
-# alias-finder.plugin.zsh,
-# /home/davep/.oh-my-zsh/plugins/bgnotify,
-# colorize.plugin.zsh,
-# common-aliases.plugin.zsh,	# Trim to my liking.
-# compleat.plugin.zsh
-# dircycle.plugin.zsh
-# dirhistory.plugin.zsh
-# emacs.plugin.zsh
-# fasd.plugin.zsh
-# history.plugin.zsh
-# ~/.oh-my-zsh/plugins/pass/_pass
-# pep8
-# percol.plugin.zsh
-# theme and sudo both use <esc><esc> as their binding.
-# And currently the fuck doesn't work with the binding and generates a python
-# error(traceback) when `fuck' is used on the command line.  Using <esc><esc> cause a
-# little screen flash which could indicate the backtrace being swallowed.
-##plugins=(percol rand-quote repo ripgrep sudo thefuck web-search)
-plugins=(
-	percol
-	rand-quote
-	repo
-	ripgrep
-	thefuck
-	themes
-	tig
-	tmux
-	tmuxinator
-	ubuntu
-	web-search
-)
+plugins=(git)
 
-source $ZSH/oh-my-zsh.sh
+dp_source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
@@ -140,12 +107,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-source "${DP_ZSH_RC_DIR}/zsh-prompt"
-source "${DP_ZSH_RC_DIR}/zsh-keys"
+dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
 
-export DP_COMPLETIONS_DIR="~/.rc/zsh/completion.davep"
+exit_rc_file "zshrc"
 
-fpath=("${fpath}")
-echo "1:fpath>${fpath}<" |& tee -a /tmp/zzz # @todo XXX
-fpath=(sep0 "${DP_COMPLETIONS_DIR}" sep1 "${fpath}" sep2)
-print "fpath>${fpath}<" |& tee -a /tmp/zzz # @todo XXX

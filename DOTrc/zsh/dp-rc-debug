@@ -1,0 +1,37 @@
+# -*-Shell-script-*-
+
+trace_rc_file()
+{
+    local enter=$1; shift
+    local name=$1; shift
+    if $enter
+    then
+	s="${name}: Enter: $(date -Iseconds)\n"
+	s2=
+    else
+	s="${name}: Exit: $(date -Iseconds)\n"
+	s2=
+    fi
+
+    export DP_SHELL_RCS="${DP_SHELL_RCS}${s}${s2}"
+    #echo "DP_SHELL_RCS>${DP_SHELL_RCS}<"
+}
+
+enter_rc_file()
+{
+    trace_rc_file true "$1"
+}
+
+exit_rc_file()
+{
+    trace_rc_file false "$1"
+}
+
+dp_source()
+{
+    local src_file=$1; shift
+    #echo "dp_source: ${src_file}"
+    enter_rc_file "${src_file}"
+    source "${src_file}"
+    exit_rc_file "${src_file}"
+}

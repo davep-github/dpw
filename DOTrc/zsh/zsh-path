@@ -1,6 +1,7 @@
+# -*-Shell-script-*-
+
 # @todo XXX This is just a grab of a processed path from a live bash shell
 # session.  It needs to be created in the same way, since some is computed,
 # some stuff is dependent to existing packages and needs to be removed from
 # the final path, etc, etc...
 export PATH="/home/davep/.oh-my-zsh:/home/davep/.rc/zsh:/home/davep/bin/override:/home/davep/bin:/home/davep/local/bin:/home/davep/yokel/sbin:/hqome/davep/yokel/bin:/home/davep/.cargo/bin:/home/davep/lib/pylib:/home/davep/bin.primitive:/etc/alternatives:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/usr/bin/X11:/opt/p4v-2018.4.1753667/bin:/opt/p4/bin:/opt/sublime_merge:/opt/GitFiend:/home/davep/bin/last-resort"
-

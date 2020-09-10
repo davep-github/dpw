@@ -1,5 +1,5 @@
-: ${PS1_backup:=PS1}
-: ${PROMPT_backup:=PROMPT}
+: ${PS1_backup=PS1}
+: ${PROMPT_backup=PROMPT}
 unset PROMPT
 PROMPT="%B%n@%m:%~%b"
 PROMPT+='$(git_prompt_info)'
@@ -16,5 +16,3 @@ ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[white]%})%{$fg[red]%}"
 # what to use for dirty, and other special states.
 ZSH_THEME_GIT_PROMPT_DIRTY+="*✗*"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[white]%})"
-
-
