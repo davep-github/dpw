@@ -8,7 +8,7 @@ dp_zsh_p()
     # preserved, like $SHELL = '/bin/bash'. Also, zsh login shell stuff is
     # not set (e.g. like $SHELL != zsh.)
     # Maybe the solution is for me to always run zsh as a login shell.
-    [[ "${ZSH_VERSION}" != '' ]]
+    [[ "${ZSH_VERSION-}" != '' ]]
 }
 
 if dp_zsh_p
