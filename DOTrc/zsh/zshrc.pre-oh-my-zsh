@@ -17,7 +17,6 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
-HISTFILE=~/.histfile.zsh.vilya
 HISTSIZE=1281
 SAVEHIST=9846
 setopt appendhistory extendedglob nomatch notify
