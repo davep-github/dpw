@@ -1,0 +1,4 @@
+# -*-Shell-script-*-
+
+set -o noclobber
+setopt appendhistory extendedglob nomatch notify

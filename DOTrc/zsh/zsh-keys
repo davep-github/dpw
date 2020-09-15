@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+
+# This is beginning as something to give me my preferences in an x-like-term,
+# in this case lxterminal.
+
+bindkey '^p' history-beginning-search-backward
+bindkey '^n' history-beginning-search-forward
+bindkey -M menuselect '^o' accept-and-infer-next-history
+
+# from my old ~/.inputrc used with bash.
+# @todo XXX This may be read by zsh.  Fix that is so.  We don't want to
+# remove .inputrc since it's a readline file, not bash.
+# These are the middle keys from a 102 key kb.
+# They are all predefined.
+#"\e[1~":beginning-of-line
+#"\e[4~":end-of-line
+#"\e[3~":delete-char
+#DEL: backward-delete-char

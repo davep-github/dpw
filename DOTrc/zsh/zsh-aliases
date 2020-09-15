@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+#@todo XXX merge into bashrc init style and stream.
+source "${DP_RC_DIR}"/alias
+
+# zsh specific or overrides.
+alias showkeys='sed -n l'
+alias sks=showkeys

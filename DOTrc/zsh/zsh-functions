@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+
+g()
+{
+    case "$1" in
+	-*)
+	    go-mgr "$@" ;;
+	*)
+	    # If a file name is given, assume we want to go to the containing
+	    # directory.
+            if [ -f "${1}" ]
+            then
+                dir=$(dirname "${1}")
+		# If $1 is a file and its dir part is '.' then we really want
+		# the original name as a abbreviation.
+		[ "${dir}" = "." ] && {
+		    dir="${1}"
+		}
+            else
+                dir="${1}"
+            fi
+	    gOcWd=$PWD; pushd $(dogo "${dir}") && export GoBack=$gOcWd ;;
+    esac
+}
