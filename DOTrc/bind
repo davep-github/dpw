@@ -1,6 +1,6 @@
 bind '^I'=complete
 bind '^?'=delete-char-forward
 
-[ -f $DP_RC_DIR/bind.${HOSTNAME-$} ] && source $DP_RC_DIR/bind.${HOSTNAME}
+[ -f $DP_RC_DIR/bind.${HOSTNAME-$} ] && . $DP_RC_DIR/bind.${HOSTNAME}
 
 true

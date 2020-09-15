@@ -77,9 +77,44 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+# Things to check out:
+# alias-finder.plugin.zsh,
+# /home/davep/.oh-my-zsh/plugins/bgnotify,
+# colorize.plugin.zsh,
+# common-aliases.plugin.zsh,	# Trim to my liking.
+# compleat.plugin.zsh
+# dircycle.plugin.zsh
+# dirhistory.plugin.zsh
+# emacs.plugin.zsh
+# fasd.plugin.zsh
+# history.plugin.zsh
+# ~/.oh-my-zsh/plugins/pass/_pass
+# pep8
+# percol.plugin.zsh
+# theme and sudo both use <esc><esc> as their binding.
+# And currently the fuck doesn't work with the binding and generates a python
+# error(traceback) when `fuck' is used on the command line.  Using <esc><esc> cause a
+# little screen flash which could indicate the backtrace being swallowed.
+##plugins=(percol rand-quote repo ripgrep sudo thefuck web-search)
+plugins=(
+	percol
+#	rand-quote
+#	repo
+#	ripgrep
+#	thefuck
+	themes
+	tig
+#	tmux
+#	tmuxinator
+	ubuntu
+	web-search
+)
 
 dp_source $ZSH/oh-my-zsh.sh
+
+export DP_ZSH_COMPLETIONS_DIR="${DP_ZSH_RC_DIR}/completions/davep"
+
+fpath=(${DP_ZSH_COMPLETIONS_DIR} ${fpath})
 
 # User configuration
 
@@ -107,7 +142,9 @@ dp_source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+dp_source ${DP_RC_DIR}/func
 dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
+dp_source ${DP_ZSH_RC_DIR}/zsh-aliases
 
 exit_rc_file "zshrc"
 

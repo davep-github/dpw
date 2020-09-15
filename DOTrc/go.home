@@ -413,6 +413,7 @@ Ee|omztemplates|omztempl|omztmpl|       /home/davep/.oh-my-zsh/templates/
 Ee|omzthemes|omzthms|       /home/davep/.oh-my-zsh/themes/
 Ee|omztools|omztls|       /home/davep/.oh-my-zsh/tools/
 Ee|wrk|       /home/davep/tmp/bashrc-for-zsh/
+Ee|zshfu|       /home/davep/.rc/zsh-fucked-up-after-working/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***

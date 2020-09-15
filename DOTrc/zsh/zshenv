@@ -9,19 +9,19 @@
 # @todo XXX Do a interactivity check?
 # make a func dp_source that just does a source.
 unset DP_SHELL_RCS
-source dp-rc-debug
+
+# Path to your oh-my-zsh installation.
+export ZSH="/home/davep/.oh-my-zsh"
+# Keep my stuff separate, because me.
+export DP_RC_DIR="${HOME}/.rc"
+export DP_ZSH_RC_DIR="${DP_RC_DIR}/zsh"
+source ${DP_ZSH_RC_DIR}/dp-rc-debug
 
 # Do it by hand since we don't call this, zsh does.
 enter_rc_file "zshenv"
 
-# Path to your oh-my-zsh installation.
-# Keep my stuff separate, because me.
-export DP_RC_DIR="${HOME}/.rc"
-export DP_ZSH_RC_DIR="${DP_RC_DIR}/zsh"
-# Path to your oh-my-zsh installation.
-export ZSH="/home/davep/.oh-my-zsh"
-
 ####????export DISABLE_MAGIC_FUNCTIONS=true
+
 
 dp_source "${DP_ZSH_RC_DIR}/zsh-path"
 ##echo $PATH | sed -rn 's/:/\n/pg'

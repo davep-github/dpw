@@ -208,19 +208,50 @@ aappend()
 
 expand_source_list()
 {
+    #{		 # @todo XXX
+	# Print 'em before any shifts, etc.
+	#echo "expand_source_list(): args in: $(eko $@)" # @todo XXX
+    #} 1>&2			# @todo XXX 
+
+    local at_copy="$@"
     local base=$1
     local src
     shift
-    rc=()
+    local rc=()
+
     for suff in "$@"
     do
+	# Missing suffix in db,  ignore.
+	# '-' --> no suffix.  ".-" happens because I'm not very good at
+	# programming, I just know how to edit really quickly, even though I
+	# type slowly.  Maybe that's why I did better work when I used (plain
+	# old) vi.
+	[[ "${suff}" =~ \.?- ]] && continue
+	#eko "rc: top of loop" "${rc[@]}" 1>&2 # @todo XXX 
 	src=${base}${suff}
+	#echo "expand_source_list(): src>$src<" 1>&2 # @todo XXX 
 	[ -f $src ] && {
 	    #rc+=("$src") # The bash which supports this isn't as widespread as one would wish.
+	    #echo "adding src >${src}<" # @todo XXX 
 	    rc[${#rc[@]}]="$src"
+	    #eko "rc: after add" "${rc[@]}" 1>&2 # @todo XXX
 	}
+	#eko "rc: bot of loop" "${rc[@]}" 1>&2 # @todo XXX
     done
-    ((${#rc[@]} > 0)) && echo "${rc[@]}"
+
+    #eko "rc: past loop:" "${rc[@]}" 1>&2 # @todo XXX
+    if ((${#rc[@]} > 0))
+    then
+	#eko "expand_source_list():returning: " "${rc[@]}" 1>&2 # @todo XXX 
+	return 0
+    else
+	{
+	    echo "expand_sour@todo XXX ce_list(): no files expanded:"
+	    echo "func args: >$(eko ${at_copy})<" # @todo XXX
+	} 1>&2
+	echo ""
+	return 1
+    fi
 }
 
 source_list()
@@ -430,7 +461,7 @@ tildefy()
     esac
 }
 
-#. $RC_DIR/dirstack
+#. $DP_RC_DIR/dirstack
 
 do_xtitle()
 {
@@ -606,17 +637,23 @@ xpick_cd ()
     fi
 }
 
-repeat ()
-{
-    local n
-    n=$1; shift;
-    while [ $(($n > 0)) != 0 ]
-    do
-	eval "$@"
-	n=$((--n))
-    done
-}
-export -f repeat
+# @todo XXX repeat is builtin to zsh, and it complains if is redefined, even
+# it it's not, like inside the `then' clause which is never executed, hence
+# the X.
+if ! dp_zsh_p
+then
+    repeatX()
+    {
+	local n
+	n=$1; shift;
+	while [ $(($n > 0)) != 0 ]
+	do
+	    eval "$@"
+	    n=$((--n))
+        done
+    }
+    DP_EXPORT_FUNC repeatX
+fi
 
 src_controlled_p ()
 {

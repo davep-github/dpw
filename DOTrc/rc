@@ -7,10 +7,10 @@ then
 	TTY=${TTY:-$tty}
 fi
 
-. $RC_DIR/alias
-. $RC_DIR/func
+. $DP_RC_DIR/alias
+. $DP_RC_DIR/func
 
-[ -f $RC_DIR/rc.${HOST} ] && . $RC_DIR/rc.${HOST}
+[ -f $DP_RC_DIR/rc.${HOST} ] && . $DP_RC_DIR/rc.${HOST}
 
 cd .				# ensure activation of prompt/titler
 

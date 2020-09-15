@@ -16,6 +16,24 @@
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
 
+if type emulate >/dev/null 2>/dev/null; then emulate bash; fi
+
+# This was supposed to make sure I had my environment if I had su'd
+# somewhere, and $USER didn't change.
+# I think it works, since I usually add things like this to fix a current
+# issue that's bugging the hell out of me, so it probably work at least once.
+if [ "$USER" = "davep" ]
+then
+    DP_RC_DIR=~davep/.rc
+else
+    DP_RC_DIR=$HOME/.rc
+fi
+
+# I don't know who came first, but some things are stupid, idiotically,
+# worthlessly and foolishly incompatible.
+#echo "PATH>$PATH<"
+source ${DP_RC_DIR}/dp_shells_compat.sh
+
 DP_LOG=$HOME/var/log
 export DP_LOG_DIR="$DP_LOG"
 
@@ -25,7 +43,7 @@ export DP_LOG_DIR="$DP_LOG"
 }
 export DP_BASHRC=t
 export DP_BASHRC_IN_PROGRESS=t
-source $HOME/.rc/func.early
+source ${DP_RC_DIR}/func.early
 
 if [ -n  "$GREP_OPTIONS" ]
 then
@@ -274,8 +292,8 @@ dp_add_to_path_iff()
 }
 DP_EXPORT_FUNC dp_add_to_path_iff
 
-DP_EXPORT_FUNC OSName=$(uname -s)	# our current os
-DP_EXPORT_FUNC Arch=$(uname -m)		# our current architecture
+export OSName=$(uname -s)	# our current os
+export Arch=$(uname -m)		# our current architecture
 case "$Arch" in
     *86*) genericArch_bin="bin.$OSName.x86";;
     *);;
@@ -305,7 +323,7 @@ then
 fi
 
 # Pull in some useful functions. func has a dependency on PATH???
-. $RC_DIR/func
+. $DP_RC_DIR/func
 
 # bin dirs from most specific to least
 if vsetp $genericArch_bin
@@ -431,7 +449,7 @@ export shell_name
 # take precedence over anything coming from $HOST_INFO
 # this allows us to function in the absence of python.
 FAMILY= FAMILY_ZONE= pre_rcs= post_rcs= WORK_ZONE= PROJECT=
-HOST_CONF="$RC_DIR/$HOSTNAME.conf"
+HOST_CONF="$DP_RC_DIR/$HOSTNAME.conf"
 [ -f  $HOST_CONF ] && source $HOST_CONF
 
 case $HOSTNAME in
@@ -447,8 +465,7 @@ case $HOSTNAME in
 	: ${WORK_ZONE:=$($HOST_INFO -n '-' work-zone)}
 
         # Project stuff:
-        : ${PROJECT:=$($HOST_INFO -n '' project)}
-        test -z "${PROJECT-}" && PROJECT='-'
+        : ${PROJECT:=$($HOST_INFO -n '-' project)}
 	;;
 esac
 export FAMILY
@@ -462,9 +479,11 @@ export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME .$PROJECT .var .ea
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
 locale_rcs="$pre_rcs $locale_rcs $post_rcs"
-# this strips leading and trailing spaces.  they were
+# This strips leading and trailing spaces.  They were
 # causing emacs problems.  We fix 'em here so no one else
 # has to worry about it.
+# A future davep: thanks, past davep, for the comment about what looked like
+# really stupid code.
 set -- $locale_rcs
 locale_rcs="$@"
 set --
@@ -496,18 +515,18 @@ fi
 
 # load locale specific functions
 EXTRA_RCS=''			# list of files other rcs want us to run
-source_list -l $RC_DIR/rc       $locale_rcs .work
-source_list -l $RC_DIR/func     $locale_rcs .work
-source_list -l $RC_DIR/env ""   $locale_rcs .work
-source_list -l $RC_DIR/alias "" $locale_rcs .work
+source_list -l $DP_RC_DIR/rc       $locale_rcs .work
+source_list -l $DP_RC_DIR/func     $locale_rcs .work
+source_list -l $DP_RC_DIR/env ""   $locale_rcs .work
+source_list -l $DP_RC_DIR/alias "" $locale_rcs .work
 
 # run any RC files that other RC files have requested.
 # this lets things like host RCs ask for, say, a project RC
 [ -n "$EXTRA_RCS" ] && {
-    source_list -l $RC_DIR/rc    $EXTRA_RCS
-    source_list -l $RC_DIR/func  $EXTRA_RCS
-    source_list -l $RC_DIR/env   $EXTRA_RCS
-    source_list -l $RC_DIR/alias $EXTRA_RCS
+    source_list -l $DP_RC_DIR/rc    $EXTRA_RCS
+    source_list -l $DP_RC_DIR/func  $EXTRA_RCS
+    source_list -l $DP_RC_DIR/env   $EXTRA_RCS
+    source_list -l $DP_RC_DIR/alias $EXTRA_RCS
     # add the extra rcs to locale
     locale_rcs=$(dp_add_to_path_iff -S "$locale_rcs" ${EXTRA_RCS})
 }
@@ -664,7 +683,7 @@ case $- in
 
 	case $shell_name in
 	    pdksh)
-		. $RC_DIR/bind	# pdksh can do bindings.
+		. $DP_RC_DIR/bind	# pdksh can do bindings.
 				# shellify bind when others can, too.
 		set -o ignoreeof
 		set -o braceexpand

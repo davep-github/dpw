@@ -10,7 +10,8 @@
 
 DP_ALIAS_RC="running as of $(date)"
 
-dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
+# @todo XXX Make this play well with zsh.
+DP_BASH_ONLY dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
 
 alias ls_no_color="\ls -CF --color=never"
 alias ls_with_color='\ls -CF --color=tty'
@@ -49,8 +50,10 @@ alias gb='pushd'		# swaps top two elements, like g b
 alias pd='popd'
 alias h=page_of_history
 alias archie='archie -h $ARCHIE_HOST'
-alias vipath='typeset x=/tmp/vipath.$SECONDS; echo $PATH > $x && vi $x && PATH=`cat $x` && rm -f $x'
-alias vicd='typeset x=/tmp/vicd.$SECONDS; echo $PWD > $x && vi $x && cd `cat $x` && rm -f $x'
+# @todo XXX ZSH cannot understand typeset.  I don't use these much, so
+# comment out for now.
+#alias vipath='typeset x=/tmp/vipath.$SECONDS; echo $PATH > $x && vi $x && PATH=`cat $x` && rm -f $x'
+#alias vicd='typeset x=/tmp/vicd.$SECONDS; echo $PWD > $x && vi $x && cd `cat $x` && rm -f $x'
 alias alias_p="alias >/dev/null 2>&1"
 alias_iff()
 {
@@ -61,8 +64,8 @@ alias_iff()
 for i in bind env alias func rc bashrc
 do
   # What in NGC714's name was I thinking of?
-  #alias_iff "${i}rc" '"source_list $RC_DIR/$i \"\" \$locale_rcs"; true'
-  eval alias ${i}rc='"source_list $RC_DIR/$i \"\" \$locale_rcs .work"; true'
+  #alias_iff "${i}rc" '"source_list $DP_RC_DIR/$i \"\" \$locale_rcs"; true'
+  eval alias ${i}rc='"source_list $DP_RC_DIR/$i \"\" \$locale_rcs .work"; true'
 done
 case $shell_name in
     bash)
@@ -71,7 +74,7 @@ case $shell_name in
 	;;
 esac
 
-[ -f $RC_DIR/alias.${HOSTNAME} ] && . $RC_DIR/alias.${HOSTNAME}
+[ -f $DP_RC_DIR/alias.${HOSTNAME} ] && . $DP_RC_DIR/alias.${HOSTNAME}
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
@@ -337,4 +340,9 @@ alias sshauthsock='gpgconf --list-dirs agent-ssh-socket'
 alias expauthsock='export SSH_AUTH_SOCK="$(sshauthsock)"'
 
 alias jcons='jupyter-console'
+
+alias NEWALIAS1="echo Ima new alias, #1"
+
+DP_ALIAS_RC="done as of $(date)"
+
 true
