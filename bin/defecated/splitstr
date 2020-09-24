@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source script-x
+
+if [ $(expr length "$1") = 1 ]
+then
+    IFS="$1"
+    shift
+else
+    IFS=${kwa_IFS:-$IFS}
+fi
+
+#eko $*
+echo $*
+#echo $x

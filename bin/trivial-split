@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+source script-x
+
+#
+# @TODO XXX Rewrite in Python.  This is really a split, not a conversion to
+# one line, although I suppose you could replace newlines w/{spaces, commas,
+# semicolons, etc}, but that's not it's primary use case.
+#
+
+: ${pat="${1-[[:space:]]+}"}
+: ${repl="\n"}
+one_per_line()
+{
+    sed -rn "s/${pat}/${repl}/pg"
+}
+
+main()
+{
+    local cmd
+    if [[ "$@" != '' ]]
+    then
+	cmd="${1}"
+	shift
+	"${cmd}" "$@" \
+	    | one_per_line ${xpat}
+    else
+	one_per_line ${xpat}
+    fi
+}
+
+main "$@"
