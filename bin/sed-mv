@@ -192,7 +192,7 @@ sed_renamer()
         vsetp $zippit || {
             WHINE "WARNING: sed changed nothing, rename skipped for:
 \"$f\""
-            continue
+            return
         }
     fi
     cmd='$MV_CMD $MV_OPTS $dash_i $dash_dash "$f"   "$newname"'

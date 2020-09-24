@@ -1239,6 +1239,12 @@ command position."
 (dp-deflocal dp-shell-output-line-count 0
   "Number of lines ouput by the current command.")
 
+;; @todo XXX There has to be some way to speed up the shell buffer.  ISTR
+;; reading something that said colorizing the buffer didn't help.  Will only
+;; leaving the prompt colorizer on speed things up?  ISTR trying this, or may
+;; still be doing it this way.
+;; Will colorizing the prompt in the prompt-recognition part of dir tracker
+;; work?
 ;;; (dp-deflocal dp-shell-output-max-lines-default (* 3 163830)
 (dp-deflocal dp-shell-output-max-lines-default 8192
   "Maximum number of lines which is kept in each shell buffer.
@@ -1923,7 +1929,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
       (insert cur-input))
     ))
 
-(defcustom dp-shell-buffer-max-lines 714
+(defcustom dp-shell-buffer-clr-max-lines 714
   "*Max lines to preserve in shell buf when using `dp-clr-shell' w/o a prefix arg."
   :group 'dp-vars
   :type 'integer)
@@ -1945,7 +1951,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
     (let (point
           (old-point-max (point-max)))
       ;; See if we're over the max.
-      (if (<= (line-number (point-max)) dp-shell-buffer-max-lines)
+      (if (<= (line-number (point-max)) dp-shell-buffer-clr-max-lines)
           (message "Not enough lines to bother clearing.")
         (dp-shell-reset-parse-info)
         (when (and (not (Cu0p erase-buffer-p))
@@ -1954,7 +1960,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
                      save-contents-p))
           (dp-save-shell-buffer))
         (dp-end-of-buffer)
-        (forward-line (- dp-shell-buffer-max-lines))
+        (forward-line (- dp-shell-buffer-clr-max-lines))
         ;; move back to previous command so that we have the entire command
         ;; still in the history
         (setq point (point))

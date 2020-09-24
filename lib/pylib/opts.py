@@ -45,7 +45,7 @@ class Option:
         def_help = self.get_def_help()
         args = self.get_arg_str()
         if len(self.ch) > 1:
-            opt_name = '[' + string.join(self.ch, '|') + ']'
+            opt_name = '[' + str.join(self.ch, '|') + ']'
         else:
             opt_name = self.ch
         return '-%s %s\t%s\n\t[default=%s, set=%s]' % \
@@ -54,7 +54,11 @@ class Option:
                 self.help,
                 def_help,
                 set_help)
-    
+
+    def __str__(self):
+        return ("ch>{}<, field>{}<, set>{}<, def>{}<, help>{}<".format(self.ch,
+                self.field, self.set, self.default, self.help))
+
 class FlagOption(Option):
     def __init__(self, ch, field, set, default, help='too lazy(flag)'):
         Option.__init__(self, ch, field, set, default, help)
@@ -82,6 +86,7 @@ class FlagOption(Option):
 class ArgOption(Option):
     def __init__(self, ch, field, set, default, help='too lazy(arg)'):
         Option.__init__(self, ch, field, set, default, help)
+        print("ArgOption>{}<".format(Option.__str__(self)))
 
     def get_set(self, arg):
         if type(self.set) == FunctionType:
@@ -91,7 +96,7 @@ class ArgOption(Option):
         return v
 
     def get_name(self):
-        ret = string.join(self.ch, ':') + ':'
+        ret = str.join(self.ch, ':')
         return ret
 
     def get_arg_str(self):
@@ -109,16 +114,20 @@ class Options:
         import getopt
 
         self._opts = opts
+        print("opts>{}<".format(opts))
         options = ''
         # make getopt list from opt lists
         options = [opt.get_name() for opt in opts]
+        print("options>{}<".format(options))
         tlist = [ch[0] for ch in options]
+        print("tlist>{}<".format(tlist))
         for opt in tlist:
+            print("opt>{}<".format(opt))
             if tlist.count(opt) > 1:
-                print("%s: Option `%s' is duplicated" % (__name__, opt))
+                print(("%s: Option `%s' is duplicated" % (__name__, opt)))
                 sys.exit(3)
 
-        options = string.join(options, '')
+        options = str.join(options, '')
 
         # set defaults from lists
         for o in opts:
@@ -128,7 +137,7 @@ class Options:
                 dp_io.eprintf("WARNING: The field `%s' already exists in this Options object.\n", o.field)
                 dp_io.eprintf(''' your option name may be colliding
  with an existing function or variable of the Options class''')
-                
+
             except AttributeError:
                 pass
             setattr(self, o.field, v)
@@ -140,10 +149,10 @@ class Options:
             if usage:
                 usage()
             sys.exit(99)
-            
+
         for opt, arg in options:
-            #print 'opt', opt, 'arg', arg
-            for o in opts :
+            print("opt>{}<, arg>{}<".format(opt, arg))
+            for o in opts:
                 if opt[1] in o.ch:
                     v = o.get_set(arg)
                     setattr(self, o.field, v)
@@ -153,11 +162,14 @@ class Options:
         output = []
         output.append('Options contains:\n')
         for k in dir(self):
-            if string.find(k, '_') != 0:
+            if str.find(k, '_') != 0:
                 output.append('  %s>%s<\n' % (k, getattr(self, k)))
-        return string.join(output, '')
+        return str.join(output, '')
 
     show = dump
+
+    def __str__(self):
+        return self.dump()
 
     def help(self, opts=[]):
         # print 'in help'
@@ -169,7 +181,7 @@ class Options:
             # print 'opt:', opt
             output.append('%s, current: %s\n\n' % (opt.get_help(),
                                                    getattr(self, opt.field)))
-        return string.join(output, '')
+        return str.join(output, '')
 
 
 def opts_help(opts):
@@ -177,4 +189,4 @@ def opts_help(opts):
     output = []
     for opt in opts:
         output.append('%s\n' % (opt.get_help()))
-    return string.join(output, '\n')
+    return str.join(output, '\n')

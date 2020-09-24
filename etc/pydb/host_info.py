@@ -54,17 +54,18 @@ LIGHT_BG_LS_COLORS = opath.join(HOME, '.rc/ls-colors-for-light-bg'),
 default = dppydb.Entry({
     'pydb_type:': 'host-info',
 
-    # make colors ugly and noticable
+    # make colors ugly and noticeable that there is no more specific entry
+    # for this host's host-info.
     'xterm_bg': 'red',
     'xterm_fg': 'blue',
-
-    # but some defaults are useful
+    # but some defaults are useful, so if these defaults are OK, then only an
+    # host-info record with better colors is needed.
     'X': 'xf86',
     'window_manager': 'kwin',
     'xrl_rsh_bin': 'ssh',               # used by xrl
-    'xrl_xterm_bin': 'xterm',
+    'xrl_xterm_bin': 'xterm',           # more ?most? universal.
     'xrl_xterm_bin_opts': """'-sb -sl 1024 -ls +si -sk'""",
-    'xterm_bin': 'xterm',
+    'xterm_bin': 'xterm',       # more ?most? universal.
     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'xterm_font': '9x15',
     'shell': 'bash',
@@ -72,10 +73,10 @@ default = dppydb.Entry({
     'family': 'none-default',
     'host': 'none-default',
     'nick': 'none-default',
-    'ctl': 'rx',
+    'ctl': 'rx',                # OH! Would that this had a comment!
     #
     'fsf_xem_bin': 'emacs',
-    'xem_version': "",
+    'xem_version': '',
     #'xem_bin': '/usr/local/bin/xemacs',
     'xem_bin': opath.join(HOME_LOCAL_BIN, "xemacs"),
     'lem_bin': opath.join(HOME_LOCAL_BIN, "xemacs"),
@@ -95,8 +96,8 @@ default = dppydb.Entry({
     'lem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
 
     'lem_xrdb_file': '''/home/davep/xf86/Xresources.lem_laptop''',
-    'xem_bg_color': '',
-    'lem_bg_color': '',
+    'xem_bg_color': '-',
+    'lem_bg_color': '-',
     'xxlem_pre_cmd': '''DISPLAY=`myhost`:0.0; export DISPLAY''',
     'x_html_browser': 'xkonq',
     'text_html_browser': 'w3m',
@@ -172,11 +173,16 @@ home_family = e(
         'network-name': 'meduseld',
         'ISP': 'verizon.net',
         'family_zone': 'home',
-        'xterm_bg': HOME_BG_COLOR,
-        'xterm_fg': HOME_FG_COLOR,
-        'xterm_bin': "lxterm",
-        'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-        #'xterm_font': "*NONE*",
+        ## 'xterm_bg': HOME_BG_COLOR,
+        ## 'xterm_fg': HOME_FG_COLOR,
+        'xterm_bin': "lxterminal",
+        'xterm_geometry': '--geometry=129x25',
+        'xterm_bg': '-',
+        'xterm_fg': '-',
+        # lxterminal doesn't like these options.
+        # 'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+        'xterm_opts': '-',
+        'xterm_font': "*NONE*",
         'cdrw-dev': '1001,1,0',             # dvd, etc. rw
         'cdrw-speed': '4',                  # 4x write speed, max for CDRWs
         'namazu-dir-base': namazu_base_dir, # look up before this e()
@@ -215,10 +221,10 @@ e(
 
 # This is for RictyDiminishedDiscord-13, which hopefully I can emsmallen
 # once I have my new eyes.
-AMD_XEM_GEOMETRY = '-geometry 81x63-0+0'
+AMD_XEM_GEOMETRY = '--geometry 81x63-0+0'
 AMD_BG_COLOR = 'rgb:0/33/60'
 AMD_FG_COLOR = 'white'
-GEOMETRY_1920x1200 = '-geometry 178x59+460+0'
+GEOMETRY_1920x1200 = '--geometry 178x59+460+0'
 amd_family = e(
     kef='family',
     dat={
@@ -228,10 +234,12 @@ amd_family = e(
         'comment': 'My linux boxen at amd.',
         'DTE': 'kde',
         'main_macs_opts': '-eval (dp-main-rc+2w)',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
+        'xem_opts': '-eval (dp-2-v-or-h-windows)',
+        "xem_geometry": AMD_XEM_GEOMETRY,
         ###"xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-        "xem_font": "",
-        'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+        "xem_font": "-",
+        'lem_opts': '-eval (dp-laptop-rc)',
+        'lem_geometry': '--geometry 80x72-1+0',
         'work-zone': 'amd',
         #    """xem-xft-font""": '''"Inconsolata-13"''',
         'xterm_bin': 'xterm',
@@ -263,7 +271,8 @@ e(
         'family': 'amd_family',
         'comment': 'A work machine.',
         # Height when nx is in "fit to window" mode.
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x66-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows)',
+        'xem_geometry': '--geometry 180x66-0+0',
         'xterm_bg': AMD_ATLR5N4_BG_COLOR,
         'xterm_fg': AMD_ATLR5N4_FG_COLOR,
         ### 'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
@@ -288,7 +297,8 @@ e(
         'host-pattern': '^(yyz)$',
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
+        'xem_opts': '-eval (dp-2-v-or-h-windows)',
+        'xem_geometry': GEOMETRY_1920x1200,
         # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
@@ -300,7 +310,7 @@ e(
         ## @todo XXX Win-e doesn't work with a -<version> and
         ## wmctrl(1) doesn't handle wildcards.  Probably need a script
         ## to find and expand on my own.
-        'xem_version': "", #"-26.1.50",
+        'xem_version': "-", #"-26.1.50",
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xxem_bg_color': "grey80", # Need to have fsf and xem parameters.
@@ -325,7 +335,8 @@ e(
         'host-pattern': '^(xerxes|pablo)$',
         'family': 'amd_family',
         'comment': 'An? FX-8370 8-core machine.  Test box.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200,
+        'xem_opts': '-eval (dp-2-v-or-h-windows)',
+        'xem_geometry': GEOMETRY_1920x1200,
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': XERXES_BG_COLOR,
         'xterm_fg': XERXES_FG_COLOR,
@@ -347,7 +358,7 @@ e(
         'host-pattern': '^(cz-fp4-bdc|cz)$',
         'family': 'amd_family',
         'comment': 'A BETTONG Carrizo dev system (on my desk).',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '--geometry 180x74-0+0',
         'xterm_bg': CZ_FP4_BG_COLOR,
         'xterm_fg': CZ_FP4_FG_COLOR,
         'xxem_bg_color': "grey80",
@@ -367,9 +378,9 @@ e(
         'host-pattern': 'nmi-test|bambleweeny|bambleweeny-57|bw(57)?',
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
-        #'xem_opts': '-geometry 88x64-0+0',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 180x74-0+0'),
+        #'xem_opts': '--geometry 88x64-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows)',
+        'xem_geometry': '--geometry 180x74-0+0',
         'main_macs_opts': '-eval (dp-start-editing-server)',
 ###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
         'xterm_bg': BW57_BG_COLOR,
@@ -389,7 +400,7 @@ e(
         'host-pattern': 'cz-alfa',
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
-        #'xem_opts': '-geometry 88x64-0+0',
+        #'xem_geometry': '--geometry 88x64-0+0',
         'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
         ###'main_macs_opts': '-eval (dp-start-editing-server)',
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
@@ -446,7 +457,7 @@ for fam in famDB:
         },
         ref=fam)
 
-VILYA_XEM_GEOMETRY = '-geometry 81x63-1+0'
+VILYA_XEM_GEOMETRY = '--geometry 81x63-1+0'
 e(
     kef='host',
     dat={
@@ -458,8 +469,10 @@ e(
         '#xterm_bin': 'konsole',             # xx uses -T which konsole hates.
         #    'xterm_bin': 'xterm',
         #    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-        'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + VILYA_XEM_GEOMETRY,
+        'lem_opts': '-eval (dp-laptop-rc)',
+        'lem_geometry': '--geometry 80x72-1+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows)',
+        'xem_geometry': VILYA_XEM_GEOMETRY,
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
         # magically changed from 120 being right to 160 being right.

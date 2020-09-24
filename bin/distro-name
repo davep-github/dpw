@@ -8,4 +8,9 @@ uname -a | fgrep -q gentoo && {
     echo "gentoo"
     exit 0
 }
+
+[[ $(uname --kernel-version) =~ "Ubuntu" ]] && {
+    echo "Ubuntu"
+    exit 0
+}
 exit 1

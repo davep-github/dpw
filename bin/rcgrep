@@ -172,7 +172,7 @@ done
 
 dat=("$@")
 grep_opts="$@"
-rc_dir=${RC_DIR:-$HOME/.rc}
+rc_dir=${DP_RC_DIR:-$HOME/.rc}
 rc_files="env alias func"
 rc_list="$HOME/.bash_profile $DP_RC_LIST_OTHERS"
 

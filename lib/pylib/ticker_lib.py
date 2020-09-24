@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import sys, types, re, time
 import dp_utils, dp_time
@@ -234,9 +234,12 @@ def Twiddle_twiddles(ostream=sys.stdout):
     i = 0
     keys = TWIDDLE_NAMES
     keys.sort()
-    print("Use index number or match regexp to select twiddle:", file=ostream)
+    dp_io.fprintf(ostream,
+                  "Use index number or match regexp to select twiddle:")
     for key in TWIDDLE_NAMES:
-        print("d:", i, "name:", key, "twids:", PREDEF_TWIDDLES[key], file=ostream)
+        dp_io.fprintf(ostream,
+                      "d: {}, name: {}, key, {}, twids: {}",
+                      "d:", i, "name:", key, "twids:", PREDEF_TWIDDLES[key])
         i += 1
 
 def nth_twiddle(n):

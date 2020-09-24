@@ -5,8 +5,8 @@
 # No wait, it's dynamic scoping.  It's keyword args.
 #
 : ${DOT=}; export DOT
-: ${creat_p=t}; export creat_p
-: ${persist_p=t}; export persist_p
-: ${mkdir_only_p=}; export mkdir_only_p
+: ${creat_p=true}; export creat_p
+: ${persist_p=true}; export persist_p
+: ${mkdir_only_p=false}; export mkdir_only_p
 
 mk-dropping-name.sh "$@"

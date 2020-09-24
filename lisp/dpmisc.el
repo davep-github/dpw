@@ -1942,10 +1942,13 @@ on the go back ring."
   (unless no-save-pos-p
     (dp-push-go-back "dp-beginning-of-buffer"))
   (goto-char (point-min)))
-;; @todo XXX Will I like this?  IIR (it's spinal memory) I may use BOB to
+;; @todo XXX Will I like this? NO.
+;; IIR (it's spinal memory) I may use BOB to
 ;; break out of a search.  But IRRBetter, I often BOB and search again, in
 ;; which case, this will be perfect.
-(put 'dp-beginning-of-buffer isearch-continues t)
+;; This ends up being more of a PITA than I imagined.
+;;(put 'dp-beginning-of-buffer isearch-continues t)
+
 
 (defun dp-blank-line-p ()
   "Pretty much what the name says: return non-nil if the line is blank.
@@ -2306,7 +2309,7 @@ E.g. ;; commented out by dp-comment-out-sexp;"
          (comment-start (or (dp-build-co-comment-start comment-tag
                                                        comment-start0)))
          (ce (cond
-              ;; known rest of line comments
+              ;; known "rest of line" comments
               ;; (comment-end is "")
               ((or
                 (string-match

@@ -1,6 +1,6 @@
 #!/bin/bash
 # $Id$
-set -x
+#set -x
 
 argWas="$1"
 c="$1"

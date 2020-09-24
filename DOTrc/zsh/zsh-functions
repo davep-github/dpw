@@ -1,24 +1,24 @@
 #!/usr/bin/env zsh
 
-g()
-{
-    case "$1" in
-	-*)
-	    go-mgr "$@" ;;
-	*)
-	    # If a file name is given, assume we want to go to the containing
-	    # directory.
-            if [ -f "${1}" ]
-            then
-                dir=$(dirname "${1}")
-		# If $1 is a file and its dir part is '.' then we really want
-		# the original name as a abbreviation.
-		[ "${dir}" = "." ] && {
-		    dir="${1}"
-		}
-            else
-                dir="${1}"
-            fi
-	    gOcWd=$PWD; pushd $(dogo "${dir}") && export GoBack=$gOcWd ;;
-    esac
-}
+#problem with completion on dogo and dogO but not dog0. g()
+#problem with completion on dogo and dogO but not dog0. {
+#problem with completion on dogo and dogO but not dog0.     case "$1" in
+#problem with completion on dogo and dogO but not dog0. 	-*)
+#problem with completion on dogo and dogO but not dog0. 	    go-mgr "$@" ;;
+#problem with completion on dogo and dogO but not dog0. 	*)
+#problem with completion on dogo and dogO but not dog0. 	    # If a file name is given, assume we want to go to the containing
+#problem with completion on dogo and dogO but not dog0. 	    # directory.
+#problem with completion on dogo and dogO but not dog0.             if [ -f "${1}" ]
+#problem with completion on dogo and dogO but not dog0.             then
+#problem with completion on dogo and dogO but not dog0.                 dir=$(dirname "${1}")
+#problem with completion on dogo and dogO but not dog0. 		# If $1 is a file and its dir part is '.' then we really want
+#problem with completion on dogo and dogO but not dog0. 		# the original name as a abbreviation.
+#problem with completion on dogo and dogO but not dog0. 		[ "${dir}" = "." ] && {
+#problem with completion on dogo and dogO but not dog0. 		    dir="${1}"
+#problem with completion on dogo and dogO but not dog0. 		}
+#problem with completion on dogo and dogO but not dog0.             else
+#problem with completion on dogo and dogO but not dog0.                 dir="${1}"
+#problem with completion on dogo and dogO but not dog0.             fi
+#problem with completion on dogo and dogO but not dog0. 	    gOcWd=$PWD; pushd $(dogo "${dir}") && export GoBack=$gOcWd ;;
+#problem with completion on dogo and dogO but not dog0.     esac
+#problem with completion on dogo and dogO but not dog0. }

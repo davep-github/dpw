@@ -10,7 +10,7 @@ named_screen()
 }
 
 if name_is___main__; then
-    vsetp "$@" || {
+    [[ -n "$@" ]] || {
 	echo "Usage: $(basename $0) <name>"
         echo "Please specify a screen name."
         exit 1

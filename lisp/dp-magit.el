@@ -158,6 +158,27 @@ real biggie, since an `undo' gets us there.  For now, at least."
 		    (setq current-prefix-arg (not current-prefix-arg))
 		    (call-interactively 'magit-status)))
 
+
+;; Was a lambda, but namespace pollution is and hasn't for a long time been a
+;; problem and is used as a strawman argument against things like this and
+;; factoring small functions and a host of other things.
+(defun dp-magit-display-buffer (buffer)
+  "kyleam commented on Feb 5, 2016 https://github.com/magit/magit/issues/2541.
+
+May the random factors align in his favor."
+  (display-buffer
+   buffer (if (and (derived-mode-p 'magit-mode)
+		   (memq (with-current-buffer buffer major-mode)
+			 '(magit-process-mode
+			   magit-revision-mode
+			   magit-diff-mode
+			   magit-stash-mode
+			   magit-status-mode)))
+	      nil
+	    '(display-buffer-same-window))))
+
+(setq magit-display-buffer-function 'dp-magit-display-buffer)
+
 (provide 'dp-magit)
 
 (message "load dp-magit()... done.")

@@ -3,8 +3,27 @@
 # Move some stuff over there, and make links so that it still looks like it's
 # here.
 source script-x
+set -u
 progname="$(basename $0)"
 source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
 
 : ${mv_opts:="-i"}
 : ${ln_opts:=""}
@@ -89,9 +108,9 @@ mv_one()
         # that don't make sense because we are in a mode where there may be
         # an error and yet it doesn't matter because we aren't doing anything
         # anyway.
-        if false && EExecDashN_p
+        if EExecDashN_p
         then
-            echo "Link target[$link_target] exists."
+            echo "{V}Link target[$link_target] exists."
         else
             read -e -p "Link target[$link_target] exists.  Continue[y/N]? "
             case "$REPLY" in

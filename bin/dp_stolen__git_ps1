@@ -1,6 +1,6 @@
 #-*-shell-script-*-
 # Source me.
-gtype=$(type -t dp_stolen__git_ps1) || return "B0rk3d"
+gtype=$(DP_BASH_TYPE_t dp_stolen__git_ps1) || return "B0rk3d"
 
 [ "${gtype}" = "function" ] && {
      return 0

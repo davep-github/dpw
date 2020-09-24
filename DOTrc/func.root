@@ -326,13 +326,13 @@ prompt_command_errno()
         if [ "$1" == 0 ]; then
             echo 0
         else
-            echo "$1:"$(errno -n "$@")
+            echo "$1:$(errno -n ""$1"")"
         fi
     else
         echo "$1"
     fi
 }
-    
+
 #
 # Move this to func?
 #

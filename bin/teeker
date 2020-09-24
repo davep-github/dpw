@@ -696,13 +696,13 @@ if __name__ == "__main__":
     oparser.add_argument("-E", "--extension",
                          dest="U_extension", default="",
                          type=str,
-                         help=("Addition output file extension. "
+                         help=("Additional output file extension. "
                          "Added last, after timestamp [if present]."))
     oparser.add_argument("-l", "--log-file",
                          dest="U_extension", const=".log",
                          action="store_const",
                          help="Add .log suffix.")
-    oparser.add_argument("-add-log-file-name",
+    oparser.add_argument("--add-log-file-name", "--alfn",
                          dest="optional_log_file_names",
                          action="append", default=[],
                          help="Add file names via an option to allow overriding.")

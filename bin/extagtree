@@ -91,7 +91,7 @@ fi
 #
 # specify some extra options for exuberant ctags
 #
-meister_indexing_rc="${RC_DIR}/index-code.rc"
+meister_indexing_rc="${DP_RC_DIR}/index-code.rc"
 [ -e "${meister_indexing_rc}" ] && {
     source "${meister_indexing_rc}"
 }

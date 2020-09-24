@@ -481,7 +481,8 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   "History for `dp-colorize-bracketing-regexps'.")
 
 (defun dp-colorize-bracketing-regexps(color regexp1 regexp2 roll-colors-p)
-  "Colorized region [REGEXP1, REGEXP2] with COLOR."
+  "Colorize region [REGEXP1, REGEXP2] with COLOR.
+ROLL-COLORS-P says to colorize each region with a different color."
   (interactive (list (prefix-numeric-value current-prefix-arg)
                      (read-from-minibuffer
                       "beginning regexp: "

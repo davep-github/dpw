@@ -659,5 +659,9 @@ changes."
   (when (dp-looking-back-at (concat "^\\s-*" comment-start))
     (cperl-indent-command)))
 
+(require 'zlc)
+;; @todo XXX I'm seeing some odd effects that may be related to this.  If
+;; not, it's kind of an ok package.
+(zlc-mode -1)
 
 (provide 'dp-lang)

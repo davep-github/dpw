@@ -102,7 +102,7 @@ last_locale()
     # probably be just as expensive.
     for loc in "$@"
     do
-      rc_file="${RC_DIR}/${rc_name}${loc}"
+      rc_file="${DP_RC_DIR}/${rc_name}${loc}"
       [ -e  "$rc_file" ] && {
           echo "${rc_file}"
       }

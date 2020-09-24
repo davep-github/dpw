@@ -87,6 +87,8 @@ DPGOP_Usage2()
 VERBOSE=:
 DEBUG=:
 
+# @todo XXX Why the fuck did I make this conditional?
+# Plus I haven't even settled on the lib vs program
 running_as_script && {
   ###source eexec Why? This invocation will stomp things set by an earlier one.
   ### what will break now?

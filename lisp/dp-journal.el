@@ -1160,12 +1160,13 @@ on disk."
 				(function
 				 (lambda (el)
 				   (let ((s (substring-no-properties(car el))))
-				     (dmessage "el>%s<" el)
-				     (dmessage "s>%s<" s)
+				     ;; (dmessage "el>%s<" el)
+				     ;; (dmessage "s>%s<" s)
 				     (if (not (listp el))
 					 (progn
-					   (dmessage "el>%s< not a list, %s" el
-						     "discarding")
+					   ;; (dmessage "el>%s< not a list, %s" el
+					   ;; 	     "discarding"
+					   ;; 	     )
 					   nil)
 				       (if (string-match dpj-private-topic-re s)
 					   nil
@@ -1595,7 +1596,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 	(if (= opos (point))
 	    (throw 'done nil))
 	(setq rec-bounds (dpj-current-record-boundaries))
-	(message "rec-bounds>%s<" rec-bounds)
+	;; (message "rec-bounds>%s<" rec-bounds)
 	;;topic-info:: (topic-string record-start topic-start record-end)
 	(setq rec-list (cons
 			(cons "topic-not-used" rec-bounds)

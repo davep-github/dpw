@@ -4,7 +4,7 @@ unset PROMPT
 PROMPT="%B%n@%m:%~%b"
 PROMPT+='$(git_prompt_info)'
 PROMPT+="
-(zsh) %!%(0?||<%S%?%s)> "
+%F{cyan}(zsh) %!%(0?||<%S%?%s)>%f "
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "

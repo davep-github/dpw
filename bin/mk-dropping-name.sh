@@ -1,11 +1,15 @@
 #!/bin/bash
 #
 # Originally written to create bash history files.  Hence the default values.
+#
+# This file is used by both bash and zsh early in the shell startup.
+# *HISTFILE aren't needed during init, so it should be possible to move them
+# to the end of bashrc.
 source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-if vsetp "${eexec_program-}"    # Did the caller provide a program?
+if [ -n "${eexec_program-}" ]    # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
 else
@@ -18,7 +22,7 @@ do
   $op
   ${EEXEC_SHIFT}
 done
-EExec_verbose_msg $(echo_id eexec_program)
+EExec_verbose_echo_id eexec_program
 unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
@@ -44,14 +48,14 @@ on_error()
 }
 
 : ${DOT=}
-: ${creat_p=t}
-: ${persist_p=}
-: ${mkdir_only_p=}
+: ${creat_p=true}
+: ${persist_p=false}
+: ${mkdir_only_p=false}
 : ${use_project_as_a_prefix=}
 : ${prefix=}
 
 persist=
-true_p "${persist_p}" && persist=persist/
+$persist_p && persist=persist/
 
 prefix=
 suffix=
@@ -74,7 +78,7 @@ done
 
 
 dir_name="$HOME/droppings/${persist}${DOT}${1-bash-history}"
-true_p "${creat_p}" || true_p "${mkdir_only_p}" && mkdir -p "${dir_name}"
-true_p "${mkdir_only_p}" && exit
+$creat_p || $mkdir_only_p && mkdir -p "${dir_name}"
+$mkdir_only_p && exit
 name="${dir_name}/${prefix}${HOSTNAME}${suffix}"
 echo "${name}"

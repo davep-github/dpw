@@ -5637,3 +5637,83 @@ Monday August 24 2020
 -unsetopt autocd
 -bindkey -e
 -# End of lines configured by zsh-newuser-install
+
+========================
+Wednesday September 09 2020
+--
+entry>[zshenv, start=2020-09-09T23:02:40-04:00--<
+Enter>zshenv<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:02:40-04:00--<
+		      
+entry>[zsh-path, start=2020-09-09T23:02:40-04:00--<
+Enter>zsh-path<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:02:40-04:00--[zsh-path, start=2020-09-09T23:02:40-04:00--<
+								  
+entry>>end=2020-09-09T23:02:40-04:00]!!!zsh-path, start=2020-09-09T23:02:40-04:00--<
+Exit>zsh-path<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:02:40-04:00--[zsh-path, start=2020-09-09T23:02:40-04:00-->end=2020-09-09T23:02:40-04:00]!!!zsh-path, start=2020-09-09T23:02:40-04:00--<
+entry>>end=2020-09-09T23:02:40-04:00]!!!zshenv, start=2020-09-09T23:02:40-04:00--<
+Exit>zshenv<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:02:40-04:00--[zsh-path, start=2020-09-09T23:02:40-04:00-->end=2020-09-09T23:02:40-04:00]!!!zsh-path, start=2020-09-09T23:02:40-04:00-->end=2020-09-09T23:02:40-04:00]!!!zshenv, start=2020-09-09T23:02:40-04:00--<
+
+
+entry>[zshenv, start=2020-09-09T23:07:34-04:00..<
+Enter>zshenv<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:07:34-04:00..<
+entry>[zsh-path, start=2020-09-09T23:07:34-04:00..<
+Enter>zsh-path<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:07:34-04:00..[zsh-path, start=2020-09-09T23:07:34-04:00..<
+entry>:end=2020-09-09T23:07:34-04:00]!!!zsh-path, start=2020-09-09T23:07:34-04:00..<
+Exit>zsh-path<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:07:34-04:00..[zsh-path, start=2020-09-09T23:07:34-04:00..:end=2020-09-09T23:07:34-04:00]!!!zsh-path, start=2020-09-09T23:07:34-04:00..<
+entry>:end=2020-09-09T23:07:34-04:00]!!!zshenv, start=2020-09-09T23:07:34-04:00..<
+Exit>zshenv<
+DP_SHELL_RCS>[zshenv, start=2020-09-09T23:07:34-04:00..[zsh-path, start=2020-09-09T23:07:34-04:00..:end=2020-09-09T23:07:34-04:00]!!!zsh-path, start=2020-09-09T23:07:34-04:00..:end=2020-09-09T23:07:34-04:00]!!!zshenv, start=2020-09-09T23:07:34-04:00..<
+
+
+[zshenv, start=2020-09-09T23:07:34-04:00..[zsh-path, start=2020-09-09T23:07:34-04:00..:end=2020-09-09T23:07:34-04:00]!!!zsh-path, start=2020-09-09T23:07:34-04:00..:end=2020-09-09T23:07:34-04:00]!!!zshenv, start=2020-09-09T23:07:34-04:00..
+
+========================
+Tuesday September 15 2020
+--
+(memq (with-current-buffer (current-buffer) major-mode)
+                               '(magit-process-mode
+                                 magit-revision-mode
+                                 magit-diff-mode
+                                 magit-stash-mode
+                                 magit-status-mode))
+nil
+
+
+(current-buffer)
+#<buffer elisp-devel.vilya.el>
+
+
+(setq magit-display-buffer-function
+      (lambda (buffer)
+        (display-buffer
+         buffer (if (and (derived-mode-p 'magit-mode)
+                         (memq (with-current-buffer buffer major-mode)
+                               '(magit-process-mode
+                                 magit-revision-mode
+                                 magit-diff-mode
+                                 magit-stash-mode
+                                 magit-status-mode)))
+                    nil
+                  '(display-buffer-same-window)))))
+(lambda (buffer) (display-buffer buffer (if (and ... ...) nil (quote ...))))
+
+========================
+Thursday September 17 2020
+--
+(let ((x -1)
+      (y 26)
+      (frame nil))
+  (set-frame-position frame x y))
+t
+
+
+;;(setq x (or x -1)) (setq y (or y 0)))
+
+(run-with-idle-timer 2 nil #'dp-stuff-that-needs-to-done-after-init.el)
+[nil 0 2 0 nil dp-stuff-that-needs-to-done-after-init\.el nil idle 0]
