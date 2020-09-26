@@ -1,0 +1,155 @@
+#!/usr/bin/env zsh
+########################################################################
+#
+# template begin.
+
+# davep specific code -------------8><------------------
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+#
+# template end.
+########################################################################
+
+# @todo XXX Genericize for BASH and ZSH.
+
+: ${GREPPER=egrep}
+: ${fix__=true}
+: ${fix_all_=false}
+: ${fix_no=false}
+: ${no_no=false}		# @todo XXX Write me.
+
+greppit()
+{
+    local o="${1}"; shift
+    echo_id o
+    echo_id GREPPER
+    (set -o | egrep always)
+}
+for o in "$@"
+do
+    # @todo XXX Should fix_no just remove (^no_?)?
+    # @todo if user wants no change, a '^' at the beginning of the pattern will prevent any changes
+    if "${fix_all_}"
+    then
+	# @todo XXX Only replace single '_'s? E.g. ([^_])(_)([^])/\1\3
+	o=$(echo "${1}" | sed -r 's/_//g')
+    fi
+    if "${fix__}"
+    then
+	# @todo XXX There has to be a *much* better way to do this.  But w/o
+	# the loop, I end up with output like: "p__oopy_" given "p__o_op_y_",
+	# but "p__o_op_yy" begets "p__oopy" I kinda see why, but digging into
+	# the main loop of sed isn't worth the time.  However, there may be an
+	# option or suggestion on how to handle this.  Or not.
+	old_o=
+	while [[ "${o}" != "${old_o}" ]]
+	do
+	    old_o="${o}"
+	    o=$(echo "${o}" | sed -r 's/([^_])(_)([^_]|$)/\1\3/g')
+	done
+    fi
+    if "${fix_no}"
+    then
+	o=$(echo "${1}" | sed -r 's/^(no)([^_])(.*)/\1_?\2\3/')
+    fi
+done
+EExec_verbose_echo_id --msg "after underscore transforms" o
+#set -x
+EExec_verbose_echo_id GREPPER
+EExec_verbose_echo_id o
+greppit "${o}"

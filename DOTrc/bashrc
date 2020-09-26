@@ -28,6 +28,7 @@ then
 else
     DP_RC_DIR=$HOME/.rc
 fi
+export DP_RC_DIR
 
 # I don't know who came first, but some things are stupid, idiotically,
 # worthlessly and foolishly incompatible.
@@ -38,11 +39,14 @@ DP_LOG=$HOME/var/log
 export DP_LOG_DIR="$DP_LOG"
 
 [ -n "${DP_BASHRC_IN_PROGRESS-}" ] && {
+    echo "returning from bashrc because DP_BASHRC_IN_PROGRESS>$DP_BASHRC_IN_PROGRESS<"
     true
     return                      # Or exit?
 }
 export DP_BASHRC=t
 export DP_BASHRC_IN_PROGRESS=t
+# @todo XXX This is also done in zshrc.  Make the loading shared somehow.
+# @todo XXX Maybe a shellsrc.early both/all call.
 source ${DP_RC_DIR}/func.early
 
 if [ -n  "$GREP_OPTIONS" ]
@@ -71,7 +75,6 @@ fi
 
 export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
 
-. $HOME/.rc/func.early
 # Define setenv to work like export so we can just copy in .cshrc stuff
 setenv ()
 {
@@ -84,9 +87,9 @@ setenv ()
 #export SHELL=bash
 export INPUTRC=$HOME/.inputrc
 
-# XXX something in the a certain build process barfs if there is no trailing /.
-# Even though tcsh is the shell of choice in the company, it can't hurt to stick it here as
-# well.
+# XXX something in a certain build process barfs if there is no trailing # /.
+# Even though tcsh is the shell of choice in the company, it can't hurt
+# to stick it here as well.
 export TMPDIR=/tmp/
 export DP_TMPDIR=$HOME/tmp/
 
@@ -105,7 +108,8 @@ prompt_command()
 }
 DP_EXPORT_FUNC prompt_command
 
-# This will only be set once
+# This will only be set once.
+
 : ${DP_ENV_ORIGINAL_PATH:=$PATH}
 export DP_ENV_ORIGINAL_PATH
 PATH="${DP_ENV_ORIGINAL_PATH}"
@@ -961,6 +965,6 @@ dp_set_x_fini
 # It should be benign in other cases, but it's vital that it be exported.
 export LD_LIBRARY_PATH
 unset EExecProgName
-unset DP_BASHRC_IN_PROGRESS
+DP_BASHRC_IN_PROGRESS=
 
 true

@@ -1,5 +1,9 @@
 # -*-Shell-script-*-
 
+#@todo XXX Make a dp-sh-common file.
+
+export DP_RC_VERBOSE=false
+
 # For any zsh-isms
 dp_zsh_p()
 {
