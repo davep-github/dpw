@@ -346,6 +346,12 @@
         <command>attempt-to-raise-emacs</command>
       </action>
     </keybind>
+    <!-- Select and raise a zsh window for dev. -->
+    <keybind key="W-z">
+      <action name="Execute">
+        <command>wmctrl -a "::zsh-dev"</command>
+      </action>
+    </keybind>
     <!-- Select and raise a Jupyter QT Console window. -->
     <keybind key="W-j">
       <action name="Execute">
