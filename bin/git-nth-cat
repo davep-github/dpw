@@ -117,7 +117,12 @@ git_cat()
     EExec_verbose_echo_id grf
     # Would something like the following be better?
     # git cat-file -p HEAD:lib/pylib/go2env_lib.py
-    EExec git show "${commit}:${grf}"
+    local file_to_cat="${commit}:${grf}"
+    EExec_verbose_echo_id file_to_cat
+    # Cheap & easy & possibly correct way to whack trailing newlines.
+    file_to_cat=$(echo -n "${file_to_cat}")
+    EExec_verbose_echo_id file_to_cat
+    EExec git show "${file_to_cat}"
 }
 
 nth=
