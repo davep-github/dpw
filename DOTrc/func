@@ -1,6 +1,9 @@
-#!/usr/bin/env bash
+# -*-Shell-script-*-
 # $Id: func,v 1.29 2004/10/27 08:20:03 davep Exp $
 # should be sourced, but the shebang tells us and emacs what's up
+
+source ~/.rc/dp_shells_compat.sh
+
 : ${dp_DEPRECATED_log:=${DP_LOG_DIR:=$HOME/log}/dp_DEPRECATEDS.log}
 export dp_DEPRECATED_log
 
@@ -208,9 +211,9 @@ aappend()
 
 expand_source_list()
 {
-    #{		 # @todo XXX
+    #{				# @todo XXX @todo XXX
 	# Print 'em before any shifts, etc.
-	#echo "expand_source_list(): args in: $(eko $@)" # @todo XXX
+	#echo "expand_source_list(): args in: $(eko $@)" # @todo XXX @todo XXX
     #} 1>&2			# @todo XXX 
 
     local at_copy="$@"
@@ -225,14 +228,23 @@ expand_source_list()
 	# '-' --> no suffix.  ".-" happens because I'm not very good at
 	# programming, I just know how to edit really quickly, even though I
 	# type slowly.  Maybe that's why I did better work when I used (plain
-	# old) vi.
-	[[ "${suff}" =~ \.?- ]] && continue
-	#eko "rc: top of loop" "${rc[@]}" 1>&2 # @todo XXX 
+	# old) vi.  I had to think since tons of debugging an code changes
+	# took a long time in vi.  So much for the IBM sub-second response
+	# time theory.  The again, they made no claims for correctness, just
+	# for "productivity."
 	src=${base}${suff}
-	#echo "expand_source_list(): src>$src<" 1>&2 # @todo XXX 
+	[[ "${suff}" =~ ^\.?-$ ]] && {
+	    # Too many things don't have a version of a file for all of the
+	    # extensions in ${locale_rcs}
+	    #echo "expand_source_list()@todo XXX : skipping suffix for>${base}|${suff}<"
+	    continue
+	} 1>&2
+	#eko "rc: top of loop" "${rc[@]}" 1>&2 # @todo XXX
+	#echo "expand_source_list(): src>$src<" 1>&2 # @todo XXX
 	[ -f $src ] && {
-	    #rc+=("$src") # The bash which supports this isn't as widespread as one would wish.
-	    #echo "adding src >${src}<" # @todo XXX 
+	    # The bash which supports this isn't as widespread as one would wish.
+	    #rc+=("$src") 
+	    #echo "adding src >${src}<" 1>&2 # @todo XXX 
 	    rc[${#rc[@]}]="$src"
 	    #eko "rc: after add" "${rc[@]}" 1>&2 # @todo XXX
 	}
@@ -242,12 +254,13 @@ expand_source_list()
     #eko "rc: past loop:" "${rc[@]}" 1>&2 # @todo XXX
     if ((${#rc[@]} > 0))
     then
-	#eko "expand_source_list():returning: " "${rc[@]}" 1>&2 # @todo XXX 
+	eko "expand_source_list():returning: " "${rc[@]}" 1>&2
+	#echo "${rc[@]}"
 	return 0
     else
-	{
-	    echo "expand_sour@todo XXX ce_list(): no files expanded:"
-	    echo "func args: >$(eko ${at_copy})<" # @todo XXX
+	[ -n "${DP_RC_DEBUG}" ] && {
+	    echo "expand_source_list(): no >${base}< files expanded."
+	    echo "func args: >$(eko ${at_copy})<"
 	} 1>&2
 	echo ""
 	return 1
@@ -271,6 +284,7 @@ source_list()
     fi
     local dprc_rc=0
     sources=$(expand_source_list "$@")
+    #echo "source_list: sources>$sources<" 1>&2 # @todo XXX 
     #echo_id sources
     for src in $sources
     do
@@ -906,7 +920,7 @@ hist_grep()
       esac
       shift
     done
-    [ "$hist_files" == "$hist_files_glob" ] && {
+    [[ "$hist_files" == "$hist_files_glob" ]] && {
         echo "No files in hist dir>${hist_file_dir}<"
         return 1
     } 1>&2
@@ -1104,6 +1118,11 @@ dp_ima_script()
     name_is___main__ "$@"
 }
 DP_EXPORT_FUNC dp_ima_script
+
+dp_ima_lib()
+{
+    ! dp_ima_script "$@"
+}
 
 invert_string_pred()
 {
@@ -1403,6 +1422,13 @@ go2rc()
     then
 	echo 1>&2 "*** You may also want to: M-x dp-abbrevs"
     fi
+}
+
+# Must be in the same shell instance to guarantee up-to-date results.
+ogreppit()
+{
+    local o="${1}"; shift
+    set -o | egrep "${o}"
 }
 
 dp_source_rc $HOME/.rc/func.completion
