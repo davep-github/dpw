@@ -214,12 +214,16 @@ def handle_csh(name, alias_item, **kw_args):
     # 1. Shell
     # B. elisp setenv calls
     # The format to handle_env_var needs to take 3 parameters.
-    # We just suck the 3rd into a comment.
-    # @todo XXX This won't work.
+    # We just stuff the 3rd into a comment.
+    # @todo XXX ??? This won't work.  Deal with it if I ever go t?csh.
+    quote_char = kw_args.get("quote_char",
+                             Evil_globals.get("quote_char", '"'))
     handle_env_var(
-        fmt='setenv %s "%s"; # %s\n',
+        fmt='setenv %s %s%s%s; # %s',
         name=name,
+        open_quote=quote_char,
         val=val,
+        close_quote=quote_char,
         **kw_args)
 
 
@@ -320,6 +324,7 @@ shell_handlers = {
     'grep-val': grep_val_handlers,
 }
 shell_handlers['bash2'] = shell_handlers['bash']  # same as bash
+shell_handlers['tcsh'] = shell_handlers['csh']  # same as csh
 shell_handlers['grep_name'] = shell_handlers['grep']
 shell_handlers['grep_val'] = shell_handlers['grep-val']
 
@@ -388,8 +393,10 @@ def LIST_handler(name, alias_item, **kw_args):
 # val: list of handlers for selector:
 #   entry, prefix in file, suffix in file, selector-regexp
 def get_handlers(shell_type=None):
+    dp_io.cdebug(1, "get_handlers(): in: shell_type>{}<\n", shell_type)
     if shell_type is None:
         shell_type = Shell_type
+    dp_io.cdebug(1, "get_handlers(): shell_type>{}<\n", shell_type)
     return {SELECTOR_EMACS:
             (
                 handle_emacs,
@@ -771,7 +778,8 @@ def process_aliases(handle, handler_keyword_args,
                     handle_pre, handle_post,
                     aliases=Get_aliases(),
                     grep_regexps=None, ostream=sys.stdout):
-    dp_io.cdebug(1, "in process_aliases()\n")
+    dp_io.cdebug(1, "in process_aliases(), handle: {}, handler_keyword_args: {}\n",
+                 handle, handler_keyword_args)
     handler_keyword_args["ostream"] = ostream
     if handle_pre:
         handle_pre(**handler_keyword_args)
@@ -781,9 +789,11 @@ def process_aliases(handle, handler_keyword_args,
     keys = list(aliases.keys())
     keys.sort()
     for regexp in grep_regexps:
+        dp_io.cdebug(2, "process_aliases(): regexp>{}<\n", regexp)
         for k in keys:
             alias_item = aliases[k]
-            dp_io.cdebug(2, "process_aliases(): alias_item>{}<\n", alias_item)
+            dp_io.cdebug(2, "process_aliases(): k: {}, alias_item>{}<\n",
+                         k, alias_item)
             if not valid_env_var_name(k):
                 continue
             kw_args = handler_keyword_args
