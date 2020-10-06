@@ -1,5 +1,22 @@
 # -*-Shell-script-*-
 
+# See https://gist.github.com/philoserf/b797d42dbf31bdb7e313
+# 2: ~/.zshenv, Interactive login, Interactive non-login, Script
+
+# Clear BASH stuff out of the environment, if
+# 1) We started zsh under BASH.
+# 2) I've left some BASHism in my RC setup somewhere.
+unset DP_BASHRC
+export DP_ZSHRC=t
+
+# Path to your oh-my-zsh installation.
+export ZSH="/home/davep/.oh-my-zsh"
+# Keep my stuff separate, because me.
+export DP_RC_DIR="${HOME}/.rc"
+export DP_ZSH_RC_DIR="${DP_RC_DIR}/zsh"
+
+source ${DP_RC_DIR}/dp_shells_compat.sh
+source ~/.rc/func.early
 #
 # The zsh env rc files are the only ones read by a script.
 # In fact they're read all the time.
@@ -8,26 +25,25 @@
 # Do we want the debug stuff loaded for scripts?
 # @todo XXX Do a interactivity check?
 # make a func dp_source that just does a source.
+# NB: Keep immediately after sourcing dp_shells_compat.sh
 unset DP_SHELL_RCS
 
-# Path to your oh-my-zsh installation.
-export ZSH="/home/davep/.oh-my-zsh"
-# Keep my stuff separate, because me.
-export DP_RC_DIR="${HOME}/.rc"
-export DP_ZSH_RC_DIR="${DP_RC_DIR}/zsh"
-source ${DP_ZSH_RC_DIR}/dp-rc-debug
+# This must always be loaded, since it isn't conditionalized and the
+# functions it defines are used everywhere in, so far, bash and zsh.
+source ${DP_RC_DIR}/dp-rc-debug
 
-# Do it by hand since we don't call this, zsh does.
+# Do this part of dp_source(dp) by hand since we don't source/include this
+# file, zsh does.
 enter_rc_file "zshenv"
 
 ####????export DISABLE_MAGIC_FUNCTIONS=true
 
-
 dp_source "${DP_ZSH_RC_DIR}/zsh-path"
-##echo $PATH | sed -rn 's/:/\n/pg'
 
 export HISTFILE=$(mk-persistent-dropping-name.sh "zsh_history")
 
-# build up and vet path as in bashrc.
+# build up and vet path as in bashrc or better with parts of bash's rc files.
 
+# Do this part of dp_source(dp) by hand since we don't source/include this
+# file, zsh does.
 exit_rc_file "zshenv"
