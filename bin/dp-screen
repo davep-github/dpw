@@ -6,6 +6,7 @@
 # NB! nVIDIA's /etc/screenrc sets `hardstatus' which ends up having 2 titles
 # (and more) in the xterm title bar.
 # Switch my scheme to use hardstatus and override or just nuke nVIDIA's?
+# Not an issue for YEARS, HA!
 #
 dp_screen()
 {

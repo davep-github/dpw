@@ -1,40 +1,12 @@
-#PS1="%B%n@%m:%~%b {$(git_current_branch)}
-#(zsh) %!%(0?||<%S%?%s)> "
+# -*-Shell-script-*-
 
-##backup PROMPT="%B%n@%m:%~%b"
-##backup PROMPT+='$(git_prompt_info)'
-##backup PROMPT+="
-##backup (zsh) %!%(0?||<%S%?%s)> "
-##
-##
-##backup ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%} (%{$fg[red]%}"
-##backup ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
-##backup ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
-##backup ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
-
-unset PS1
-unset PROMPT
-PROMPT="%B%n@%m:%~%b"
-PROMPT+='$(git_prompt_info)'
-PROMPT+="
-(zsh)%!%(0?||<%S%?%s)> "
-
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[white]%})%{$fg[red]%}"
-# @todo XXX Change the dirty indicator back to only one unicode character if
-# we can determine unicode support.  lxterm(1) claims to do that and use the
-# proper terminal, but doesn't.
-ZSH_THEME_GIT_PROMPT_DIRTY+="*✗*"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[white]%})"
-
-
-
-# PROMPT=$'%{$fg[white]%}$(ruby_prompt_info) %{$fg_bold[cyan]%}%~%{$reset_color%}$(git_prompt_info) %{$fg[cyan]%}%D{[%I:%M:%S]}\
-# %{$fg_bold[green]%}%n$%{$reset_color%} '
-
-# ZSH_THEME_GIT_PROMPT_PREFIX=" %{$fg[white]%}("
-# ZSH_THEME_GIT_PROMPT_SUFFIX=")%{$reset_color%}"
-# ZSH_THEME_GIT_PROMPT_DIRTY="*"
-# ZSH_THEME_GIT_PROMPT_CLEAN=""
+zshoval()
+{
+    set -x
+    for opt in "$@"
+    do
+	# @todo XXX Make a single regexp: "^($1|$2...|$n-1)[[:space:]]"
+	set -o | egrep "^${opt}[[:space:]]"
+    done
+    set +x
+}
