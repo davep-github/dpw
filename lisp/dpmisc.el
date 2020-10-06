@@ -5619,7 +5619,8 @@ E.g. the ability to fill docstrings and comments properly,
   "Doesn't work when \"-eval'd\" from the command line.
 Usta, but not anymore."
   (interactive)
-  (let (x y)
+  (let ((x x)
+	(y y))
     ;; Messages must be different or the logger merges them so it seems
     ;; that it only adds "done" so we never see the first message.
 ;;;(message "+snuggling(x: %s, y: %s)..." x y)
