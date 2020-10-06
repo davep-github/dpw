@@ -73,7 +73,11 @@ then
     }
 fi
 
+# bashrc, technically, wasn't tried because it was loaded implicitly by the shell.
 export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
+export DP_RC_LIST_OTHERS_TRIED=
+export DP_RC_LIST_OTHERS_ERRORS=
+export DP_RC_LIST_OTHERS_UNREADABLE=
 
 # Define setenv to work like export so we can just copy in .cshrc stuff
 setenv ()
@@ -519,10 +523,17 @@ fi
 
 # load locale specific functions
 EXTRA_RCS=''			# list of files other rcs want us to run
+# echo 1>&2 "locale_rcs>${locale_rcs}<"
+# echo 1>&2 "Before rc"
 source_list -l $DP_RC_DIR/rc       $locale_rcs .work
+# echo 1>&2 "Before func"
 source_list -l $DP_RC_DIR/func     $locale_rcs .work
+# echo 1>&2 "Before env"
 source_list -l $DP_RC_DIR/env ""   $locale_rcs .work
+# echo 1>&2 "Before alias"
 source_list -l $DP_RC_DIR/alias "" $locale_rcs .work
+# echo 1>&2 "After alias"
+# read -p "press enter >"
 
 # run any RC files that other RC files have requested.
 # this lets things like host RCs ask for, say, a project RC
@@ -621,7 +632,7 @@ dp_setup_prompt()
     	;;
     esac		# $TERM
     if [ "$_bashrc_set_ps1_path" == terminal ]; then
-        source setemph
+        dp_source_rc setemph
             # @todo XXX make this work.
         PS1_pre_history="${emph}scrn!$norm"
         fi
@@ -725,7 +736,7 @@ case $- in
 		    ignoreeof=2;;
 		esac
 	esac
-	source setemph		# set emphasis/norm sequences
+	dp_source_rc setemph	# set emphasis/norm sequences
         case "$USER" in
             root) emph='\[\033[01;31m\]'
                   emph2='\[\033[01;31m\]'
@@ -734,7 +745,7 @@ case $- in
                   # Gaping security hole to allow me to pass variables to a
                   # sudo'd shell.
                   # All this bullshit just to get matching prompt stuff.
-                  [ -e "$sudo_bash_env" ] && source "$sudo_bash_env"
+                  [ -e "$sudo_bash_env" ] && dp_source_rc "$sudo_bash_env"
 		  ;;
 
             *) PS1_terminator='>';emph2=; norm2=;;
@@ -802,7 +813,7 @@ source_bash_completion_code()
     for script in /etc/bash_completion /usr/share/bash-completion/bash_completion
     do
       [ -e "${script}" ] && {
-          source "${script}"
+          dp_source_rc "${script}"
           DP_SOURCED_BASH_COMPLETION_FILES="${script}"/
           return 0
       }
@@ -845,7 +856,7 @@ source_bash_completion_code()
       do
         dp_rc_logger "source_bash_completion_code: trying >$bc<"
         [ -f "$bc" ] || continue
-        source "$bc"
+        dp_source_rc "$bc"
         case "$bc" in
             /etc/*) dp_rc_logger "source_bash_completion_code: sourced system bash completion >$bc<";
                     bc_type=system;;
@@ -863,7 +874,7 @@ source_bash_completion_code()
 [ "$DP_ENV_INTERACTIVE" = 'y' ] && {
     if dp_ssh_run_agent_p
     then
-	source $HOME/.rc/dp-ssh-agent
+	dp_source_rc $HOME/.rc/dp-ssh-agent
 	dp_ssh_start_agent
     elif dp_gpg_run_agent_p
     then
@@ -941,7 +952,7 @@ export DP_BASHRC_EXECUTION_COMPLETED=t
 xterm_ls_colors=$($HOST_INFO -n '' "xterm-ls-colors")
 if [ -n "${xterm_ls_colors-}" ]
 then
-    source "${xterm_ls_colors}"
+    dp_source_rc "${xterm_ls_colors}"
 else
     unset LS_COLORS
 fi
@@ -959,7 +970,7 @@ unset post_bashrc_command
 dp_set_x_fini
 
 [ -n "${DP_BASHRC_SOURCE_ME_LAST}" ] && {
-    source "${DP_BASHRC_SOURCE_ME_LAST}"
+    dp_source_rc "${DP_BASHRC_SOURCE_ME_LAST}"
 }
 
 # It should be benign in other cases, but it's vital that it be exported.
