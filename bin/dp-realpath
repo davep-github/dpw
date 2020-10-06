@@ -2,10 +2,10 @@
 
 import sys, os
 
-def emit_result(result, verbose_p=False):
-    print(result, end=' ')
+def emit_result(result, end=' ', verbose_p=False):
+    print(result, end=end)
     if verbose_p:
-        print("dp-realpath, result>%s<" % (result,), end=' ', file=sys.stderr)
+        print("dp-realpath, result>%s<" % (result,), end=end, file=sys.stderr)
 
 def relpath_translator(pathname, relpath):
     rp = os.path.relpath(pathname, relpath)
@@ -43,10 +43,16 @@ def main(argv):
             continue
 
     if args:
+        n = len(args)
+        end = ' '
         for fileName in args:
+            if n == 1:
+                end=''
+            #print("n: {}, end>{}<".format(n, end))
+            n = n - 1
             rp = translator(fileName, *translator_args)
             result = '%s%s' % (rp, terminator)
-            emit_result(result, verbose_p=verbose_p)
+            emit_result(result, verbose_p=verbose_p, end=end)
 
     else:
         while True:
