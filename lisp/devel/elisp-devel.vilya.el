@@ -4263,8 +4263,8 @@ these.  Hell, he never wore a mask to influence people to disbelieve the
 pandemic was as bad as was said, to pretend that he had fixed it.  What about
 the states he encouraged to open?  The numbers are bigger than they were,
 thanks to him.  Now it's red states and people in the WH.  Suddenly he begins
-to wear a mask.  And he encourage people to participate in rallys (for his
-ego, he's already going to be the red nominee), a environment that is almost
+to wear a mask.  And he encourage people to participate in rallies (for his
+ego, he's already going to be the red nominee), an environment that is almost
 designed to spread covid.  Also, why did he insist on being the only one to
 see the data from the hospitals, etc?  If his numbers are so good, they'd be
 on every billboard as far as the eye can see.
@@ -5717,3 +5717,46 @@ t
 
 (run-with-idle-timer 2 nil #'dp-stuff-that-needs-to-done-after-init.el)
 [nil 0 2 0 nil dp-stuff-that-needs-to-done-after-init\.el nil idle 0]
+
+========================
+Sunday September 27 2020
+--
+
+;; (defun dp-call-q (&optional key-I-wish)
+;;   (interactive "p")
+;;   (call-interactively (key-binding "q")))
+
+
+(defun dp-q-exp()
+;;  (interactive "d")
+  (dmessage "in `dp-q-exp'")
+  (let ((kb (key-binding "q")))
+    (message "kb>%s<" kb)
+    (call-interactively kb)))
+
+;;(dmessage "leaving `dp-q-exp'"))
+
+(defun dp-q-exp()
+  (interactive "d")
+  (dmessage "in `dp-q-exp'")
+  (let ((kb (key-binding "q")))
+    (message "kb>%s<" kb)
+    (call-interactively kb)))
+
+
+;; @todo XXX Complete/fix;
+;; Breaks if I use the `save-window-excursion'. But works in the debugger.
+;; D'UH.  It pays to keep track of stuff I've written:
+;; `dp-op-other-window'
+;; It doesn't use save-window-excursion, so it may break.
+;; but it might be that which makes it work.
+
+========================
+Sunday October 04 2020
+--
+(defun dp-isearch-forward-list (search-list)
+  (interactive)				;@todo XXX get interactive args.
+  ()
+  for str in search-list do
+  (unless (re-search-forward str nil t)
+    return nil
