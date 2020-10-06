@@ -8616,8 +8616,37 @@ keep the file around."
   "Go to the specified window and invoke the [\(meta ?-)] function."
   (interactive "p")
   (save-window-excursion
-    (other-window (prefix-numeric-value current-prefix-arg))
+    (other-window (or other-window-arg
+		      (prefix-numeric-value current-prefix-arg)))
     (dp-meta-minus)))
+
+;;
+;; The ultimate in laziness.
+(defun* dp-q{uit}-other-window(&optional other-window-arg
+					 (key "q"))
+  "Go to another window and \"type\" a ?q into it.
+
+Good for exiting things like
+`view-lossage'. `dp-meta-minus-other-window' would work, but ?q
+may cause the buffer's mode to do (or *NOT* do) things
+`dp-meta-minus-other-window' might not.  ?q may just bury buffer.
+Or, similarly, but different, in help modes, 'l' moves you to a
+previous node, whereas M-- will take you out of help mode
+entirely.  Both are useful, but are very different.
+@todo XXX Generalize to make the char an argument."
+  (interactive )
+  (dp-op-other-window (or other-window-arg
+			  (prefix-numeric-value current-prefix-arg))
+		      (lambda ()
+			(call-interactively (key-binding key)))))
+;; @todo XXX C-M-q runs the command indent-pp-sexp (found in
+;; emacs-lisp-mode-map), which is an interactive compiled Lisp function in
+;;  lisp-mode.el .
+
+;; Move binding to C-M ?Q (cap ?Q)
+(dp-bump-key-binding [(control) (meta) ?q] 'dp-q{uit}-other-window
+		     [(control) (meta) ?Q]
+		     emacs-lisp-mode-map)
 
 (defun dp-maybe-kill-buffer (buffer)
   "Kill buffer if local, else ask to kill for remote files.
