@@ -8612,6 +8612,7 @@ keep the file around."
           (message "Saving buffer after `dp-save-buffer'...done."))
         (dp-kill-this-buffer)))))
 
+
 (defun dp-meta-minus-other-window (&optional other-window-arg)
   "Go to the specified window and invoke the [\(meta ?-)] function."
   (interactive "p")
@@ -8641,7 +8642,7 @@ entirely.  Both are useful, but are very different.
 			(call-interactively (key-binding key)))))
 ;; @todo XXX C-M-q runs the command indent-pp-sexp (found in
 ;; emacs-lisp-mode-map), which is an interactive compiled Lisp function in
-;;  lisp-mode.el .
+;; ‘lisp-mode.el’.
 
 ;; Move binding to C-M ?Q (cap ?Q)
 (dp-bump-key-binding [(control) (meta) ?q] 'dp-q{uit}-other-window
@@ -12381,6 +12382,9 @@ vc system, etc. When I figure out how to do closure like things."
                "")
              orig-decoded-file-mode))))
 
+(if (dp-xemacs-p)
+    ;; Leave unindented because otherwise there are problems with eval defun
+    ;; and other similar functions.
 (defun dp-fake-key-presses (&rest keys)
   "Create and dispatch key events for KEYS.
 If any element of KEYS is a string, then recursively call ourself with the
@@ -12389,7 +12393,9 @@ string's characters.
   (loop for k in keys do
     (if (stringp k)
         (apply 'dp-fake-key-presses (string-to-list k))
-      (dispatch-event (make-event 'key-press (list 'key k))))))
+      (dispatch-event (make-event 'key-press (list 'key k)))))
+  )
+(message "`dp-fake-key-presses' not supported in Emacs."))
 
 (defun dp-delete-frame (&optional forcep frame)
   "Confirm deletion because I use C-x 5 0 too often."
@@ -13328,12 +13334,6 @@ MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
       (apply pred pred-args)
     pred))
 
-(defun dp-quit-other-window (arg)
-  (interactive "p")
-  (save-window-excursion
-    (other-window arg)
-    (dp-fake-key-presses ?q)))
-
 (defun* dp-path-len (dels &optional (delimitter "/") (omit-nulls t))
   (length (split-string dels delimitter omit-nulls)))
 
@@ -14173,6 +14173,7 @@ The APPEND-ARG is a list wrapped around the real list to append."
   (append (symbol-value save-sym)
           (car append-arg)))
 
+;; @todo XXX Make into a macro?
 (defun or-stringp (string &optional if-not)
   "If STRING is \(stringp), return STRING, otherwise IF-NOT"
   (if (stringp string)
