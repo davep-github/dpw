@@ -2,6 +2,8 @@
 # $Id: func,v 1.29 2004/10/27 08:20:03 davep Exp $
 # should be sourced, but the shebang tells us and emacs what's up
 
+# @todo XXX Now that arrays are pretty common [ as of: 2020-10-04T15:31:59 ]
+# move to them, and assocs, when convenient.
 source ~/.rc/dp_shells_compat.sh
 
 : ${dp_DEPRECATED_log:=${DP_LOG_DIR:=$HOME/log}/dp_DEPRECATEDS.log}
@@ -9,16 +11,48 @@ export dp_DEPRECATED_log
 
 : ${envDTE=}
 
+# For now, must be 1st arg.
+verbosity_check() {
+    #echo 1>&2 "0:verbosity_check(): @>$@<"
+    local verbose="VERBOSITY CHECK ERROR"
+    case "$1" in
+	-v) verbose="eval echo 1>&2";;
+	-l) verbose=dp_rc_logger;;
+	-x) set -x; verbose=dp_rc_logger;;
+	*) verbose=":";;
+    esac
+    # echo 1>&2 "A:verbosity_check(): verbose>${verbose}<, @>$@<"
+    # set -- $verbose "$@"
+    # echo 1>&2 "B:verbosity_check(): \"returning\" @>$@<"
+    # echo "$@"
+    # An axshul real genuwine non-wat-the-fick-is-ronge-now-eko.
+    echo "$verbose"
+}
+
 dp_source_rc()
 {
+    # eko 1>&2 "dp_source_rc():Enter, @:" "$@"
+    # For now, must be 1st arg.
+    local verbose=$(verbosity_check "$@")
+    [[ "${verbose}" == ":" ]] || shift
+    # echo 1>&2 "dp_source_rc(): verbose>${verbose}<"
+    # eko 1>&2 "dp_source_rc(): @>" "$@"
+    # echo 1>&2 "B:dp_source_rc(): @>$@<"
+    #read -p "verbose>${verbose}<, @>$@<, press <enter>"
     for rcf in "$@"; do
-	#echo considering $rcf
-	#stat $rcf
-	[ -r $rcf ] && {
-	    #echo sourcing $rcf
-            source $rcf
+	$verbose "dp_source_rc() considering >$rcf<"
+        DP_RC_LIST_OTHERS_TRIED="$DP_RC_LIST_OTHERS_TRIED $rcf"
+	if [ -r $rcf ]
+	then
+	    $verbose "dp_source_rc() sourcing >$rcf<"
+            source $rcf  || {
+		echo 1>&2 "dp_source_rc(): error source rcf>$rcf<"
+		DP_RC_LIST_OTHERS_ERRORS="$DP_RC_LIST_OTHERS_ERRORS $rcf"
+	    }
             DP_RC_LIST_OTHERS="$DP_RC_LIST_OTHERS $rcf"
-        }
+        else
+	    DP_RC_LIST_OTHERS_UNREADABLE="$DP_RC_LIST_OTHERS_UNREADABLE $rcf"
+	fi
     done
 }
 
@@ -209,6 +243,11 @@ aappend()
     done
 }
 
+#restore these declare -a DP_RC_FILES_EXPANDED=()
+#restore these export DP_RC_FILES_EXPANDED
+# @todo XXX Put in bashrc so this is done once?
+# @todo XXX Better to fix my sourcing overload/repetition.
+export DP_RC_FILES_EXPANDED=()
 expand_source_list()
 {
     #{				# @todo XXX @todo XXX
@@ -252,15 +291,22 @@ expand_source_list()
     done
 
     #eko "rc: past loop:" "${rc[@]}" 1>&2 # @todo XXX
+    # This is the number of files processed, not an error code.
     if ((${#rc[@]} > 0))
     then
-	eko "expand_source_list():returning: " "${rc[@]}" 1>&2
-	#echo "${rc[@]}"
+	#eko "expand_source_list():returning: " "${rc[@]}" 1>&2
+	# echo "rc>>>${rc[@]}<<<" 1>&2
+	DP_RC_FILES_EXPANDED+=("${rc[@]}")
+	# echo "DP_RC_FILES_EXPANDED>>>${DP_RC_FILES_EXPANDED[@]}<<<" 1>&2
+	#declare -p DP_RC_FILES_EXPANDED 1>&2
+	# return list of files we expanded and detected.
+	echo "${rc[@]}"
 	return 0
     else
+	# Not really an error, but certainly odd; and might be a sign of one.
 	[ -n "${DP_RC_DEBUG}" ] && {
-	    echo "expand_source_list(): no >${base}< files expanded."
-	    echo "func args: >$(eko ${at_copy})<"
+	    echo 1>&2 "expand_source_list(): no >${base}< files expanded."
+	    #echo "original func args: >$(eko ${at_copy})<"
 	} 1>&2
 	echo ""
 	return 1
@@ -269,27 +315,23 @@ expand_source_list()
 
 source_list()
 {
-    local verbose
+    # eko 1>&2 "source_list():Enter, @:" "$@"
+    # For now, must be 1st arg.
+    local verbose=$(verbosity_check "$@")
+    [[ "${verbose}" == ":" ]] || shift
+    # echo 1>&2 "source_list(): verbose>${verbose}<"
+    # eko 1>&2 "dp_source_rc(): @" "$@"
+    $verbose echo 1>&2 "1:source_list(): verbose>${verbose}<"
+    $verbose eko "2:source_list():@" "$@"
+    $verbose eko "3: source_list():@" "$@"
+    $verbose echo 1>&2 "4:source_list(): verbose>${verbose}<"
     local src
-    if [ "$1" = '-v' ]
-    then
-	shift
-	verbose=echo
-        set -x
-    elif [ "$1" = "-l" ]; then
-        verbose=dp_rc_logger
-        shift
-    else
-	verbose=":"
-    fi
     local dprc_rc=0
     sources=$(expand_source_list "$@")
-    #echo "source_list: sources>$sources<" 1>&2 # @todo XXX 
-    #echo_id sources
+    $verbose echo "*******Expanded: source_list: $(eko sources $@)" 1>&2 # @todo XXX replace $verbose.
     for src in $sources
     do
-        #echo_id src
-        $verbose "source_list: sourcing>$src<"
+        $verbose echo 1>&2 "source_list(): sourcing>$src<"
         dp_source_rc $src
         ((++ dprc_rc))
     done
@@ -317,6 +359,7 @@ dpe_error()
     [[ "$rc" -gt "0" ]] && dpFATAL "$@"
     shift
     rc=$((- $rc))               # PoPT!
+    # I guess we can make 0 like a warning, even though we have dpWARN.
     [[ "$rc" == "0" ]] || rc_msg="rc: $rc: "
     dp_echo2 "ERROR:" "$rc_msg""$@"
     return $rc
