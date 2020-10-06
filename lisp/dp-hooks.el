@@ -944,11 +944,13 @@ tab setting, font or phase of the moon."
                       "\\)")))
     (ding)                              ; !<@todo XXX
     (toggle-read-only 1))
-  ;; xor modes?
-  (when (dp-gtags-p)
+  ;; Modes are xor.
+  (cond
+   ((dp-gtags-p)
     (gtags-mode 1))
-  (when (dp-xgtags-p)
-    (xgtags-mode 1))
+   ((dp-xgtags-p)
+    (xgtags-mode 1)))
+
   (dp-auto-it?)
   (dp-global-set-tags-keys)
 
@@ -2153,7 +2155,7 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
     ;; unwind-protect inside of the savehist worker function.  Strange since
     ;; simple test code shows unwind-protect prevents debug-on-error from
     ;; entering the debugger.  So lets just turn it off.
-    ;; 'praps due to hook context?
+    ;; 'praps due to hook context? Or something else using either of them.
     (condition-case appease-byte-compiler
         (let ((debug-on-error nil))
           ad-do-it)
