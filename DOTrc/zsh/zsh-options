@@ -7,4 +7,9 @@ setopt						\
     extendedglob				\
     nomatch					\
     notify					\
-    nohistverify
+    nohistverify				\
+    NO_HIST_SAVE_NO_DUPS			\
+    HIST_EXPIRE_DUPS_FIRST			\
+    NO_PUSHD_IGNORE_DUPS			\
+    LIST_ROWS_FIRST
+#    LIST_TYPES
