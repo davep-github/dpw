@@ -1,4 +1,13 @@
+#-*-Shell-script-*-
 # source me.
+
+# @todo XXX change complete with something that works in bash but doesn't
+# make zsh barf.
+
+DP_BASH_ONLY()
+{
+    "$@"
+}
 
 gnu_global_complete()
 {
@@ -6,18 +15,62 @@ gnu_global_complete()
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(global -c $cur))
 }
-complete -F gnu_global_complete global
+DP_BASH_ONLY complete -F gnu_global_complete global
 
-dp_sp_complete()
+dp_binaries_complete()
 {
         local cur
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(compgen -c $cur))
 }
-complete -F dp_sp_complete sp
-complete -F dp_sp_complete run-iff
-complete -F dp_sp_complete xit
-complete -F dp_sp_complete lessit
+DP_BASH_ONLY complete -F dp_binaries_complete sp run-iff xit lessit
+
+_dp_sp_complete_exp()
+{
+    set -x
+    local cur prev words cword
+    _init_completion || return
+
+    local i
+    for (( i=1; i <= COMP_CWORD; i++ )); do
+        if [[ ${COMP_WORDS[i]} != -* ]]; then
+            local root_command=${COMP_WORDS[i]}
+            _command_offset $i
+            return
+        fi
+        [[ ${COMP_WORDS[i]} == -@([0-9]|l|ll|r|x|f|v|F|e|L|g|G|d|S) ]] && ((i++))
+    done
+
+    case "$prev" in
+        -x)
+            ## COMPREPLY=( $( compgen -c -- "$cur" ) )
+            ## COMPREPLY=( $( compgen -c -- "$cur" ) )
+	    cur=${COMP_WORDS[COMP_CWORD]}
+            COMPREPLY=($(compgen -c $cur))
+            return
+            ;;
+        -X|-f)
+            # argument required but no completions available
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W '-1 -2 -3 -4 -5 -6 -7 -8 -9
+            -x -X -f
+            -l -ll -r -v -F -e -g -G -d -s' -- "$cur" ) )
+        return
+    fi
+}
+#
+# I copped most of this and hacked it, but I don't really know how it works.
+# :-(
+# AH!  Just remembered.
+_dp_sp_complete_hide()
+{
+    _dp_sp_complete_exp_guts "$@"
+}
+DP_BASH_ONLY complete -F _dp_sp_complete_exp sp_exp
 
 dp_go_complete()
 {
@@ -25,8 +78,7 @@ dp_go_complete()
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(go2env --grep-name-only "^$cur"))
 }
-complete -F dp_go_complete g
-complete -F dp_go_complete dogo
+DP_BASH_ONLY complete -F dp_go_complete g go dogo
 
 dp_ctags_etags_expand()
 {
