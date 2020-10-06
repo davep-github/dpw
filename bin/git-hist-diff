@@ -1,4 +1,6 @@
 #!/bin/bash
+# @todo XXX Handle options properly (dp-getopt+.sh)
+: ${nths:=-1}			# Just one so we don't get massive spewage.
 source script-x
 set -u
 progname="$(basename $0)"
@@ -54,15 +56,19 @@ git_hist_diff_file()
     fi
 }
 
+# @todo XXX Handle options properly (dp-getopt+.sh).
+# --nths or --revs should be handled.
 [ $# = 0 ] && {
     echo 1>&2 "usage: commit=<COMMIT> $(basename $0) files...
 For all files, diff them against all specs in rev-list COMMIT"
 }
 
+# ???
 revs=
 
-
-EExec -y git-nth-rev --all --file-last "$@" | while read
+# nths is the plural of nth because you can have many specifications of nth.
+# This is passed through to git-nth-rev(q.v.).
+EExec -y git-nth-rev "${nths}" --file-last "$@" | while read
 do
   EExec_verbose_echo_id REPLY
   set -- ${REPLY}
