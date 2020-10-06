@@ -6,6 +6,7 @@ source script-x
 : ${dump_dir:=%}
 : ${EZEC:=eexec}
 : ${COMPRESSION_LEVEL=7}
+: ${progname=$(basename "$0")}
 
 # e.g.
 # dump_dir=/bfd2/dumps/ddd dump_fses='/mathoms /yokel /' EExec trivial-yokel-dump 0
@@ -21,7 +22,7 @@ eexec()
     "$@"
 }
 
-[ "$1" = "-n" ] && {
+[[ "$1" =~ -[Nn] ]] && {
     shift
     EZEC=echo
 }
@@ -55,7 +56,7 @@ case "${COMPRESSION_LEVEL}" in
     *) compression_opt="-j${COMPRESSION_LEVEL}";;
 esac
 
-eko "@>$@<"
+# eko "after arg parsing" "@>$@<"
 # XXX ??? Override or (pre|ap)pend?
 #vsetp $* && dump_fses="$@"
 
@@ -80,6 +81,7 @@ do
 	# There should only be one leading, but...
       *) name=$(echo $dump_fs | sed -r -e 's,^//*,,' -e 's,/,%,g')
   esac
-  echo "PWD>$PWD<" 
+  echo "PWD>$PWD<"
+  df -h ${dump_fs}
   ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-${date_stamp}.lvl${lvl}.dump ${compression_opt} -u "$@" ${dump_fs}
 done
