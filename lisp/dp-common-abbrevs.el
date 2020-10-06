@@ -474,11 +474,15 @@
     ((("chre" "sfre" "srcre" "chcre")
       ".*\\.[ch]\\(pp\\)?$")
      dp-manual)
+
+    ;; >> Wish I was smart
     ((("arg" "argument" "arguments")
       'circular)
      dp-manual)
     ((("args" "arguments" "arg" "argument")
       'circular)
+     ;; << enough to handle plurals.
+
      dp-manual)
     ((("P" "Python" "py")
       'circular)

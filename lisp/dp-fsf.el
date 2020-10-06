@@ -104,7 +104,7 @@ The stolen one above is slow when using completion."
   "`dse this' sudo edit the file in the current buffer."
   (interactive)
   (when (dp-remote-file-p)
-    (error "I can't dse a remote file... yet"))
+    (error "Can't dse a remote file... yet"))
   (dp-stolen-sudo-edit 'dse-this-buffer)
   (unless (string-match "<dse>\\(<[0-9]+>\\)?$" (buffer-name))
     (rename-buffer (concat (buffer-name) "<dse>"))

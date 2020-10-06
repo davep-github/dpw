@@ -504,6 +504,8 @@ the init files.")
                              set-variable-value-history
                              setenv-history
                              svn-status-directory-history
+			     ;; @todo XXX !!! send write quoting patch to
+			     ;; maintainer.
                              command-history
                              ssh-history
 			     ;; I can't believe I left this out.  I

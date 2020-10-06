@@ -74,7 +74,7 @@ position."
       ;; @todo XXX As a less terrible hack, when we move out of the window,
       ;; exit `isearch-mode'.
       ;; Causing an error here (and in the `post-command-hook') seems to make
-      ;; things less fucked up.
+      ;; things less fucked up.  An error message and that seems to be all.
       (message))))
   ;FIXME     (when (funcall dp-original-isearch-string-out-of-window-function
   ;FIXME 		     isearch-point)
