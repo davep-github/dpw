@@ -15,4 +15,4 @@
 
 }
 
-eko sudo "${SHELL-bash}" ${C} "$CMD"
+sudo "${SHELL-bash}" ${C} "$CMD"
