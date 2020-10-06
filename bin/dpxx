@@ -13,10 +13,13 @@ source script-x
 
 set -u
 
+Usage() {
+    echo "No Usage yet."
+} 1>&2
 #font="7x13"
 name=
 amper='&'
-extra_options=
+extra_xterm_opts=
 xterm_bin=
 : ${login_shell_p=t}
 : ${just_show=}
@@ -33,7 +36,7 @@ host=
 
 set_var()
 {
-set +u
+    set +u
     local vname=$1			# variable's name
     local db_val=$2			# value from the host-info db
     local default=$3			# default value if host-info had no value
@@ -69,7 +72,7 @@ for i in "$@"
 do
     case $1 in
 	-f) font=$2; shift ;;
-        -g) geometry="-geometry $2"; shift ;;
+        -g) geometry="--geometry $2"; shift ;; # -- makes lxterm happy.
         -n) name="$2"; shift ;;
 	-F) fg=$2; shift ;;
 	-B) bg=$2; shift ;;
@@ -104,8 +107,8 @@ args="$@"
 opts=$($HOST_INFO $host xterm_bg xterm_fg)
 eval set -- $opts
 
-bg=$(set_var bg ${1-} gray40)
-fg=$(set_var fg ${2-} white)
+bg=$(set_var bg ${1-} "")
+fg=$(set_var fg ${2-} "")
 
 #
 # the term runs locally, so get bin for local host
@@ -114,14 +117,15 @@ fg=$(set_var fg ${2-} white)
 # differentiation, but the syntax is related to the local
 # term program
 #
+# post set --         $1        $2           $3            $4
 opts=$($HOST_INFO xterm_bin xterm_opts xterm_geometry xterm_font)
 eval set -- $opts
-[ -z "$xterm_bin" ] && xterm_bin=$(set_var options "$1" 'xterm')
-options=$(set_var options "$2" '')
-options="$options $extra_options"
-geometry=$(set_var geometry $3 '')
+[ -z "$xterm_bin" ] && xterm_bin=$(set_var xterm_bin "$1" 'xterm')
+xterm_opts=$(set_var xterm_opts "${2-}" '')
+xterm_opts="$xterm_opts $extra_xterm_opts"
+geometry=$(set_var geometry "${3-}" '')
 : ${DEFONT=9x15}
-font=$(set_var font $4 $DEFONT)
+font=$(set_var font "${4-}" $DEFONT)
 
 if [ "$args" != "" ]
 then
@@ -140,10 +144,13 @@ then
 	name=$USER
     fi
     name=$(rx_name $name .)
+elif [ "$name" = "-" ]
+then
+    name=''
 fi
 #name=$(serialize_name $name)
-[ "$bg" = "" ] || bg="-bg '$bg'"
-[ "$fg" = "" ] || fg="-fg '$fg'"
+#[ "$bg" = "" ] || bg="-bg '$bg'"
+#[ "$fg" = "" ] || fg="-fg '$fg'"
 
 if [ "$font" = "*NONE*" ]
 then
@@ -156,23 +163,23 @@ fi
 if [ -n "$exe" ]
 then
     exe="-e $exe"
-    options=$(echo "$options" | sed s/-ls//g)
+    xterm_opts=$(echo "$xterm_opts" | sed s/-ls//g)
 fi
 
 if [ -n "$name" ]
 then
-    if [ "$xterm_bin" = "konsole" ]
+    if [[ "$xterm_bin" =~ konsole|lxterminal ]]
     then
 	name="-T $name"
     else
 	name="-name $name -T $name"
     fi
 fi
-# Konsole has problems with a name being set and using the xterm sequences
-# to set it... it always leaves the existing name in place
-#options='-j -sb -sl 1024 -ls'
+# Konsole and lxterminal have problems with a name being set and using the
+# xterm sequences to set it... it always leaves the existing name in place
+#xterm_opts='-j -sb -sl 1024 -ls'
 
-#echo "exec $xterm_bin $name $geometry $options $font $bg $fg $exe $amper"
+#echo "exec $xterm_bin $name $geometry $xterm_opts $font $bg $fg $exe $amper"
 
 NON_KDE_EXEC=exec
 
@@ -195,17 +202,26 @@ fi
 
 if [ "$just_show" = "y" ]
 then
-    EXEC="echo $EXEC"
+    EXEC="echo command: $EXEC"
     amper=''
 fi
 
 vunsetp "$login_shell_p" && {
-    options=$(echo "$options" | sed s/-ls//g)
+    xterm_opts=$(echo "$xterm_opts" | sed s/-ls//g)
 }
 
+cmd_str=$(eval echo $xterm_bin $name $geometry $xterm_opts $font $bg $fg $exe $amper)
+
 [ -n "${show_too_p}" ] && {
-    eval echo $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
+    echo "cmd_str>${cmd_str}<"
 }
-eval $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
+eval $EXEC $xterm_bin $name $geometry $xterm_opts $font $bg $fg $exe $amper
+if (("$?" != 0))
+then
+    echo "Error: ${cmd_str} failed."
+    exit
+fi
+
+exit
 
 #exec $term $geometry -fat -sl 2500 -ls -font $font -bg "#e0ffff" $exe &
