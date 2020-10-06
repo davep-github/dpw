@@ -3,19 +3,32 @@
 prog=`basename $0`
 echo $prog: $* 1>&2
 
+PINGER=ping_fun
+
 Usage()
 {
    echo "${prog}: usage: [-$option_str]" 1>&2
    exit 1
 }
 
+ping_fun()
+{
+    s=${1}; shift
+    eval ping -c 2 $s $REDIR
+}
+
+traceroute_fun()
+{
+    echo 1>&2 "traceroute_fun(): NOT IMPLEMENTED."
+    return 1
+}
 # init optional vars to defaults here...
 ECHO=
 ECHO="echo $prog: "
 
 # see the man page of getopt for inadequacies.
 
-option_str='vi:'
+option_str='vxi:t'
 args=` getopt $option_str $* `
 
 [ $? != 0 ] && Usage
@@ -25,7 +38,9 @@ for i in $*
 do
     case $1 in
 	-v) verbose=y;;
+	-x) set -x;;
 	-i) ISP=$2; shift;;
+	-t) PINGER=traceroute_fun;;
 	--) shift ; break ;;
 	*) 
 	    echo 1>&2 "Unsupported option>$1<";
@@ -58,7 +73,7 @@ pingit()
 #     fi
     ###echo $NEWLINE "Pinging $extra$s"
     echo $NEWLINE "${extra}ping $s..."
-    if eval ping -c 2 $s $REDIR
+    if "${PINGER}" $s
     then
 	if [ "$verbose" != 'y' ]
 	then
