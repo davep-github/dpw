@@ -106,6 +106,8 @@ Usage_error()
 ########################################################################
 
 # @todo XXX Genericize for BASH and ZSH.
+# @todo XXX # Must be in the same shell instance to guarantee up-to-date
+#  results.  Turn this into a shell function.
 
 : ${GREPPER=egrep}
 : ${fix__=true}
@@ -116,16 +118,17 @@ Usage_error()
 greppit()
 {
     local o="${1}"; shift
-    EExec_verbose_echo_id o
-    EExec_verbose_echo_id GREPPER
+    # EExec_verbose_echo_id o
+    # EExec_verbose_echo_id GREPPER
     set -o | "${GREPPER}" "${o}"
 }
+set -x
 for o in "$@"
 do
     # Check this file's history to see a foolish attempt to underscores so
     # that NO_THIS matches nothis and N_o_th_is.
     # Turns out that "set -o" always prints options in lower case sans '_'.
-    EExec_verbose_echo_id GREPPER
-    EExec_verbose_echo_id o
+    # EExec_verbose_echo_id GREPPER
+    # EExec_verbose_echo_id o
     greppit "${o}"
 done
