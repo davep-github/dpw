@@ -95,6 +95,9 @@ HIST_STAMPS="yyyy-mm-dd"
 # error(traceback) when `fuck' is used on the command line.  Using <esc><esc> cause a
 # little screen flash which could indicate the backtrace being swallowed.
 ##plugins=(percol rand-quote repo ripgrep sudo thefuck web-search)
+# NB: web-search defines an alias named `sp'. And no one, NO ONE, 
+# takes one of my favorite 2LAs away from me.
+#
 plugins=(
 	percol
 #	rand-quote
@@ -106,7 +109,6 @@ plugins=(
 #	tmux
 #	tmuxinator
 	ubuntu
-	web-search
 )
 
 dp_source $ZSH/oh-my-zsh.sh
@@ -114,6 +116,8 @@ dp_source $ZSH/oh-my-zsh.sh
 export DP_ZSH_COMPLETIONS_DIR="${DP_ZSH_RC_DIR}/completions/davep"
 
 fpath=(${DP_ZSH_COMPLETIONS_DIR} ${fpath})
+
+dp_source zshrc.pre-oh-my-zsh
 
 # User configuration
 
@@ -141,9 +145,16 @@ fpath=(${DP_ZSH_COMPLETIONS_DIR} ${fpath})
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+export histchars='!,#'
+
 dp_source ${DP_RC_DIR}/func
 dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
+# Must come after sourcing zshrc.pre-oh-my-zsh because it does some bindkey inits that
+# can clobber my bindings.  If there's any clobbering to be done, I want to be the one to do it.
+dp_source ${DP_ZSH_RC_DIR}/zsh-keys
 dp_source ${DP_ZSH_RC_DIR}/zsh-aliases
 
+# Do this part of dp_source(dp) by hand since we don't source/include this
+# file, zsh does.
 exit_rc_file "zshrc"
 
