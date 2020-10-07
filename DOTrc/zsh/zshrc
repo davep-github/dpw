@@ -4,11 +4,10 @@
 # with PATH!  export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Actually into zsh_path
 
-# Do it by hand since we don't call this, zsh does.
+# Do this part of dp_source(dp) by hand since we don't source/include this
+# file, zsh does.
 enter_rc_file "zshrc"
 
-dp_source ${DP_RC_DIR}/dp_shells_compat.sh
-dp_source ${DP_ZSH_RC_DIR}/zsh-path
 dp_source ${DP_ZSH_RC_DIR}/zsh-options
 
 # Set name of the theme to load --- if set to "random", it will
