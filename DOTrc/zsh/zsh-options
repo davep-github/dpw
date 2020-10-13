@@ -1,15 +1,58 @@
 # -*-Shell-script-*-
 
+# @todo XXX ??? Split this into interactive and non-interactive parts?
 
+# listtypes --> after this all is new.
 setopt						\
-    noclobber					\
-    appendhistory				\
     extendedglob				\
     nomatch					\
     notify					\
     nohistverify				\
-    NO_HIST_SAVE_NO_DUPS			\
-    HIST_EXPIRE_DUPS_FIRST			\
-    NO_PUSHD_IGNORE_DUPS			\
-    LIST_ROWS_FIRST
-#    LIST_TYPES
+    nohistsavenodups				\
+    histexpiredupsfirst				\
+    nopushdignoredups				\
+    listrowsfirst				\
+    listtypes					\
+    nomenucomplete				\
+    noglobdots					\
+    rematchpcre
+
+# Causes a full screen of spew.  I bad and naughty global guy.
+   ## warncreateglobal \
+   ## warnnestedvar
+
+
+# history
+setopt						\
+    appendhistory				\
+    histexpiredupsfirst				\
+    histfcntllock				\
+    histignoredups				\
+    histignorespace				\
+    histlexwords
+
+# Initialisation, all defaults.
+
+# Input/Output.
+# Man, do I wish ignoreeof acted like it does in bash.
+# interactivecomments doesn't seem to change.
+# We could use MAIL_WARNING as a way to generate an interrupt.
+setopt						\
+    noclobber					\
+    ignoreeof					\
+    interactivecomments				\
+    mailwarning					\
+    normstarsilent				\
+    rmstarwait
+
+# Jobcontrol
+setopt						\
+    monitor
+
+# Prompting
+
+# Scripts and Functions
+setopt						\
+    cbases					\
+    cprecedences
+
