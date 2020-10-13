@@ -1,8 +1,12 @@
 #!/usr/bin/env zsh
 
 #@todo XXX merge into bashrc init style and stream.
-source "${DP_RC_DIR}"/alias
+dp_source "${DP_RC_DIR}"/alias
+
+# This is duped from bashrc, which is a bad thing.
+source_list -l $DP_RC_DIR/alias "" $locale_rcs .work
 
 # zsh specific or overrides.
 alias showkeys='sed -n l'
 alias sks=showkeys
+alias typef='type -f'
