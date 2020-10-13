@@ -34,10 +34,19 @@ export DP_RC_DIR
 # worthlessly and foolishly incompatible.
 #echo "PATH>$PATH<"
 source ${DP_RC_DIR}/dp_shells_compat.sh
+source ${DP_RC_DIR}/echo_id
 
+# @todo XXX Add common file for "constants."
 DP_LOG=$HOME/var/log
 export DP_LOG_DIR="$DP_LOG"
+if [ -d "$DP_LOG" ]
+then
+    DAVEP_rc_log=${DP_LOG}/login-rc/$(/bin/hostname).bash.log
+else
+    DAVEP_rc_log=$HOME/login-rc.$(/bin/hostname).bash.log
+fi
 
+# How early should I do this?  AEAP?
 [ -n "${DP_BASHRC_IN_PROGRESS-}" ] && {
     echo "returning from bashrc because DP_BASHRC_IN_PROGRESS>$DP_BASHRC_IN_PROGRESS<"
     true
@@ -130,27 +139,6 @@ DP_EXPORT_FUNC prompt_command
 
 DP_BITCH_LOG="$DP_LOG/bitches"
 DP_SUGGESTION_BOX="$DP_LOG/suggestions"
-
-if [ -d "$DP_LOG" ]
-then
-    DAVEP_rc_log=${DP_LOG}/login-rc/$(/bin/hostname).log
-else
-    DAVEP_rc_log=$HOME/login-rc.$(/bin/hostname).log
-fi
-
-dp_log_header()
-{
-    echo -n "$(date +'%j:%R:%S')"
-}
-
-dp_rc_logger()
-{
-    {
-	dp_log_header
-	echo ": $@"
-    } >> $DAVEP_rc_log
-}
-dp_rc_logger "================= $(date): begin bashrc ================="
 
 pbit_farm_machine_p()
 {
@@ -524,16 +512,12 @@ fi
 # load locale specific functions
 EXTRA_RCS=''			# list of files other rcs want us to run
 # echo 1>&2 "locale_rcs>${locale_rcs}<"
-# echo 1>&2 "Before rc"
+
+# @todo XXX I'd like to have the zsh init code [re]use these if necessary.
 source_list -l $DP_RC_DIR/rc       $locale_rcs .work
-# echo 1>&2 "Before func"
 source_list -l $DP_RC_DIR/func     $locale_rcs .work
-# echo 1>&2 "Before env"
 source_list -l $DP_RC_DIR/env ""   $locale_rcs .work
-# echo 1>&2 "Before alias"
 source_list -l $DP_RC_DIR/alias "" $locale_rcs .work
-# echo 1>&2 "After alias"
-# read -p "press enter >"
 
 # run any RC files that other RC files have requested.
 # this lets things like host RCs ask for, say, a project RC
@@ -708,7 +692,7 @@ case $- in
 		bang='!'
 		;;
 	    bash)
-                : ${PS1_bang_pre:=""}
+                : ${PS1_bang_pre:="(bash) "}
                 : ${PS1_bang_suff:=""}
                 # Can't pass env vars through sudo.
                 export PS1_bang_pre
@@ -938,10 +922,7 @@ do_go2env
 #         echo "4: about to nh"
 #         nh
 # }
-#echo "bashrc done"
-vsetp "${dp_NH-}" && {	# It needs "{" to make it go.
-    # mayhaps due to the fact that nh is a big ol' hairy alias?
-    # nh is aliased to `export dp_NH=y; HISTFILE=; dp_NH_PS1_prefix=$PS1_prefix; PS1_prefix="(nh)$PS1_prefix"; PS1_title_prefix="-(NH)-"'
+vsetp "${dp_NH-}" && {
     nh
 }
 

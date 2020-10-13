@@ -1,4 +1,20 @@
 # -*-Shell-script-*-
+
+dp_log_header()
+{
+    echo -n "$(date +'%j:%R:%S')"
+}
+
+dp_rc_logger()
+{
+    {
+	dp_log_header
+	echo ": $@"
+    } >> $DAVEP_rc_log
+}
+DP_EXPORT_FUNC dp_rc_logger
+dp_rc_logger "================= $(date): begin $0 ================="
+
 vsetp()
 {
     [ -n "$*" ]
@@ -49,112 +65,7 @@ tfnot_name()
 }
 DP_EXPORT_FUNC tfnot_name
 
-echo_name_and_val()
-{
-    local echo_name_and_val_arg=
-    local echo_name_and_val_anno=""
-    local echo_name_and_val_noAnno=
-    local echo_name_and_val_prefix=""
-    local echo_name_and_val_suffix=""
-    local echo_name_and_val_pre_limiter=">"
-    local echo_name_and_val_post_limiter="<"
-    local echo_name_and_val_val=
-    local echo_name_and_val_name=
-    local echo_name_and_val_text=
-    local echo_cmd=echo
-    local bare_p=
-
-    while [[ "${1-}" =~ ^- ]]
-    do
-      echo_name_and_val_arg="$1"
-      case "$echo_name_and_val_arg" in
-          -q) echo_name_and_val_noAnno=t;;
-          -t|--text) shift; echo_name_and_val_text="${1} ";;
-          -T|--TEXT) shift; echo_name_and_val_text="${1}";;
-          -p) shift; echo_name_and_val_prefix="$1";;
-          -s) shift; echo_name_and_val_suffix="$1";;
-          -e|--echo-cmd) shift; echo_cmd="${1}";;
-          -b|--bare) bare_p=t;;
-          *) echo 1>&2 "echo_name_and_val: unknown option: $echo_name_and_val_arg";
-             return 1;;
-      esac
-      shift
-    done
-
-    local type_suffix
-    # This local could hide another with the same name
-    local __use_a_name_like_this_and_you_get_what_you_deserve__
-    for __use_a_name_like_this_and_you_get_what_you_deserve__ in "$@"; do
-        type_suffix=
-        if [ -z "$echo_name_and_val_noAnno" ]
-        then 
-            echo_name_and_val_anno="$__use_a_name_like_this_and_you_get_what_you_deserve__"
-        else
-            echo_name_and_val_anno=
-        fi
-
-        case "$__use_a_name_like_this_and_you_get_what_you_deserve__" in
-            -*) echo_name_and_val_name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
-                type_suffix='[]'
-                # eval av="\${$echo_name_and_val_name[@]}"
-                eval echo_name_and_val_val="\${$__use_a_name_like_this_and_you_get_what_you_deserve__[@]}";;
-            *) eval echo_name_and_val_val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
-        esac
-        
-        true_p "${bare_p}" && {
-            echo_name_and_val_prefix=
-            echo_name_and_val_anno=
-            echo_name_and_val_suffix=
-            echo_name_and_val_pre_limiter=
-            echo_name_and_val_post_limiter=
-            echo_name_and_val_anno=
-            echo_name_and_val_suffix=
-        }
-
-        "${echo_cmd}" \
-      "${echo_name_and_val_text}${echo_name_and_val_prefix}${echo_name_and_val_anno}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
-    done
-}
-DP_EXPORT_FUNC echo_name_and_val
-alias echo_nv=echo_name_and_val
-alias echo_nnv=echo_name_and_val
-#too short?# alias ennv=echo_name_and_val    # ???
-#too short?# alias ecnv=echo_name_and_val    # ???
-
-echo_id()
-{
-    echo_name_and_val "$@"
-}
-
-echo_id_err()
-{
-    echo_id "$@" 1>&2
-}
-
-echo_id2()
-{
-    echo_id_err "$@"
-}
-
-echo_id_ornate()
-{
-    echo_id -p "===== " -s " ===========" "$@"
-}
-
-eko_id()
-{
-    echo_name_and_val --echo-cmd eko --bare "$@"
-}
-
-eko_id_err()
-{
-    eko_id "$@" 1>&2 
-}
-
-eko_id2()
-{
-    eko_id_err "$@"
-}
+source ${DP_RC_DIR}/echo_id
 
 DP_EXPORT_FUNC echo_id echo_id_err echo_id2 echo_id_ornate
 DP_EXPORT_FUNC eko_id eko_id_err eko_id2
