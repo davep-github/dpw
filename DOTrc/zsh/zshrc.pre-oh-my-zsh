@@ -13,6 +13,12 @@ zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' verbose true
 zstyle :compinstall filename '/home/davep/.zshrc'
 
+# This is done in zshrc.pre-oh-my-zsh, which is a copy of my zshrc when I add
+# omz.  I think it's replaced when omz is uninstalled, but knowing me, I may
+# just rm -rf the omz repo and then take 100s of hours to realize what I did.
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
 # Lines configured by zsh-newuser-install
 HISTSIZE=1281
 SAVEHIST=9846
