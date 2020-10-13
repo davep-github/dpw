@@ -315,6 +315,7 @@ grep_name_handlers = (handle_grep_name, None, None)
 grep_val_handlers = (handle_grep_val, None, None)
 shell_handlers = {
     'bash': sh_handlers,
+    'zsh': sh_handlers,
     'sh': sh_handlers,
     'ksh': sh_handlers,
     'csh': csh_handlers,
@@ -745,20 +746,24 @@ def write_dict(args, dict_file=None):
 #####################################################################
 def read_dict(dict_file=None):
     dp_io.cdebug(1, "in read_dict()\n")
-    import imp
+    import importlib
     if not dict_file:
         dict_file = DEFAULT_DICT_FILE
     if not opath.exists(dict_file):
         return []
-    dict_path = [opath.dirname(dict_file)]
+    dict_path = opath.dirname(dict_file)
     dp_io.dprintf("""read_dict(): dict_path>%s<\n""", dict_path)
     dict_name = opath.basename(opath.splitext(dict_file)[0])
     dp_io.dprintf("""read_dict(): dict_name>%s<\n""", dict_name)
-    fobj, p, d = imp.find_module(dict_name, dict_path)
+    dict_spec = importlib.util.find_spec(dict_name)
+    dp_io.dprintf("""read_dict(): dict_spec>%s<\n""", dict_spec)
+    mod = importlib.util.module_from_spec(dict_path)
+    dp_io.dprintf("""read_dict(): mod>%s<\n""", mod)
+    dict_loader = dict_spec.loader
+    dp_io.dprintf("""read_dict(): dict_loader>%s<\n""", dict_loader)
     dp_io.dprintf("""read_dict(): fobj>%s<, p>%s<, d>%s<\n""",
                   dict_name, p, d)
-
-
+    dp_io.dprintf("""we shouldn't get heyah\n""")
     z = imp.load_module("alias_file_aliases", fobj, p, d)
     fobj.close()
     return z.aliases
