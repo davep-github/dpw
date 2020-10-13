@@ -149,12 +149,12 @@ export histchars='!,#'
 
 dp_source ${DP_RC_DIR}/func
 dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
-# Must come after sourcing zshrc.pre-oh-my-zsh because it does some bindkey inits that
-# can clobber my bindings.  If there's any clobbering to be done, I want to be the one to do it.
+# Must come after sourcing zshrc.pre-oh-my-zsh because omz does some bindkeys
+# that can clobber my bindings.  If there's any clobbering to be done, I want
+# to be the one to do it.
 dp_source ${DP_ZSH_RC_DIR}/zsh-keys
-dp_source ${DP_ZSH_RC_DIR}/zsh-aliases
+dp_source ${DP_ZSH_RC_DIR}/zsh-alias
 
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
 exit_rc_file "zshrc"
-
