@@ -2,7 +2,7 @@
 ########################################################################
 #
 # template begin.
-
+emulate zsh
 # davep specific code -------------8><------------------
 source script-x
 set -u
@@ -114,15 +114,21 @@ Usage_error()
 : ${fix_all_=false}
 : ${fix_no=false}
 : ${no_no=false}		# @todo XXX Write me.
+: ${option_query=set -o}
 
 greppit()
 {
-    local o="${1}"; shift
-    # EExec_verbose_echo_id o
-    # EExec_verbose_echo_id GREPPER
-    set -o | "${GREPPER}" "${o}"
+    local option_name="${1}"; shift
+    local massaged=$(echo "${option_name}" | tr '[:upper:]' '[:lower:]' \
+			 | sed -rn 's/[_-]//gp')
+    # Needs the eval because of the way zsh does string parsing.  It should
+    # be split when being run by the shell.  Since I can always use quotes if
+    # I want it to be one word, and there's no easy way that I know of
+    # (i.e. nothing like single quotes) only eval which, for some reason, I
+    # like to avoid.
+    eval ${option_query} | "${GREPPER}" "${massaged}"
 }
-set -x
+
 for o in "$@"
 do
     # Check this file's history to see a foolish attempt to underscores so
