@@ -6,10 +6,10 @@ trace_rc_file()
     local name=$1; shift
     if $enter
     then
-	s="${name}: Enter: $(date -Iseconds)\n"
+	s="${name}: Enter: $(date -Ins)\n"
 	s2=
     else
-	s="${name}: Exit: $(date -Iseconds)\n"
+	s="${name}: Exit: $(date -Ins)\n"
 	s2=
     fi
 
