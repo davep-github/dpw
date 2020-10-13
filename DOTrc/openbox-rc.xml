@@ -423,7 +423,7 @@
     <!-- run skippy-xd, an expose like window selector. -->
     <keybind key="W-s">
       <action name="Execute">
-        <command>ubuntu-sucks skippy-xd</command>
+        <command>skippy-xd</command>
       </action>
     </keybind>
     <keybind key="W-1">

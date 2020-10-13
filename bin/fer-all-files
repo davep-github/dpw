@@ -130,7 +130,7 @@ crappy_dash_n2()
 #
 # NB!!! Any output to stdout after the pipe is set up will
 # screw up the input to xargs.
-echo "dirs_a>"${dirs_a[0]}"<"
+echo "dirs_a>"${dirs_a[@]}"<"
 $RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type $name_arg \
     $FIND_PRINT0_OPT $FIND_POST_ARGS \
     | \

@@ -267,9 +267,9 @@ expand_source_list()
 	# '-' --> no suffix.  ".-" happens because I'm not very good at
 	# programming, I just know how to edit really quickly, even though I
 	# type slowly.  Maybe that's why I did better work when I used (plain
-	# old) vi.  I had to think since tons of debugging an code changes
+	# old) vi.  I had to think since tons of debugging and code changes
 	# took a long time in vi.  So much for the IBM sub-second response
-	# time theory.  The again, they made no claims for correctness, just
+	# time theory.  Then again, they made no claims for correctness, just
 	# for "productivity."
 	src=${base}${suff}
 	[[ "${suff}" =~ ^\.?-$ ]] && {
@@ -281,10 +281,19 @@ expand_source_list()
 	#eko "rc: top of loop" "${rc[@]}" 1>&2 # @todo XXX
 	#echo "expand_source_list(): src>$src<" 1>&2 # @todo XXX
 	[ -f $src ] && {
-	    # The bash which supports this isn't as widespread as one would wish.
-	    #rc+=("$src") 
-	    #echo "adding src >${src}<" 1>&2 # @todo XXX 
-	    rc[${#rc[@]}]="$src"
+	    # The bash which supports this isn't as widespread as one would
+	    # wish.  Wish I had a date on the above, because [ at this time:
+	    # 2020-10-11T22:14:24 ], it's widespread enough feel comfortable
+	    # to use.
+	    rc+=("$src")	# Yay!
+	    # Dumbass zsh -- sorry but true -- uses 1, one, 2^0, non-zero,
+	    # based array indexing.  Out of sync with most of the computing
+	    # world.  Why?  Guaranteed with any other shell that uses the
+	    # norm of 0 based arrays.
+	    #echo "size of rc>rc[${#rc[@]}]<" 1>&2
+	    # rc[${#rc[@]}]="$src" <<<<< broken.  Thanks, zsh.  I wonder if
+	    # there's a justification "out there" for it.
+	    #echo "adding src >${src}<" 1>&2 # @todo XXX
 	    #eko "rc: after add" "${rc[@]}" 1>&2 # @todo XXX
 	}
 	#eko "rc: bot of loop" "${rc[@]}" 1>&2 # @todo XXX

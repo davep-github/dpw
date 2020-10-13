@@ -38,7 +38,6 @@
 # EExecDash[NVQ]_opt  Contain the corresponding -n, -v or -q if they've been used.
 #                     snippet: $EExecDashN_opt $EExecDashV_opt $EExecDashQ_opt
 
-
 # MUST be set before sourcing or this will NOT work.
 # On by default. Call EExecNoExport to disable exportation.
 : ${EExecExporter:=export}

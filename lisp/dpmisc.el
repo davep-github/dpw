@@ -5615,7 +5615,7 @@ E.g. the ability to fill docstrings and comments properly,
 	interprogram-cut-function
          dp-save-dp-disable-interprogram-cut-function))
 
-(defun dp-snuggle-frame-in-upper-right (&optional frame x y)
+(defun dp-snuggle-frame-in-upper-right (&optional x y frame)
   "Doesn't work when \"-eval'd\" from the command line.
 Usta, but not anymore."
   (interactive)

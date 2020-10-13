@@ -4,10 +4,10 @@
 # @todo XXX change complete with something that works in bash but doesn't
 # make zsh barf.
 
-DP_BASH_ONLY()
-{
-    "$@"
-}
+# DP_BASH_ONLY()
+# {
+#     "$@"
+# }
 
 gnu_global_complete()
 {
