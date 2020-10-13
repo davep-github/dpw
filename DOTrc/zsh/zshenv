@@ -9,32 +9,42 @@
 unset DP_BASHRC
 export DP_ZSHRC=t
 
+DP_LOG=$HOME/var/log
+export DP_LOG_DIR="$DP_LOG"
+if [ -d "$DP_LOG" ]
+then
+    DAVEP_rc_log=${DP_LOG}/login-rc/$(/bin/hostname).bash.log
+else
+    DAVEP_rc_log=$HOME/login-rc.$(/bin/hostname).bash.log
+fi
+export DAVEP_rc_log
+
 # Path to your oh-my-zsh installation.
 export ZSH="/home/davep/.oh-my-zsh"
 # Keep my stuff separate, because me.
 export DP_RC_DIR="${HOME}/.rc"
 export DP_ZSH_RC_DIR="${DP_RC_DIR}/zsh"
-
-source ${DP_RC_DIR}/dp_shells_compat.sh
-source ~/.rc/func.early
-#
-# The zsh env rc files are the only ones read by a script.
-# In fact they're read all the time.
-#
-
+# This must always be loaded, since it isn't conditionalized and the
+# functions it defines are used everywhere in, so far, bash and zsh.
+source ${DP_RC_DIR}/dp-rc-debug	# provides dp_source, debugging source function.
+#set -x
+dp_source ${DP_RC_DIR}/dp_shells_compat.sh
+dp_source ${DP_RC_DIR}/echo_id
 # Do we want the debug stuff loaded for scripts?
 # @todo XXX Do a interactivity check?
 # make a func dp_source that just does a source.
 # NB: Keep immediately after sourcing dp_shells_compat.sh
 unset DP_SHELL_RCS
 
-# This must always be loaded, since it isn't conditionalized and the
-# functions it defines are used everywhere in, so far, bash and zsh.
-source ${DP_RC_DIR}/dp-rc-debug
+dp_source ~/.rc/func.early
 
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
 enter_rc_file "zshenv"
+
+# The zsh env rc files are the only ones read by a script.
+# In fact they're read all the time.
+#
 
 ####????export DISABLE_MAGIC_FUNCTIONS=true
 
