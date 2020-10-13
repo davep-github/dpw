@@ -3,36 +3,71 @@
 source script-x
 set -u
 progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 
 : ${prefix:=}
 : ${separator:=" "}
 : ${exec_p:=}
 
-# change a diff [-q] difference line into a more useful form.
+# change a diff [-q][-r] difference line into a more useful form.
 # We get:
 # Files ./.git/refs/stash and /home/davep/work/ftca/poc/.git/refs/stash differ
-#_-----__________________-----_________________________________________-------
+# xxxxx__________________xxxxx_________________________________________xxxxxxx
 # More useful, in some cases would be:
 # [prefix][sep]./.git/refs/stash /home/davep/work/ftca/poc/.git/refs/stash
-#
+# diff -qr d1 d2 -->
+# Only in d1: 1
+# Files d1/b and d2/b differ
+# --> outputs -->
+# [prefix] d1/b d2/b
+# E.g.
+# $ diff -qr d1 d2 | diff-diff-split -p biif
+# -->
+# biif d1/b d2/b
 
 split_it()
 {
-    local prefix="$1"
-    shift
+    # eko "@:" "$@"
+
     local sep="$1"
     shift
     local line="$1"
     shift
-    [ -n "$prefix" ] && prefix="$prefix$sep"
+    [ -n "${1-}" ] && {
+	prefix="$prefix$sep"
+	shift
+    }
 
-    local x=$(echo "$line" | sed -rn 's/(Files )([^[:space:]]+)( and )([^[:space:]]+)( differ)/'"$prefix"'\2 \4/p')
+    # Here's another regexp I made by fucking hand since I didn't remember I
+    # wrote this util.
+    # sed -rn 's/^(Files[[:space:]]+)([^[:space:]]+)([[:space:]]+and[[:space:]]+)([^[:space:]]+)(.*)/\2 \4/p';
+    # This is "better" WRT spaces, but uses just a .* for all stuff after the
+    # "other" file.  So merge 'em.
+    local pat='s/^(Files[[:space:]]+)([^[:space:]]+)([[:space:]]+and[[:space:]]+)([^[:space:]]+)([[:space:]]+differ)/'"$prefix"'\2 \4/p'
+    local x=( $(echo "$line" | sed -rn "${pat}") )
+    set -- $(echo "$line" | sed -rn "${pat}")
 
     if [ -n "$exec_p" ]
     then
-        "$x"
+	# eko "@:" "$@"
+        EExec "$@"
     else
-        echo "$x"
+        echo "${x[@]}"		# @todo XXX Make echo the default prefix/command.
     fi
 }
 
@@ -40,6 +75,7 @@ long_options=("prefix:" "exec" "separator:" "prefix-separator:" "prefix-suffix:"
 option_str="p:xes:"
 source dp-getopt+.sh
 
+# @todo XXX use dp-getopt+ here.
 for i in "$@"
 do
   case $1 in
@@ -52,8 +88,11 @@ do
   shift
 done
 
+#@todo XXX Set things up so that prefix (which is usually a program) comes
+#last on the call to split_it so that, after peeling off the args using
+#shift, we can "exec" "$@".
 while read
 do
-  split_it "$prefix" "$separator" "$REPLY"
+  split_it "$separator" "$REPLY" "$@"
 done
-    
+
