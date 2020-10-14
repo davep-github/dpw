@@ -2,7 +2,7 @@
 ########################################################################
 #
 # template begin.
-emulate zsh
+emulate bash
 # davep specific code -------------8><------------------
 source script-x
 set -u
@@ -18,8 +18,8 @@ fi
 
 for op in $eexec_program
 do
-  $op
-  ${EEXEC_SHIFT}
+    $op
+    ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
@@ -120,7 +120,12 @@ greppit()
 {
     local option_name="${1}"; shift
     local massaged=$(echo "${option_name}" | tr '[:upper:]' '[:lower:]' \
-			 | sed -rn 's/[_-]//gp')
+			 | sed -r 's/[_-]//gp')
+    [ -z "${massaged}" ] && {
+	echo "$progname: Something went wrong with massaging >${option_name}<"
+	echo "  into canonical form.  Massaged string is empty."
+	exit 1
+    } 1>&2
     # Needs the eval because of the way zsh does string parsing.  It should
     # be split when being run by the shell.  Since I can always use quotes if
     # I want it to be one word, and there's no easy way that I know of
