@@ -14,8 +14,8 @@ fi
 
 for op in $eexec_program
 do
-  $op
-  ${EEXEC_SHIFT}
+    $op
+    ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
 # We can export the program we got from eexec so that called programs

@@ -56,3 +56,6 @@ setopt						\
     cbases					\
     cprecedences
 
+# [other] Shell Emulation
+setopt						\
+    appendcreate

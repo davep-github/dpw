@@ -5760,3 +5760,89 @@ Sunday October 04 2020
   for str in search-list do
   (unless (re-search-forward str nil t)
     return nil
+
+========================
+Wednesday October 14 2020
+--
+;; zsh prompt (d'uh)
+davep@vilya:~
+(zsh) 1415> 
+
+;; bash
+davep@vilya:/tmp
+(bash) 3150/0001> 
+(concat "^\\(?:(.*)\\s-*\\)?"		; Misc annotation: shell name, etc.
+	  "[0-9]+"			; History number
+          "\\("
+          "[/<]"                        ; hist num separator.
+          "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name"
+          "\\)"
+          "?\\([#>]\\|<[0-9]*>\\)")
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)"
+
+^\(?:(.*)\s-*\)?[0-9]+\([/<]\(?:[0-9]+\|spayshul\)\)?\([#>]\|<[0-9]*>\)
+
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)"
+
+dp-sh-prompt-regexp
+^[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)
+
+^\(?:(.*)\s-*\)?[0-9]+\([/<]\(?:[0-9]+\|spayshul\)\)?\([#>]\|<[0-9]*>\)
+
+(concat "^\\(?:(.*)\\s-*\\)?"		; (zsh) Misc annotation: shell name, etc.
+	  "[0-9]+"			; xxxx History number
+          "\\("
+          "[/<]"                        ; hist num terminator/separator.
+          "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name/number"
+          "\\)?"
+	  ;;                V should this be [#>] ?
+          "\\([#>]\\|<[0-9]*>\\)")
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)"
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)"
+
+
+
+(concat "^\\(?:(.*)\\s-*\\)?"	    ; (zsh) Misc annotation: shell name, etc.
+	  "[0-9]+"		    ; xxxx History number
+          "\\("	      ; hist num terminator/separator, from shell number/name
+          "[/<]"      ; terminator char.
+          "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name/number"
+          "\\)"				; hist num end.
+	  ;;                 V should this be [#>] ?
+          "?\\([#>]\\|<[0-9]*>\\)")
+
+(concat "^\\(?:(.*)\\s-*\\)?"	    ; (zsh) Misc annotation: shell name, etc.
+	  "[0-9]+"		    ; xxxx History number
+          "\\("	      ; hist num terminator/separator, from shell number/name
+          "[/<]"      ; terminator char.
+          "\\)"				; hist num end.
+	  ;;                 V should this be [#>] ?
+          "?\\([#>]\\|<[0-9]*>\\)")
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\)?\\([#>]\\|<[0-9]*>\\)"
+^\(?:(.*)\s-*\)?[0-9]+\([/<]\)?\([#>]\|<[0-9]*>\)
+
+dp-bash-prompt-regexp
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)"
+
+dp-shells-prompt-font-lock-regexp-list
+("^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)" "^(gdb) " "^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\)?\\([#>]\\|<[0-9]*>\\)")
+
+
+(dp-concat-regexps-grouped (or nil
+                                 dp-shells-prompt-font-lock-regexp-list))
+"\\(^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<[0-9]*>\\)\\)\\|\\(^(gdb) \\)\\|\\(^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\)?\\([#>]\\|<[0-9]*>\\)\\)"
+
+
+(cl-pp dp-shells-prompt-font-lock-regexp)
+
+"^\\([0-9]+\\)
+\\(/\\(?:[0-9]+\\|spayshul\\)\\)
+\\([#>]\\|\\(<[0-9]*>\\)?\\)"
+
+
+(concat
+   "^\\([0-9]+\\)"			; history number
+   "\\(/\\(?:[0-9]+\\|spayshul\\)\\)"	; shell buffer id
+   "\\([#>]\\|\\(<[0-9]*>\\)?\\)"	; prompt [error] terminator
+   )
+"^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)"
