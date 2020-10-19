@@ -180,7 +180,7 @@ Inserts `dp-python-new-file-template-file' by default."
   (setq dp-insert-tempo-comment-func 'dp-py-insert-tempo-doxy-comment
 	block-comment-start (concat py-block-comment-prefix " ")
 	comment-start "# ")
-  (define-key dp-Ccd-map [(control d)] 'dp-py-insert-tempo-doxy-comment)
+  (define-key dp-Ccd-map [(control ?d)] 'dp-py-insert-tempo-doxy-comment)
   ;; They set this to "# " This makes doxygen comments ("##") not look like
   ;; Python comments.
   ;; ## forces comment to line up @ comment col.
@@ -191,7 +191,7 @@ Inserts `dp-python-new-file-template-file' by default."
   (local-set-key "\C-p`" 'comint-previous-matching-input-from-input)
   (local-set-key [delete] 'dp-delete)
   (local-set-key "\C-z" 'dp-shell)
-  (local-set-key [(control x) (control left)] 'py-beginning-of-def-or-class)
+  (local-set-key [(control ?x) (control left)] 'py-beginning-of-def-or-class)
   (local-set-key [(meta left)] 'beginning-of-defun)
   (if (dp-xemacs-p)
       (local-set-key [(meta right)] 'py-end-of-def-or-class)
@@ -199,16 +199,28 @@ Inserts `dp-python-new-file-template-file' by default."
   (local-set-key [(meta return)] 'dp-py-open-newline)
   (local-set-key [(control meta ?p)] 'py-beginning-of-def-or-class)
   (local-set-key "\C-c!" 'dp-python-shell)
-  (local-set-key [(meta s)] 'dp-py-insert-self?)
-  (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
+  (local-set-key [(meta ?s)] 'dp-py-insert-self?)
+  (local-set-key [(shift meta ?s)] 'dp-py-insert-self?-and-init)
+  (local-set-key [(meta ?q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (local-set-key [(meta up)] 'dp-other-window-up)
   (local-set-key [(meta down)] 'other-window)
-  ;; @todo XXX 
-  ;; See also <:elpy-python-bindings:> in `dp-elpy-mode-hook'.
-  ;; This mode and that mode interact by stacking in some way, some keys on
-  ;; one map, some keys on another, as normal minor modes do, but I don't
-  ;; know how to handle them in the best way.  So sometimes I'm stuck using
-  ;; mode specific keymap (names).
+  ;; company steals this for completion.
+  (when (featurep 'company)
+    ;; Steal it the fuck back
+    ;; was: (global-set-key [(meta ?9)] 'dp-insert-parentheses)
+    ;; should set locally to override the new local binding.
+    ;; Doesn't work.
+    ;; (local-set-key [(meta ?9)] 'dp-insert-parentheses))
+    (define-key company-active-map [(meta ?9)] 'dp-insert-parentheses))
+
+  ;; @todo XXX
+  ;; See also <:elpy-python-bindings:> in `dp-elpy-mode-hook'.  This mode and
+  ;; that mode interact by stacking in some way, some keys on one map, some
+  ;; keys on another, as normal minor modes do, but I don't know how to
+  ;; handle them in the best way.  So sometimes I'm stuck using mode specific
+  ;; keymap (names).  That now seems to be a quite common practice. It
+  ;; requires a convention, or source, to know the name, source quite often.
+  ;; I hope it solves a worthy problem.
 
   (dp-add-line-too-long-font 'python-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
