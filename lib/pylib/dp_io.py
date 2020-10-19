@@ -456,7 +456,7 @@ def get_debug_level():
     return debug_level
 
 ###############################################################
-def set_debug_level(level, enable_debugging_p=False,
+def set_debug_level(level, enable_debugging_p=True,
                     disable_debugging_p=False):
     global debug_level
     old_level = get_debug_level()
