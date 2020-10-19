@@ -1971,7 +1971,7 @@ on the go back ring."
   (unless no-save-pos-p
     (dp-push-go-back "dp-end-of-buffer"))
   (goto-char (point-max)))
-(put 'dp-end-of-buffer isearch-continues t)
+;; Muscle mem can't get used to this.;;(put 'dp-end-of-buffer isearch-continues t)
 
 
 (dp-deflocal dp-il&md-dont-fix-comments-p nil
