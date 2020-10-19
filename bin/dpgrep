@@ -47,6 +47,16 @@ PS_ARGS="${DEF_PS_ARGS}"
 : ${GREP_CMD_FILTER_PAT:="[0-9]+:[0-9]+ /bin/sh /bin/${GREPPER}"}
 : ${PGREP:=$0}
 
+# @todo XXX @todo XXX Add name of grepper, e.g. grep, grep -F, grep -E, to
+# list of matches to exclude.
+# Just grepping for -[FE] could get a hit somewhere else.  Just look for
+# grep -[FE]?
+# Hiding a real hit is the major problem.
+# ? Slurp up all of the ps output, then grep that data.  tmp file?
+# ? Problem with the ps command being a hit.
+#case "${GREPPER}" in
+
+
 out_line()
 {
     # Colors don't seem to make it through the preceding parts of the pipeline.

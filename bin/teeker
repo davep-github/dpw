@@ -616,6 +616,7 @@ if __name__ == "__main__":
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
 
+    # <:parser:>
     oparser = argparse.ArgumentParser()
 
     oparser.add_argument("--debug", "--dl",
@@ -697,7 +698,7 @@ if __name__ == "__main__":
                          dest="U_extension", default="",
                          type=str,
                          help=("Additional output file extension. "
-                         "Added last, after timestamp [if present]."))
+                               "Added last, after timestamp [if present]."))
     oparser.add_argument("-l", "--log-file",
                          dest="U_extension", const=".log",
                          action="store_const",

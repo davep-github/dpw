@@ -5846,3 +5846,111 @@ dp-shells-prompt-font-lock-regexp-list
    "\\([#>]\\|\\(<[0-9]*>\\)?\\)"	; prompt [error] terminator
    )
 "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)"
+
+========================
+Friday October 16 2020
+--
+<a href="https://raw.githubusercontent.com/GoogleChrome/accessibility-developer-tools/master/dist/js/axs_testing.js">homepage</a>
+
+
+(defun dp-re-search-forward-show-data (regexp &optional limit noerror count buffer)
+  (interactive "sre: ")
+  (dp-re-search-forward regexp limit noerror count buffer)
+  (let ((match-data (match-data)))
+    (dp-all-match-strings)
+    (message "mb: %s, match-strings: %s" (match-string 0)
+	     (dp-all-match-strings)))
+  "=====================================")
+
+dp-re-search-forward-show-data
+
+PROMPT+=' $(git_prompt_
+	    )'
+zsh-o-prompt
+"[?2004l
+%                                                                                       "
+dp-defwriteme
+
+(cl-pe '
+ (dp-defwriteme bubba (a b c)
+   "a defwriteme"
+   (princf "I am bubba!")
+   )
+ )
+
+(defalias 'bubba
+  (function
+   (lambda (a b c)
+     "WRITE THIS FUNCTION!
+a defwriteme"
+     (interactive)
+     (let ((s (format "%s: WRITE ME!!!
+signature %s %s" 'bubba 'bubba "(a b c)")))
+       (message "%s" s)
+       (princf "%s" s))
+     (princf "I am bubba!"))))
+
+bubba
+
+
+
+
+(defalias 'bubba
+  (function
+   (lambda (a b c)
+     "WRITE THIS FUNCTION!
+a defwriteme"
+     (interactive)
+     (let ((s (format "%s: WRITE ME!!!: %s %s" 'bubba 'bubba "(a b c)")))
+       (message "%s" s)
+       (princf "%s" s))
+     (princf "I am bubba!"))))
+bubba
+
+
+
+
+(defalias 'bubba
+  (function
+   (lambda (a b c)
+     "WRITE THIS FUNCTION!
+a defwriteme"
+     (interactive)
+     (let ((s (format "%s: WRITE ME!!!: %s %s" 'bubba 'bubba "(a b c)")))
+       (message "%s" s)
+       (princf "%s" s))
+     (princf "I am bubba!"))))
+bubba
+
+bubba
+
+
+
+
+
+(defalias 'bubba
+  (function
+   (lambda (a b c)
+     "WRITE THIS FUNCTION!
+a defwriteme"
+     (interactive)
+     (message "%s: WRITE ME!!!: %s %s" 'bubba 'bubba "(a b c)")
+     (princf "I am bubba!"))))
+bubba
+
+
+
+
+(bubba 1 2 3)
+bubba: WRITE ME!!!
+signature bubba (a b c)
+I am bubba!
+nil
+
+I am bubba!
+nil
+
+bubba: WRITE ME!!!: bubba (a b c)
+I am bubba!
+nil
+
