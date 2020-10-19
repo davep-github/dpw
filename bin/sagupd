@@ -1,0 +1,14 @@
+#!/bin/sh
+
+sag_op()
+{
+    sudo apt-get update "$@"
+}
+
+if [ "$1" = "---y" ]
+then
+    shift
+    yes | sag_op "$@"
+else
+    sag_op "$@"
+fi

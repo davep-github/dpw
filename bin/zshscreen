@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# <Inhales...> Currently zsh rc stuff is kinda sharing bashrc stuff.
+# However, functions are a problem.  In bash, the are exported so that bash
+# scripts get them via their environments.  However, when zsh sources the
+# func files, it sees the definitions, but bash scripts don't.  <sigh> so I
+# run this bash script and load the bashrc/_env (stupidly same file) then run
+# zsh, which has all of the bash environment above it.  This seems to "work"
+# as in not immediately break.
+# NB: I can't autoload the function in zsh, because bash scripts won't see them.
+# NB: However, I will need to autoload them in order to run zsh scripts.
+#
+# My baroque tendencies have just kicked me in my Rococo nuts.
+source ~/.bashrc
+: ${login_opt=}
+#set -x
+#echo "${PATH}" | sed -rn 's/:+/\n/gp'
+#type screen
+#read -p 'before nscreen... '
+# zsh prompt doesn't handle our naming stuff, yet.
+echo "login_opt>${login_opt}<"
+read -l "press enter... "
+nscreen ZSH zsh ${login_opt} "$@"
+#echo "${PATH}" | sed -rn 's/:+/\n/gp'
+#read -p "Well? "

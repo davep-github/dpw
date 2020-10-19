@@ -1,0 +1,23 @@
+mk_go_path()
+{
+    local gp=""
+    local sep=""
+    # Put global/default file ("") first so others can override values.
+    for l in "" .home $locale_rcs; do
+        gf=$HOME/.go$l
+        #echo 1>&2 "l>$l<, gf>$gf<"
+        [ -f $gf ] && {
+            #echo 1>&2 "B: gp>$gp<"
+            gp="$gp$sep$gf"
+            #echo 1>&2 "A: gp>$gp<"
+            # This is from a lower loop over $GOPATH.  Why?
+            # We do this so make can tell if .go files have changed.
+            # [-e "$gf" ] || touch "$gf"
+            sep=":"
+        }
+    done
+    # Remove the trailing :
+    [ -n "$sep" ] && echo "$gp" | sed -r 's/(.*)(:)$/\1/'
+}
+
+mk_go_path "$@"

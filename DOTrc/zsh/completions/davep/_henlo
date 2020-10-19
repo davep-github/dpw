@@ -1,0 +1,111 @@
+#compdef _henlo henlo
+#autoload
+# -*- mode: sh; -*-
+
+
+# Imagine you have a program with an interface like the following
+
+# henlo -h | --help
+# henlo quietly [--silent] <message>
+# henlo loudly [--repeat=<number>] <message>
+
+# This imaginary program has two command quietly and loudly that each have
+# distinct arguments you can pass to them – ideally we’d like the completion
+# script to complete -h, --help, quietly, and loudly when no commands are
+# supplied, and once either quietly or loudly has been entered it should give
+# context specific completions for those.
+
+# The following zsh script provides completions for the program as
+# described. In the rest of the post I’ll give an explanation of the general
+# outline of the script and dive into some of the more interesting parts.
+
+# see [/home/davep/DOTrc/zsh/completions/]simple-example.zsh
+function _henlo {
+    local line
+
+    #echo "curcontext>$curcontext<"
+    _arguments -C						\
+	       "-d[Daisy, a strange goldie]"			\
+	       "-p[Paw-Prints, lovingest]"			\
+	       "-b[Bud, he who was gold]"			\
+	       "-a[Atlas, the first one I remember]"		\
+	       "-t[Tucker, a derpy goldie]"			\
+	       "-k[Key, the stunt husky]"			\
+	       "-m[Moo Not a dog, but a cow]"			\
+	       "-N+[Dog name]:dog name:_dog_names"		\
+	       "--d2=[Dog name v2]:dog name: _dog_names2"	\
+	       "--d3=[Dog name v3]:dog name: _dog_names3"	\
+	       "--d4=[Dog name v4]:dog name: _dog_names4"	\
+	       "--d5=[Dog name v5]:dog name: _dog_names5"	\
+	       "--d6=[Dog name v6]:dog name: _dog_names6"	\
+	       "-o+[Owner]:owner's name:_owner_names"		\
+	       "--dog-names[List of dogs' names]"		\
+               ": :(quietly loudly)"				\
+	       "*::arg:->args"
+
+    case $line[1] in
+        loudly)
+            _henlo_loudly
+        ;;
+        quietly)
+            _henlo_quietly
+        ;;
+    esac
+}
+
+function _henlo_quietly {
+    compadd "--silent"
+    _arguments					\
+        "--silent[Dont output anything]"	\
+	"-d [Daisy, a strange goldie]"		\
+	"-p [Paw-Prints, lovingest]"		\
+	"-b [Bud, the bud who was gold]"	\
+	"-a [Atlas, the first one I knew]"	\
+	"-t [Tucker, a derpy goldie]"		\
+	"-k [Key, the stunt husky]"		\
+	"-m [Moo Not a dog, but a cow]"
+}
+
+function _henlo_loudly {
+    _arguments							\
+        "--repeat=[Repeat the <message> this number of times]"	\
+	"-d [Daisy, a strange goldie]"				\
+	"-p [Paw-Prints, lovingest]"				\
+	"-b [Bud, the bud who was gold]"			\
+	"-a [Atlas, the first one I knew]"			\
+	"-t [Tucker, a derpy goldie]"				\
+	"-k [Key, the stunt husky]"				\
+	"-m [Moo Not a dog, but a cow]"
+}
+
+_dog_names () {
+    compadd "Daisy" "Paw-Prints" "Bud" "Atlas" "Tucker" "Key"
+}
+
+_dog_names2 () {
+    ({henlo --dog-names})
+}
+
+_dog_names3 () {
+    # Get the names from the henlo program itself.  It's lazier and more
+    # consistent, All Praise OaOO.
+    _values 'doggo nameses3' "${(uonzf)$(henlo --dog-names)}"
+}
+
+_dog_names4 () {
+    zozo
+}
+
+_dog_names5 () {
+    zaza
+}
+
+_dog_names6 () {
+    zuzu
+}
+
+_owner_names () {
+    # Just get *something* via program output (e.g. like $(...))
+    {ls ~/etc/crontab.w*}
+    #_users
+}

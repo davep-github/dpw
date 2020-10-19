@@ -1,0 +1,14 @@
+#compdef _tcomp tcomp
+
+
+_alternative \
+  'args:custom arg:((a\:"description a" b\:"description b" c\:"description c"))'\
+  'files:filename:_files -/'
+
+# _alternative \
+#   "directories:user directory:($userdirs)" \
+#   'options:comma-separated opt: _values -s , letter a b c'
+  
+# _alternative \
+#   "dirs:user directory:($userdirs)" \
+#   "pids:process ID:($(ps -A o pid=))"
