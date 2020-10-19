@@ -931,6 +931,10 @@ DP_EXPORT_FUNC hist_snap
 
 hist_grep()
 {
+    [[ "${1-}" == "-x" ]] && {
+	set -x
+	shift
+    }
     # &*@JH@GHG#!!!!
     # For some reason, in xemacs, the aliases aren't used.
     # The variable? Ayup.
@@ -964,7 +968,7 @@ hist_grep()
     # Not sure if it's all of them, but hgrep often says: Binary file
     # /home/dpanarit/.../bash_history/yyz matches.  All of the files should
     # be text, so I'll just force a -a, since seeing garbage is better than
-    # seeing nothing since at least it's noticeable and the "binary matches"
+    # seeing nothing ; at least it's noticeable and the "binary matches"
     # could be missed.
     "${DP_HIST_GREP_GREPPER}" -a --directories="${directories_opt}" --with-filename \
         "$@" $hist_files        # All history files
