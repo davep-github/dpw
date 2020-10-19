@@ -646,18 +646,22 @@ FORMS complete."
        'lisp-indent-function (get 'save-excursion 'lisp-indent-function))
 
   (defmacro* dp-defwriteme (name arg-list docstring &rest body &aux args-str)
+    "Use just like `defun' except it defines a placeholder function.
+@todo XXX Modify so that function prints it name, ??location??, args, etc.
+?? Allow to be called with any args so *any* invocation calls the function."
     ;; Handle docstring cases:
     (setq docstring (concat "WRITE THIS FUNCTION!\n" docstring))
-    (setq args-str (if arg-list
-                       (format "%s" `(,@arg-list))
-                     "()"))
+    (setq args-str (if args-str
+                       (format "%s" ,args-str)
+		     (format "%s" `(,@arg-list))))
     `(defun ,name ,arg-list
       ,docstring
       (interactive)
-      (message "%s: WRITE ME!!!: %s %s"
-               (quote ,name)
-               (quote ,name)
-               ,args-str)
+      (let ((s (format "%s: WRITE ME!!!\nsignature %s %s" (quote ,name) (quote ,name)
+               ,args-str)))
+	(message "%s" s)
+	(princf "%s" s)
+	)
       ,@body))
   (put 'dp-defwriteme 'lisp-indent-function 'defun)
 
