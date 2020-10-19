@@ -15,60 +15,11 @@ if inside_emacs_p
 then
     export dp_no_color=y
 fi
-#export SERIAL_NUM=$(serialize_name $shell_name | cut -f2 -d:)
-export DEFAULT_XTERM_PARMS='-sb -sl 500 -j -ls -fn 9x15'
-#export noclobber=y
-export PAGER=less
-#export LESSOPEN="|lesspipe.sh %s"
-export LESSOPEN_PROG='lesspipe-new.sh'
-export LESSOPEN="|${LESSOPEN_PROG} %s"
-# check below for xemac's LESS= override
-# Use more informative option names.
-#export LESS='-R -MM -X --ignore-case'
-export LESS="--RAW-CONTROL-CHARS --LONG-PROMPT --no-init --ignore-case"
 
-export NAME="David A. Panariti"
-export PCAL_DIR=$HOME/etc
-export PCAL_OPTS="-m -n /7"
-export XUSERFILESEARCHPATH="./%N%C.ad:$HOME/app-defaults/%N%C:./%N.ad:$HOME/app-defaults/%N"
-export GOPATH=$(mk_go_path)
-export main_display=$(hostname)':0.0'
-export EDITOR='ec-w'
-export MUTT_EDITOR=vim
-export PDB_PATH="$HOME/etc/pdb/*.pdb"
-export BLOCKSIZE=K
-# Closest NWS station.
-export WEATHER_CODE=ORH		# Worcester, MA.
-export ARCHIE_HOST=archie.rutgers.edu
+source $DP_RC_DIR/env.common
+
 export DP_NOTE_INDEX_DIR=$($HOST_INFO -n 'DP_NOTE_INDEX_DIR_NOT_SET!!!' \
 					'notes-index-dir')
-export MEWTMP='/usr/tmp/mew'
-# Sigh. I'll never use these consistently.
-export RUBYLIB="$HOME/lib/rblib"
-#export TMPDIR="$HOME/tmp"
-export TMPDIR="/tmp"
-export TMP=$TMPDIR
-export TEMP=$TMPDIR
-export BIG_TMPDIR=/var/tmp
-export SEMANTIC_EMACS=emacs
-export SEMANTIC_PATH="$HOME/lisp/contrib/site-packages/cedet/semantic"
-export DP_IPC_DIR="$HOME/ipc"
-export DP_EDITING_SERVER_FILE="$DP_IPC_DIR/dp-editing-server"
-# This is better than aliasing with --colou?r since older greps won't barf.
-# And all? greps should see it.
-[[ "$dp_no_color" == y ]] && {
-    # Broken.  One binary option, apparently used by auto (`ne') is being
-    # used.
-    #export GREP_OPTIONS='--color=auto'
-    #export GREP_OPTIONS='--color=never'
-    unset GREP_OPTIONS
-}
-
-# Override this in a more specific env file.
-[ -f /etc/timezone ] || export TZ=EST5EDT
-
-#
-
 #
 # Useful for shopts that may not be in all of the versions of bash that I
 # interact with.
