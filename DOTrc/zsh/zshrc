@@ -67,6 +67,8 @@ HYPHEN_INSENSITIVE="true"
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 HIST_STAMPS="yyyy-mm-dd"
+export histchars='!,#'
+export HISTFILE=$(mk-persistent-dropping-name.sh "zsh_history")
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
@@ -92,8 +94,9 @@ HIST_STAMPS="yyyy-mm-dd"
 # percol.plugin.zsh
 # theme and sudo both use <esc><esc> as their binding.
 # And currently the fuck doesn't work with the binding and generates a python
-# error(traceback) when `fuck' is used on the command line.  Using <esc><esc> cause a
-# little screen flash which could indicate the backtrace being swallowed.
+# error(traceback) when `fuck' is used on the command line.  Using <esc><esc>
+# causes a little screen flash which could indicate the backtrace being
+# swallowed.
 ##plugins=(percol rand-quote repo ripgrep sudo thefuck web-search)
 # NB: web-search defines an alias named `sp'. And no one, NO ONE, 
 # takes one of my favorite 2LAs away from me.
@@ -144,8 +147,6 @@ dp_source zshrc.pre-oh-my-zsh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
-export histchars='!,#'
 
 dp_source ${DP_RC_DIR}/func
 dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
