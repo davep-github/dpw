@@ -129,12 +129,22 @@ then
 	alias xzfgrep="xzfgrep ${grep_options}"
 	alias pcregrep="pcregrep ${grep_options}"
 	alias grep="grep $grep_options"
-	alias egrep="grep --directories=skip -E $grep_options"
-	alias fgrep="grep --directories=skip -F $grep_options"
+	# NB: We *HAVE* to keep the grep type after the grep command because
+	# that's the way the system does it in /bin/[ef]grep.  We need to
+	# know the format so we can build a pattern to exclude the grepper
+	# when we grep for processes, since the args to *grep will usually
+	# match its own process in the ps listing.
+	# E.g.
+	#     PID TTY      STAT   TIME COMMAND
+	# 1115928 pts/1    S+     0:00 tail -f /home/davep/log/xemacs/xem-run.log
+	# 1122582 pts/0    S+     0:00 grep -E xemacs
+	#                              ^^^^^^^
+	alias egrep="grep -E --directories=skip $grep_options"
+	alias fgrep="grep -F --directories=skip $grep_options"
     }
     DP_EXPORT_FUNC dp_emacs_dash_n_greps
 
-    # How to make this dependent on my dp-shells lisp flags so the always match up?
+    # How to make this dependent on my dp-shells' lisp flags so the always match up?
     unalias ls
     alias ls='ls_no_color'
 
