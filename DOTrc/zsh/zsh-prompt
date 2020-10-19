@@ -2,7 +2,9 @@
 : ${PROMPT_backup=PROMPT}
 unset PROMPT
 PROMPT="%B%n@%m:%~%b"
-PROMPT+='$(git_prompt_info)'
+# We need to match the form of the bash prompt for emacs shell-buffer dir
+# tracking.  In fact all shells should do the same.
+PROMPT+=' $(git_prompt_info)'
 PROMPT+="
 %F{cyan}(zsh) %!%(0?||<%S%?%s)>%f "
 
