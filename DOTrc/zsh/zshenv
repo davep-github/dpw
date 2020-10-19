@@ -49,7 +49,7 @@ enter_rc_file "zshenv"
 ####????export DISABLE_MAGIC_FUNCTIONS=true
 
 dp_source "${DP_ZSH_RC_DIR}/zsh-path"
-#dp_source "${DP_RC_DIR}/env.common"
+dp_source "${DP_RC_DIR}/env.common"
 
 # build up and vet path as in bashrc or better with parts of bash's rc files.
 
