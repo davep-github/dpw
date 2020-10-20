@@ -1943,7 +1943,7 @@ on the go back ring."
     (dp-push-go-back "dp-beginning-of-buffer"))
   (goto-char (point-min)))
 ;; @todo XXX Will I like this? NO.
-;; IIR (it's spinal memory) I may use BOB to
+;; IIR (it's muscle memory) I may use BOB to
 ;; break out of a search.  But IRRBetter, I often BOB and search again, in
 ;; which case, this will be perfect.
 ;; This ends up being more of a PITA than I imagined.
@@ -5147,6 +5147,9 @@ Note the spaces."
     (when (and (not cbeg) (not cend))
       (ding)
       (message "You need to insert the appropriate comment chars"))))
+;; Keep the alii the same, because, muscle memory.
+;; [ Jan Akkerman rocks.  Plus the rest of Focus. ]
+(dp-defaliases 'ebang 'ieb 'ebi 'dp-insert-ebang)
 
 (defun dp-comment-endif ()
   "Grab conditional off current line, jump fwd to #endif and insert as comment"
@@ -12187,7 +12190,7 @@ Optionally use MATCH-DATA instead of the existing match-data."
   ;; when assigning `access-fun' which just needs to be 'match-string.
   (let ((access-fun 'match-string))
     (loop for i from 0 to (1- (dp-sizeof-match-data))
-      collect (funcall access-fun i match-string))))
+      collect (format "\"%s\"" (funcall access-fun i match-string)))))
 
 (defun* dp-all-match-strings-string (&key (match-string-args nil)
                                      (string-join-args nil))
@@ -12203,6 +12206,7 @@ STRING-JOIN-ARGS are passed through to `dp-string-join'. "
          string-join-args))
 
 (defun dp-window-dedicated-p (&optional win buffer)
+  "Make `window-dedicated-p' work to deduce WIN when it's nil."
   (window-dedicated-p (or win (dp-get-buffer-window buffer))))
 
 (defun dp-layout-compile-windows-func ()
@@ -12558,6 +12562,10 @@ def __init__(var):
 	    (insert " = "))
 	  (insert var-name)))
       (dp-deactivate-mark))))
+
+(defun dp-py-insert-self?-and-init ()
+  (interactive)
+  (dp-py-insert-self? 'initialize))
 
 (defsubst dp-xor (a b)
   "I can't believe there's not logical xor... or that they call bitwise xor, et.al. log*"
@@ -14962,6 +14970,7 @@ JFC."
   (interactive "P")
   (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
 
+;; Make a loop/macro that takes a list of names and creates on of these functions.
 (defun eli ()
   "Emacs Lisp Info.  Visit Emacs Lisp Info node."
   (interactive)
