@@ -1241,7 +1241,7 @@ add_ps1_prefix()
 nh()
 {
     export dp_NH=y
-    HISTFILE=
+    HISTFILE="${1-}"
     vunsetp $dp_NH_PS1_prefix && dp_NH_PS1_prefix=$PS1_prefix
     add_ps1_prefix nh NH
 }
