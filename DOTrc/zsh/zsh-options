@@ -1,8 +1,24 @@
 # -*-Shell-script-*-
 
 # @todo XXX ??? Split this into interactive and non-interactive parts?
+# @todo XXX ??? I think I'd like to tend to have interactive zsh features but
+# try to make scripts run goodly.
 
-# listtypes --> after this all is new.
+# These cause problems that are fatal in my setup.  We don't really want KSH
+# compatibility anyway.
+#    globsubst
+#    ksharrays
+# nopathscript off
+# Is this due to emulation?  It's set to "zsh"
+# Up to listtypes is from the initialish installation, and have been
+# "tested", as in "in use" longer.
+# So there's a lot new.
+# Probably the most essential is shwordsplit, which splits strings on the
+# command line like bash, sh, dash, csh, ksh.
+# And their excuse us that you probably want to send the whole string to a
+# command/function. However, there's a trivial way to prevent the splitting
+# ("") but there is no way to force the split that's as easy.  There are no
+# anti-quotes (in this anti-anti-universe).
 setopt						\
     extendedglob				\
     nomatch					\
@@ -15,7 +31,29 @@ setopt						\
     listtypes					\
     nomenucomplete				\
     noglobdots					\
-    rematchpcre
+    rematchpcre					\
+    noaliasfuncdef				\
+    appendcreate				\
+    banghist					\
+    bgnice					\
+    bare_glob_qual				\
+    checkjobs					\
+    checkrunningjobs				\
+    cprecedences				\
+    equals					\
+    evallineno					\
+    functionargzero				\
+    nohup					\
+    noignorebraces				\
+    interactivecomments				\
+    nomultifuncdef				\
+    nooctalzeroes				\
+    noposixcd					\
+    posixstrings				\
+    shfileexpansion				\
+    noshoptionletters				\
+    shortloops					\
+    shwordsplit
 
 # Causes a full screen of spew.  I bad and naughty global guy.
    ## warncreateglobal \
