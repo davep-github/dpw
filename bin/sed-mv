@@ -95,13 +95,6 @@ WHINE()
     }
 }
 
-if [ EExecDashN_p ]
-then
-    echo 'EExecDashN_p is true'
-else
-    echo 'EExecDashN_p is false'
-fi
-
 if [ "$1" = "-G" ]
 then
     shift
