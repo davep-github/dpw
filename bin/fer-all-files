@@ -56,11 +56,11 @@ do
     case $1 in
 	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
 	-q) ECHO=":" ;;
-	-d) dirs_a[${#dirs_a[@]}]=$2; shift;;   # Save off dirs.
-	-g) PATS_a[${#PATS_a[@]}]=$2; shift;;   # Save off globs.
+	-d) dirs_a+=("$2"); shift;; # Save off dirs.
+	-g) PATS_a+=("$2"); shift;; # Save off globs.
 	-D) file=d; shift;;
-        -p) FIND_PRE_ARGS_a[${#FIND_PRE_ARGS_a[@]}]="$2"; shift;;
-        -P) FIND_POST_ARGS_a[${#FIND_POST_ARGS_a[@]}]="$2"; shift;;
+        -p) FIND_PRE_ARGS_a+=("$2"); shift;;
+        -P) FIND_POST_ARGS_a+=("$2"); shift;;
         -s) FINDER=find;;
         -f) FINDER=$2; shift;;
         -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
