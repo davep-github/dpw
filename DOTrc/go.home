@@ -423,6 +423,8 @@ Ee|gitz|       /home/davep/local/build/gitted/zsh/
 Ee|uszcompu|       /usr/share/zsh/functions/Completion/Unix/
 Ee|uszcomp|       /usr/share/zsh/functions/Completion/
 Ee|uszcompl|       /usr/share/zsh/functions/Completion/Linux/
+Ee|omzrepo|       /home/davep/.oh-my-zsh/
+Ee|gitto|       /home/davep/local/build/gitted/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***

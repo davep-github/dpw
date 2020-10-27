@@ -129,10 +129,13 @@ Make it buffer local since there can be >1 minibuffers.")
 ;;CO;             )
 
   ;; Where were we when we caused the minibuffer to be used?
-  (setq dp-pre-minibuffer-buffer (cadr (buffer-list)))  ; SWAG
+  ;; SWAG.  3 or 4 tests and it looks to be 100% perfect for all of time in
+  ;; Emacs as well as the evil splitters, the "People's front of Macs."
+  (setq dp-pre-minibuffer-buffer (cadr (buffer-list))) ; SWAG++
   ;; Some minibuffer users, like isearch, provide their own key maps for the
   ;; minibuffer to use.  We don't want to nuke those maps (here), so let's do
   ;; all our manipulations with the actual minibuffer key map.
+  ;; This seems to be right and "the way" rather than the brittle hack it is.
   (let ((map minibuffer-local-map))
     ;; this may be a problem by causing the zmacs region to deactivate
     ;; when chars are typed in the mini-buffer

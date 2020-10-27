@@ -351,7 +351,7 @@ EExec_background()
 EExec()
 {
     # @todo XXX Is it worth it to do a full getopt?
-    # Only of argv[1] has a leading `-'?
+    # Only if argv[1] has a leading `-'?
     local i
     local eexecEcho="${EExecEcho}"
     local eexecShowOnly="${EExecShowOnly}"

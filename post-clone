@@ -75,7 +75,7 @@ safe_ln()
 
     ${EZEC} ln -s "${src}" "${dest}"
 }
-          
+
 ln_dotrc()
 {
     for fuckyou in "$@"

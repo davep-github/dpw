@@ -14987,9 +14987,14 @@ JFC."
   (info "magit"))
 
 (defun trani ()
-  "Magit Info.  Visit Magit's Info node."
+  "Magit Info.  Visit Magit's Transient subsystem's Info node."
   (interactive)
   (info "transient"))
+
+(defun zshi ()
+  "ZSH Info.  Visit ZSH's Info node."
+  (interactive)
+  (info "zsh"))
 
 (defun cali ()
   "Calendar/Diary Info."
