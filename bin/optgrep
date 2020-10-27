@@ -2,9 +2,17 @@
 ########################################################################
 #
 # template begin.
-emulate bash
+#emulate bash
+# With the emulate bash uncommented, I get this error:
+# (zsh) 2856> optgrep hashlistall
+# /home/davep/.rc/func.completion:41: parse error near `('
+# dp_source_rc(): error source rcf>/home/davep/.rc/func.completion<
+# nohashlistall         off
+# But I need the emulate down there (A)
+
 # davep specific code -------------8><------------------
 source script-x
+emulate bash			# (A).  Needs must be after script-x
 set -u
 progname="$(basename $0)"
 source eexec
@@ -16,6 +24,22 @@ else
     EEXEC_SHIFT=shift
 fi
 
+#
+# I'm seeing this:
+# (zsh) 2855> optgrep -v hashlistall
+# /home/davep/bin/optgrep:30: command not found: EExecVerbose
+# nohashlistall         off
+
+#
+# By default in bash, when something (eexec, in this case) is sourced, all of
+# the functions are known to the sourcer.  Not so in zsh (at least with how
+# I've [mis]set it up.  So we emulate bash where we need it.  Then back to
+# zsh.
+# However, the problem should've already happened since the source has
+# already happened by now, so the functions are defined the zsh way.  Why are
+# we OK when we use them in bash mode?  Seems like zsh would need to keep
+# extra meta-data around.
+#emulate bash
 for op in $eexec_program
 do
     $op
