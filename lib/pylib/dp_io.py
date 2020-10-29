@@ -227,6 +227,7 @@ def eprintf(fmt, *args):
 
 ###############################################################
 def printf(fmt, *args):
+    """Why doesn't this use fprintf using stdio?"""
     if type(fmt) == int:
         if lint:
             warning = 'HEY, you left a level in a printf/PRINTF\n'
