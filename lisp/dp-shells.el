@@ -48,26 +48,60 @@ Should be a color which nearly blends into background."
 ;;
 ;; currently: [ the 5056/0002> line is what we match. ]
 ;; dpanariti@sc-xterm-19:/home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132
-;; 5056/0002>
+;; (bash) 5056/0002>
 ;; After an error:
 ;; dpanariti@sc-xterm-19:/home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132
-;; 5057/0002<1>
+;; (bash) 5057/0002<1>
 ;; For shell 0 buffer:
 ;; 5002/spayshul>
-(defconst dp-sh-prompt-regexp
-  (concat "^[0-9]+"                     ; History number
-          "\\("
-          "[/<]"                        ; hist num separator.
-          "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name"
-          "\\)"
-          "?\\([#>]\\|<[0-9]*>\\)")
+
+;; Current bash prompt [ as of: 2020-10-14T10:46:45 ]:
+;; davep@vilya:/tmp
+;; (bash) 3150/0001>
+;; With error:
+;; davep@vilya:/tmp
+;; (bash) 3150/0001<130:SIGINT>
+
+(defconst dp-bash-prompt-regexp
+  (concat "^\\(?:(.*)\\s-*\\)?"	    ; (zsh) Misc annotation: shell name, etc.
+	  "[0-9]+"		    ; xxxx History number
+          "\\("	      ; hist num terminator/separator, from shell number/name
+          "[/<]"      ; terminator char.
+          "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name/number"
+          "\\)"			    ; hist num end.
+	  ;;                 V should this be [#>] ?
+          "?\\([#>]\\|<[0-9]*>\\)")  ; prompt terminatior [#>] or error: <rc>
   "For colorization in shell-mode buffer (bash/sh/etc.)")
+
+;; zsh prompt (d'uh)
+;; davep@vilya:~
+;; (zsh) 1415>
+;; With error:
+;; davep@vilya:/tmp
+;; (zsh) 1415<130>
+;; Make a regexp for zsh and add it to
+;; `dp-shells-prompt-font-lock-regexp-list'.  More trouble than it's worth to
+;; merge zsh and bash at this time.  Should add the shell number though, then
+;; they can be merged more easily,
+;;
+(defconst dp-zsh-prompt-regexp
+  (concat "^\\(?:(.*)\\s-*\\)?"	    ; (zsh) Misc annotation: shell name, etc.
+	  "[0-9]+"		    ; xxxx History number
+          "\\("	      ; hist num terminator/separator, from shell number/name
+          "[/<]"      ; terminator char.
+          "\\)"				; hist num end.
+	  ;;                 V should this be [#>] ?
+          "?\\([#>]\\|<[0-9]*>\\)")  ; prompt terminatior [#>] or error: <rc>
+  "For colorization in shell-mode buffer
+\(zsh only [ at this time: 2020-10-14T10:19:43 ])")
 
 (defconst dp-gdb-prompt-regexp "^(gdb) "
   "For gdb.")
 
 (defvar dp-shells-prompt-font-lock-regexp-list
-  (list dp-sh-prompt-regexp dp-gdb-prompt-regexp)
+  (list dp-bash-prompt-regexp
+	dp-gdb-prompt-regexp
+	dp-zsh-prompt-regexp)
   "`comint'-y \"clients\" can have font locking regexp for its prompt here.")
 
 ;;;###autoload
@@ -78,7 +112,11 @@ Should be a color which nearly blends into background."
 ;;; Why does autoloading C-z (dp-shell) make this autoload necessary?
 ;;;###autoload
 (defvar dp-shells-prompt-font-lock-regexp
-  "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)"
+  (concat
+   "^\\([0-9]+\\)"			; history number
+   "\\(/\\(?:[0-9]+\\|spayshul\\)\\)"	; shell buffer id
+   "\\([#>]\\|\\(<[0-9]*>\\)?\\)"	; prompt [error] terminator
+   )
   "*Regular expression to match my shell prompt.  Used for font locking.
 For my multi-line prompt, this is second line.  For most prompts, this will
 be the only line.  Some shells, like IPython's, already colorize their
@@ -166,6 +204,7 @@ prompt.  We don't want to stomp on them.")
 
 ;; NB: q.v. rev f1ca57a1648b4a7542450f590e57ae87ecc914e0 if you're
 ;; interested in an old way of doing this.
+;; First, a question which will never be discussed much less answered:
 ;; Is leaving a comment like this a better idea than leaving (especially
 ;; large) chunks of comment out code that changed for a reason that may be
 ;; ephemeral?  Throwing it away without leaving a reference to it seems
@@ -178,7 +217,11 @@ prompt.  We don't want to stomp on them.")
 ;; idea, though.
 ;; If this proves to be a good idea, this huge dissertation won't be
 ;; present.
-
+;; A huge comment in the commit message might help in a similar way, but
+;; you'd need to know to look for it.  And it may be many revs back and only
+;; now has a very rare boundary condition been hit.
+;; In this case, info is right near where it's needed, and we all know how
+;; many people read comments.
 (setq dp-dirtrack-regexp
   (format
    ;; `concat' makes it easier (for me) to see and doc the components.
@@ -344,6 +387,9 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "grep"
                                        "egrep"
                                        "fgrep"
+                                       "\\grep"
+                                       "\\egrep"
+                                       "\\fgrep"
                                        "dotfgrep"
                                        "dotegrep"
                                        "dotjgrep"
@@ -747,6 +793,8 @@ dir-tracker has become lost.
     )
   (local-set-key [(control ?g)] 'keyboard-quit))
 
+;; Would doing all (or a subset) of these in a single function be faster, if
+;; more complex?
 (defun* dp-add-lookfor-hooks(&optional (variant dp-default-variant))
   (loop for hook in '(dp-shell-lookfor-cls
                       dp-shell-lookfor-clsx
@@ -2078,48 +2126,48 @@ handled right."
         (call-interactively 'term)
       (term prog-name))))
 
-(defun dp-shell-process-xdir (arg)
-  "Let the dir tracking stuff track my xdir command.
-It's getting to the point, though, that I should just do a `dirs' after
-every dir changing command.
-Especially since this won't work as I don't have the other arg.
-The code which calls the dirtrack other function isn't passing all of the
-args so this can't work."
-  (shell-process-pushd (substring (shell-command-to-string
-                                   (format "sed_path %s" arg)) 0 -1)))
+;del me? (defun dp-shell-process-xdir (arg)
+;del me?   "Let the dir tracking stuff track my xdir command.
+;del me? It's getting to the point, though, that I should just do a `dirs' after
+;del me? every dir changing command.
+;del me? Especially since this won't work as I don't have the other arg.
+;del me? The code which calls the dirtrack other function isn't passing all of the
+;del me? args so this can't work."
+;del me?   (shell-process-pushd (substring (shell-command-to-string
+;del me?                                    (format "sed_path %s" arg)) 0 -1)))
 
-(defun dp-shell-process-go (arg)
-  "Use my `go' command to change directories.
-Xemacs's view of the pwd often gets confuzed."
-  (interactive "sdir: ")
-  (shell-process-pushd (dp-expand-dir-abbrev arg)))
+;del me? (defun dp-shell-process-go (arg)
+;del me?   "Use my `go' command to change directories.
+;del me? Xemacs's view of the pwd often gets confuzed."
+;del me?   (interactive "sdir: ")
+;del me?   (shell-process-pushd (dp-expand-dir-abbrev arg)))
 
-(defun dp-shell-dirtrack-other (cmd arg)
-  ;; Let's take the easy way out and just do a dirs after every dir changing
-  ;; command.
-  ;; !<@todo XXX Is there a pre or post shell command hook?
-  ;; Doesn't work... and it prints the dirs all over the screen and leaves the
-  ;; original command on the next prompt line.
-  ;; (shell-resync-dirs))
-  ;; Since my commands print a compatible dirs output, let's use our command
-  ;; as shell-dirstack-query. But the fact that we don't get all of the args
-  ;; keeps xdir broken.
-  ;; Also we'd need to prevent the shell from getting the original command in
-  ;; order to prevent the command being issued twice.  Most of the commands
-  ;; are not idempotent the way they are used.
-  (cond
-   ((string-match cmd "\\`gr?\\'") (dp-shell-process-go arg))
-   ((string-match cmd "\\`xdir\\'") (dp-shell-process-xdir arg))
-   ((string-match cmd "\\`gb\\'")	;swap top two dirstack items
-    (let ((dir (car shell-dirstack)))
-      (when dir
-	(setq shell-dirstack (cdr shell-dirstack))
-	(shell-directory-tracker (format "pushd %s\n" dir)))))
-   (t (error (format "Unknown cmd(%s) in dp-shell-dirtrack-other" cmd)))))
+;del me? (defun dp-shell-dirtrack-other (cmd arg)
+;del me?   ;; Let's take the easy way out and just do a dirs after every dir changing
+;del me?   ;; command.
+;del me?   ;; !<@todo XXX Is there a pre or post shell command hook?
+;del me?   ;; Doesn't work... and it prints the dirs all over the screen and leaves the
+;del me?   ;; original command on the next prompt line.
+;del me?   ;; (shell-resync-dirs))
+;del me?   ;; Since my commands print a compatible dirs output, let's use our command
+;del me?   ;; as shell-dirstack-query. But the fact that we don't get all of the args
+;del me?   ;; keeps xdir broken.
+;del me?   ;; Also we'd need to prevent the shell from getting the original command in
+;del me?   ;; order to prevent the command being issued twice.  Most of the commands
+;del me?   ;; are not idempotent the way they are used.
+;del me?   (cond
+;del me?    ((string-match cmd "\\`gr?\\'") (dp-shell-process-go arg))
+;del me?    ((string-match cmd "\\`xdir\\'") (dp-shell-process-xdir arg))
+;del me?    ((string-match cmd "\\`gb\\'")	;swap top two dirstack items
+;del me?     (let ((dir (car shell-dirstack)))
+;del me?       (when dir
+;del me? 	(setq shell-dirstack (cdr shell-dirstack))
+;del me? 	(shell-directory-tracker (format "pushd %s\n" dir)))))
+;del me?    (t (error (format "Unknown cmd(%s) in dp-shell-dirtrack-other" cmd)))))
 
-;; tell the dirtracker about my functions.
-(setq shell-dirtrack-process-other-func 'dp-shell-dirtrack-other
-      shell-dirtrack-other-regexp "g\\|gb\\|gr\\|kd\\|xdir")
+;del me? ;; tell the dirtracker about my functions.
+;del me? (setq shell-dirtrack-process-other-func 'dp-shell-dirtrack-other
+;del me?       shell-dirtrack-other-regexp "g\\|gb\\|gr\\|kd\\|xdir")
 
 (setq shell-popd-regexp (regexp-opt '("popd" "pd")))
 
@@ -2411,7 +2459,10 @@ It isn't pretty."
   "So we can use it later.")
 
 (dp-deflocal dp-shell-num nil
-  "Shell number, the number in the <>s")
+  "Shell number, the number in the before the final bit of the prompt, e.g.:
+davep@vilya:~/var/db
+(bash) 3311/0001> -!-
+            ^^^^")
 
 ;;;###autoload
 (defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
