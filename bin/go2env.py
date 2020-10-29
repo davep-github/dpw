@@ -744,28 +744,27 @@ def write_dict(args, dict_file=None):
 
 
 #####################################################################
+# Newe version.
 def read_dict(dict_file=None):
-    dp_io.cdebug(1, "in read_dict()\n")
+    dp_io.cdebug(1, "in read_dict(dict_file:%s)\n", dict_file)
     import importlib
     if not dict_file:
         dict_file = DEFAULT_DICT_FILE
     if not opath.exists(dict_file):
         return []
-    dict_path = opath.dirname(dict_file)
+    # Too stupid to find out how to do it the right way, he does it the
+    # stupid way. Hi Algy, how ya doin'?
+    dp_io.dprintf("""read_dict(): dict_file>%s<\n""", dict_file)
+    dict_path = [opath.dirname(dict_file)]
     dp_io.dprintf("""read_dict(): dict_path>%s<\n""", dict_path)
+    dp_io.dprintf("""read_dict(): sys_path>%s<\n""", sys.path)
+    dict_path.extend(sys.path)
+    sys.path = dict_path
+    dp_io.dprintf("""read_dict(): sys_path>%s<\n""", sys.path)
     dict_name = opath.basename(opath.splitext(dict_file)[0])
-    dp_io.dprintf("""read_dict(): dict_name>%s<\n""", dict_name)
-    dict_spec = importlib.util.find_spec(dict_name)
-    dp_io.dprintf("""read_dict(): dict_spec>%s<\n""", dict_spec)
-    mod = importlib.util.module_from_spec(dict_path)
-    dp_io.dprintf("""read_dict(): mod>%s<\n""", mod)
-    dict_loader = dict_spec.loader
-    dp_io.dprintf("""read_dict(): dict_loader>%s<\n""", dict_loader)
-    dp_io.dprintf("""read_dict(): fobj>%s<, p>%s<, d>%s<\n""",
-                  dict_name, p, d)
-    dp_io.dprintf("""we shouldn't get heyah\n""")
-    z = imp.load_module("alias_file_aliases", fobj, p, d)
-    fobj.close()
+    z = importlib.import_module(dict_name)
+    sys.path = sys.path[1:]
+    dp_io.dprintf("""read_dict(): sys_path>%s<\n""", sys.path)
     return z.aliases
 
 
