@@ -6,7 +6,7 @@
 # Also optionally modprobe(8)s amdgpu driver.
 #
 set -x
-: ${modprobe_p=}
+: ${modprobe_p=false}
 
 case "$(hostname)" in
     vilya) element="/home/davep";;
