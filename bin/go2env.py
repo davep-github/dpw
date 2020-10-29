@@ -752,15 +752,12 @@ def read_dict(dict_file=None):
         dict_file = DEFAULT_DICT_FILE
     if not opath.exists(dict_file):
         return []
-    # Too stupid to find out how to do it the right way, he does it the
+    # Being too stupid to find out how to do it the right way, he does it the
     # stupid way. Hi Algy, how ya doin'?
-    dp_io.dprintf("""read_dict(): dict_file>%s<\n""", dict_file)
+    # So, add the path part of the file name to sys.path, then remove it.
     dict_path = [opath.dirname(dict_file)]
-    dp_io.dprintf("""read_dict(): dict_path>%s<\n""", dict_path)
-    dp_io.dprintf("""read_dict(): sys_path>%s<\n""", sys.path)
     dict_path.extend(sys.path)
     sys.path = dict_path
-    dp_io.dprintf("""read_dict(): sys_path>%s<\n""", sys.path)
     dict_name = opath.basename(opath.splitext(dict_file)[0])
     z = importlib.import_module(dict_name)
     sys.path = sys.path[1:]
