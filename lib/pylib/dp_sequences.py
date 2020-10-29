@@ -132,7 +132,17 @@ def mk_bracketed_joined_string(l, sep="]\n[", opener="[", closer="]"):
     return opener + stringized_join(l, sep) + closer
 
 
-########################################################################
+###############################################################################
+## @todo XXX Needs tested.
+def dict_to_kv_strings(dict):
+    """Crappy name."""
+    ret = []
+    for k, v in dict.items():
+        ret.append("type(dict): k: {}, v: {}".format(k, v))
+    return ret
+
+
+#################################################################
 def list_to_indented_string(lst, indent_len=2, indent_str=" ", sep='\n'):
     return stringized_join(lst, sep + indent_str * indent_len)
 
