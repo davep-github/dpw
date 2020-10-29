@@ -855,6 +855,15 @@ do_go2env()
 }
 DP_EXPORT_FUNC do_go2env
 
+go2rc()
+{
+    eval $(go2env)
+    if inside_emacs_p
+    then
+	echo 1>&2 "*** You may also want to: M-x dp-abbrevs"
+    fi
+}
+
 do_sed_path()
 {
     # NO /, since it is a common dir sep char ;->
@@ -1446,15 +1455,6 @@ nix_ccache()
     [ -n "${echo_path_p}" ] && echo "${PATH}"
     
     return 0
-}
-
-go2rc()
-{
-    eval $(go2env)
-    if inside_emacs_p
-    then
-	echo 1>&2 "*** You may also want to: M-x dp-abbrevs"
-    fi
 }
 
 # Must be in the same shell instance to guarantee up-to-date results.
