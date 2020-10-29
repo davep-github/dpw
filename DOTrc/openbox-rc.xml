@@ -423,7 +423,7 @@
     <!-- run skippy-xd, an expose like window selector. -->
     <keybind key="W-s">
       <action name="Execute">
-        <command>skippy-xd</command>
+        <command>/home/davep/local/bin/skippy-xd</command>
       </action>
     </keybind>
     <keybind key="W-1">
