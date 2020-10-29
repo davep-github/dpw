@@ -401,7 +401,7 @@
              findprog meld or /usr/bin/meld doesn't work.
              This will be a problem when python3 becomes defecated.
         -->
-        <command>run-iff -r -n "IPython:" "python3"</command>
+        <command>run-iff -r -n "IPython:" dpxx ipython3</command>
       </action>
     </keybind>
     <keybind key="S-W-p">
