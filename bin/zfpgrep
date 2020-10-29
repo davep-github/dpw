@@ -1,0 +1,151 @@
+#!/usr/bin/env zsh
+########################################################################
+#
+# template begin.
+emulate bash
+# davep specific code -------------8><------------------
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+#
+# template end.
+########################################################################
+
+# Usage variable usage:
+Usage_args_info=" Usage_args_info"
+Usage_synopsis="Usage_synopsis: Clean FS with sudo rm -rf /"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-o) flag o
+-O <val>) set Option to <val>
+"
+# Example of arg parsing.
+option_str="i"
+insensitive=-i
+# long_options=("option-name-without-leading--" ...)
+source dp-getopt+.sh || exit 1
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -i) if [[ -z "${insensitive}" ]]
+	  then
+	      insensitive=''
+	  else
+	      insensitive='-i'
+	  fi
+	  ;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when args are required.
+[ "$*" = "" ] && Usage
+echo_id insensitive
+exit 99
+find ${fpath} -type f -print0 | xargs -r0 fgrep i "$@"
