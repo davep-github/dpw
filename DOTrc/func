@@ -1247,9 +1247,12 @@ add_ps1_prefix()
     esac
 }
 
+export dp_NH=""
+export dp_NH_indicator=""
 nh()
 {
     export dp_NH=y
+    dp_NH_indicator='(nh)'
     HISTFILE="${1-}"
     vunsetp $dp_NH_PS1_prefix && dp_NH_PS1_prefix=$PS1_prefix
     add_ps1_prefix nh NH
