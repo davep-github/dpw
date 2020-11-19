@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# echo 1>&2 "zsh-keys: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "zsh-keys: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
 # This is beginning as something to give me my preferences in an x-like-term,
 # in this case lxterminal.
 
@@ -14,6 +17,8 @@ bindkey "\eOA" up-line-or-history
 bindkey "\eOB" down-line-or-history
 bindkey -M menuselect '^o' accept-and-infer-next-history
 bindkey "^[OM" accept-line # <Enter> on keypad
+bindkey "^H" backward-delete-word
+bindkey "^[^?" delete-word 
 
 # from my old ~/.inputrc used with bash.
 # @todo XXX This may be read by zsh.  Fix that is so.  We don't want to
