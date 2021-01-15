@@ -1,4 +1,5 @@
 # -*-Shell-script-*-
+set -e
 
 # See https://gist.github.com/philoserf/b797d42dbf31bdb7e313
 # 2: ~/.zshenv, Interactive login, Interactive non-login, Script

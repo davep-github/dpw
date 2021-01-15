@@ -3,6 +3,20 @@
 # Shouldn't this be in zshenv?  Yes, yes it should.  Away, away! To zshenv
 # with PATH!  export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Actually into zsh_path
+set -e
+#set -x
+
+export DP_ZSH_ENVIRONMENT_FUCKED=true
+export DP_ZSH_FIX_FUCKED_ENVIRONMENT=true
+
+if [[ -n "${DP_ZSH_ENVIRONMENT_FUCKED-}" ]] && "${DP_ZSH_FIX_FUCKED_ENVIRONMENT}"
+then
+    #echo "Performing fucked up environment hackage."
+    run_under_bash()
+    {
+	bash -l -c "$@"
+    }
+fi
 
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
@@ -149,6 +163,7 @@ dp_source zshrc.pre-oh-my-zsh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 dp_source ${DP_RC_DIR}/func
+dp_source ${DP_ZSH_RC_DIR}/zsh-func
 dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
 # Must come after sourcing zshrc.pre-oh-my-zsh because omz does some bindkeys
 # that can clobber my bindings.  If there's any clobbering to be done, I want
@@ -156,6 +171,16 @@ dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
 dp_source ${DP_ZSH_RC_DIR}/zsh-keys
 dp_source ${DP_ZSH_RC_DIR}/zsh-alias
 
+# Load up the abbrev env definitions.
+do_go2env
+
+# Turn this off now, since errors will cause the current shell to exit.
+set +e
+
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
 exit_rc_file "zshrc"
+
+#echo 1>&2 "end of zshrc PID: $$.  Remove this.  Waiting for enter> "
+#read
+#echo 1>&2 "exiting zshrc."

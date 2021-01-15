@@ -1,9 +1,18 @@
 #-*-shell-script-*-
 
+# echo 1>&2 "zsh-prompt: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "zsh-prompt: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
 : ${PS1_backup=PS1}
 : ${PROMPT_backup=PROMPT}
 setopt PROMPT_SUBST
 unset PROMPT
+# DP_XTITLE_ID always goes first so wmctrl(1), or other similar, can ID the
+# window easily. The `!' is part of the ID to make it more unique.  I don't
+# thing wmctrl, et. al., use regexps.
+# @todo XXX ??? Have an [associative] array to hold arbitrary prefix
+# indicators.  The hash is best because then we can unset the prefix by name.
+# Display them as sorted by name or key or hash order?
 PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # We need to match the form of the bash prompt for emacs shell-buffer dir
 # tracking.  In fact all shells should do the same.
@@ -13,9 +22,18 @@ PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # containing the properly formatted prompt.  However since the filter
 # function doesn't see the right thing it can't track the dir.  The garbage
 # doesn't look like the raw prompt, but it could be some "compiled" form.
+# [(nh)]user@host:(c/w/d -OR- ~/w/d) [(git-branch[git-modified-indicator])]<actual newline>
+# (SHLVL:zsh) hist-num(> -OR- <error-code>) "
 PROMPT+=' $(git_prompt_info)'
+if [[ "$(id -u)" == 0 ]]
+then
+    ~# I am root.~
+    line2_color="red"
+else
+    line2_color="cyan"
+fi
 PROMPT+="
-%F{cyan}(zsh) %!%(0?||<%S%?%s)>%f "
+%F{${line2_color}}(${SHLVL}:zsh) %!%(0?||<%S%?%s)>%f "
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "

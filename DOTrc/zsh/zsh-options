@@ -1,5 +1,8 @@
 # -*-Shell-script-*-
 
+# echo 1>&2 "zsh-options: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "zsh-options: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
 # @todo XXX ??? Split this into interactive and non-interactive parts?
 # @todo XXX ??? I think I'd like to tend to have interactive zsh features but
 # try to make scripts run goodly.

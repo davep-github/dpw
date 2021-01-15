@@ -1,5 +1,12 @@
 #!/usr/bin/env zsh
 
+# echo 1>&2 "zsh-func: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "zsh-func: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
+tildify()
+{
+    print -P '%~'
+}
 #problem with completion on dogo and dogO but not dog0. g()
 #problem with completion on dogo and dogO but not dog0. {
 #problem with completion on dogo and dogO but not dog0.     case "$1" in

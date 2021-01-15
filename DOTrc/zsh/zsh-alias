@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# echo 1>&2 "zsh-alias: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "zsh-alias: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
 #@todo XXX merge into bashrc init style and stream.
 dp_source "${DP_RC_DIR}"/alias
 

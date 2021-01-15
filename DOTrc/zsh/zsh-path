@@ -4,4 +4,12 @@
 # session.  It needs to be created in the same way, since some is computed,
 # some stuff is dependent to existing packages and needs to be removed from
 # the final path, etc, etc...
-export PATH="/home/davep/.oh-my-zsh:/home/davep/.rc/zsh:/home/davep/bin/override:/home/davep/bin:/home/davep/local/bin:/home/davep/yokel/sbin:/home/davep/yokel/bin:/home/davep/.cargo/bin:/home/davep/lib/pylib:/home/davep/bin.primitive:/etc/alternatives:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/usr/bin/X11:/opt/p4v-2018.4.1753667/bin:/opt/p4/bin:/opt/sublime_merge:/opt/GitFiend:/home/davep/bin/last-resort"
+export dp_zsh_PRE_PATH="/home/davep/.oh-my-zsh:/home/davep/.rc/zsh"
+export PATH="${dp_zsh_PRE_PATH}:/home/davep/bin/override:/home/davep/bin:/home/davep/local/bin:/home/davep/yokel/sbin:/home/davep/yokel/bin:/home/davep/.cargo/bin:/home/davep/lib/pylib:/home/davep/bin.primitive:/etc/alternatives:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/usr/bin/X11:/opt/p4v-2018.4.1753667/bin:/opt/p4/bin:/opt/sublime_merge:/opt/GitFiend:/home/davep/bin/last-resort"
+
+
+# And other path-likes.
+# bashrc adds path elements everywhere, near where they make sense,
+# i.e. local to the consumers.
+# But sometimes it's easy to add a path-like...
+export PYTHONPATH="${PATH}"
