@@ -289,7 +289,7 @@ Can be set after the first prompting.")
 
 (defun* dp-bash-like-p (&optional (shell-name (getenv "SHELL")))
   "Are we using a bash-like shell?"
-  (string-match "/\\(ba\\|z\\)?sh" (getenv "SHELL")))
+  (string-match "/\\(ba\\|z\\)?sh" shell-name))
 
 (defvar dp-editing-server-cmd-regexp
   (concat "^\\s-*\\(.?/?\\)?"
@@ -1024,24 +1024,25 @@ Or both.")
 
 (defun* dp-maybe-add-ansi-color (&optional force-it-p (filter-it-p t))
   (interactive)
-)
-;;fix for fsf   (let ((want-it-p (or force-it-p
-;;fix for fsf                        (bound-and-true-p dp-wants-ansi-color-p))))
-;;fix for fsf     (if (and want-it-p (dp-optionally-require 'ansi-color))
-;;fix for fsf         (progn
-;;fix for fsf           (setq dp-wants-ansi-color-p t)
-;;fix for fsf           (ansi-color-for-comint-mode-on)
-;;fix for fsf           ;; Cheesy hack to replace the nigh invisible green face used for
-;;fix for fsf           ;; executables.
-;;fix for fsf           (aset ansi-color-map 32 font-lock-string-face)
-;;fix for fsf           ;; The cyan face for symbolic links sucks, too.
-;;fix for fsf           (aset ansi-color-map 36 'dp-journal-extra-emphasis-face))
-;;fix for fsf       (if filter-it-p
-;;fix for fsf           ;; Filters any ANSI color escape sequences from output.  Can be
-;;fix for fsf           ;; useful if some program insists on emitting ANSI color codes.
-;;fix for fsf           (ansi-color-for-comint-mode-filter)
-;;fix for fsf         ;; Turns the mode off.  Do nothing with anything.
-;;fix for fsf         (ansi-color-for-comint-mode-off))))))
+  ;; @todo XXX Fix for Emacs.
+  (when (featurep 'xemacs)
+    (let ((want-it-p (or force-it-p
+			 (bound-and-true-p dp-wants-ansi-color-p))))
+      (if (and want-it-p (dp-optionally-require 'ansi-color))
+	  (progn
+	    (setq dp-wants-ansi-color-p t)
+	    (ansi-color-for-comint-mode-on)
+	    ;; Cheesy hack to replace the nigh invisible green face used for
+	    ;; executables.
+	    (aset ansi-color-map 32 font-lock-string-face)
+	    ;; The cyan face for symbolic links sucks, too.
+	    (aset ansi-color-map 36 'dp-journal-extra-emphasis-face))
+	(if filter-it-p
+	    ;; Filters any ANSI color escape sequences from output.  Can be
+	    ;; useful if some program insists on emitting ANSI color codes.
+	    (ansi-color-for-comint-mode-filter)
+	  ;; Turns the mode off.  Do nothing with anything.
+	  (ansi-color-for-comint-mode-off))))))
 
 ;;;###autoload
 (defun* dp-shell-mode-hook (&optional (variant dp-default-variant))
@@ -1053,7 +1054,8 @@ Or both.")
   (setq font-lock-defaults nil
         font-lock-keywords nil)
   ;;(dmessage "enter dp-shell-mode-hook, current-buffer: %s" (current-buffer))
-  (setq comint-prompt-regexp "^[^#$%>\n]*[#$%>]+ *"
+  (setq ;; comint-prompt-regexp "^[^#$%>\n]*[#$%>]+ *"
+	comint-prompt-regexp "^\\(davep@vilya:.*\n([0-9]+:zsh) [0-9]+> *\\)"
         comint-use-prompt-regexp t)
   (setq show-trailing-whitespace nil)
   (unless (dp-shell-ignored-buffer-p (buffer-name))
@@ -2114,7 +2116,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
 ;;;###autoload
 (defun dp-start-term (prompt-for-shell-program-p)
   "Start up a terminal session, but first set the coding system so eols are
-handled right."
+handled correctly."
   (interactive "P")
   (let ((coding-system-for-read 'undecided-unix)
 	(prog-name (or

@@ -1,5 +1,8 @@
 # -*-Shell-script-*-
 
+# echo 1>&2 "alias: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "alias: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
 # Should be sourced, but the ebang tells us and emacs what's up.
 # A shebang might do some things that might surprise us.
 #
@@ -330,15 +333,11 @@ alias tree-root=sandbox_root_dir
 
 alias myvncs='ls -l ~/.vnc/*.pid'
 
-# No longer needed because gpg is now gpg2, which is good because all the
-# stuff that needed gpg really needed gpg2.
-#alias gpg='dp-gpg-fe'
-
 ## grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
 ## This sucks so much because I used a simple grep to eliminate the grep
 ## being used by dpgrep from the output.  Now it'll be more complex and
-## I'll stay up nights worring when it will change again and screw me over. Again.
-## Sigh.
+## I'll stay up nights worrying when it will change again and screw me over. Again.
+## Sigh. Again.
 
 alias sagi='sudo apt-get install'
 
@@ -353,8 +352,18 @@ alias sshauthsock='gpgconf --list-dirs agent-ssh-socket'
 alias expauthsock='export SSH_AUTH_SOCK="$(sshauthsock)"'
 
 alias jcons='jupyter-console'
+alias jcon='jcons'
 
-alias NEWALIAS1="echo Ima new alias, #1"
+#
+# HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
+# HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
+# HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
+#
+if [[ -n "${DP_ZSH_ENVIRONMENT_FUCKED-}" ]] && "${DP_ZSH_FIX_FUCKED_ENVIRONMENT}"
+then
+    alias dpxx='run_under_bash dpxx'
+    alias xem='run_under_bash xem'
+fi 1>&2
 
 DP_ALIAS_RC="done as of $(date)"
 

@@ -1,7 +1,7 @@
 #-*-shell-script-*-
 
 prog=`basename $0`
-echo $prog: $* 1>&2
+#echo $prog: $* 1>&2
 
 PINGER=ping_fun
 

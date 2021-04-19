@@ -107,7 +107,8 @@ Usage_error()
 
 : ${TARGET:=multi-user}
 
-echo 'In /etc/default/grub
+echo 'davep sez: In /etc/default/grub, make sure that you've already done the
+following.
 Comment this out: 
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
 Add this:

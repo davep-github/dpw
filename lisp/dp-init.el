@@ -41,7 +41,7 @@
 
 (defun dp-short-hostname ()
   (or (getenv "HOST")
-      (car (split-string-by-char
+      (car (split-string
 	    (dp-hostname)
 	    ?.))))
 

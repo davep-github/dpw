@@ -27,6 +27,7 @@ vunsetp()
 DP_EXPORT_FUNC vsetp vunsetp
 
 DP_TRUTH_VAL=t                  # Preferred
+#echo defining true_p
 true_p()
 {
     case "${1-}" in
@@ -36,6 +37,8 @@ true_p()
     return 1
 }
 DP_EXPORT_FUNC true_p
+#echo "$DP_EXPORT_FUNC true_p"
+#echo defined true_p
 
 false_p()
 {

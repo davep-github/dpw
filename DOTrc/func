@@ -2,6 +2,9 @@
 # $Id: func,v 1.29 2004/10/27 08:20:03 davep Exp $
 # should be sourced, but the shebang tells us and emacs what's up
 
+# echo 1>&2 "func: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
+# echo 1>&2 "func: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
+
 # @todo XXX Now that arrays are pretty common [ as of: 2020-10-04T15:31:59 ]
 # move to them, and assocs, when convenient.
 source ~/.rc/dp_shells_compat.sh
@@ -949,7 +952,7 @@ hist_grep()
     # The variable? Ayup.
     local hist_file_dir=$(dirname "$HISTFILE")
     local hist_file_glob="$hist_file_dir/*"
-    local hist_files=$(echo $hist_file_glob)
+    local hist_files=$(eval echo $hist_file_glob)
     local directories_opt=recurse
     while (($# > 0))
     do
@@ -1469,3 +1472,7 @@ ogreppit()
 
 dp_source_rc $HOME/.rc/func.completion
 dp_source_rc $HOME/.rc/func.git
+repsh()
+{
+	exec "${1-zsh}" -l
+}

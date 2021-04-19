@@ -1,18 +1,27 @@
 #-*-shell-script-*-
 
+# @todo XXX I need to make this whole file work during a root login.
+
 # echo 1>&2 "zsh-prompt: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
 # echo 1>&2 "zsh-prompt: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
 
+#
+# Setup the normal prompt.
+# In Emacs shell buffers, the prompt is parsed to track the current
+# directory, so it must have the current working directory (aka `default-directory') in it somewhere. [ at this time: 2021-03-25T15:09:34 ] the regexp I use to extract the cwd is:
+# "^$(user)@$(machine):\\([~/][[:graph:]]*\\)\\(.*\\)$"
+# for some reason, when the prompt string is read by comint before being sent to the recognition routine, it looks like garbage, serious garbage, all garbage, ?all? non-ASCII.  Hopefully it's due to the colorization, so lets turn that off in Emacs' shells.
 : ${PS1_backup=PS1}
 : ${PROMPT_backup=PROMPT}
 setopt PROMPT_SUBST
 unset PROMPT
 # DP_XTITLE_ID always goes first so wmctrl(1), or other similar, can ID the
 # window easily. The `!' is part of the ID to make it more unique.  I don't
-# thing wmctrl, et. al., use regexps.
+# think wmctrl, et. al., use regexps.
 # @todo XXX ??? Have an [associative] array to hold arbitrary prefix
 # indicators.  The hash is best because then we can unset the prefix by name.
 # Display them as sorted by name or key or hash order?
+decorated_NH_indicator=
 PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # We need to match the form of the bash prompt for emacs shell-buffer dir
 # tracking.  In fact all shells should do the same.
@@ -27,7 +36,7 @@ PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 PROMPT+=' $(git_prompt_info)'
 if [[ "$(id -u)" == 0 ]]
 then
-    ~# I am root.~
+    # ~I am root.~
     line2_color="red"
 else
     line2_color="cyan"

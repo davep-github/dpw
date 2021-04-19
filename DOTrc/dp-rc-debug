@@ -1,5 +1,13 @@
 # -*-Shell-script-*-
 
+add_rc_text()
+{
+    s="${1-s:Nada}"; shift
+    s2="${1-s2:Nada}"; shift
+    export DP_SHELL_RCS="${DP_SHELL_RCS}$(type true_p)"
+    export DP_SHELL_RCS="${DP_SHELL_RCS}${s}${s2}"
+}
+
 trace_rc_file()
 {
     local enter=$1; shift
@@ -13,18 +21,22 @@ trace_rc_file()
 	s2=
     fi
 
-    export DP_SHELL_RCS="${DP_SHELL_RCS}${s}${s2}"
+    # export DP_SHELL_RCS="${DP_SHELL_RCS}${s}${s2}"
+    add_rc_text "${s}" "${s2}"
     #echo "DP_SHELL_RCS>${DP_SHELL_RCS}<"
 }
 
 enter_rc_file()
 {
+    #echo 1>&2 "$1(enter): $(type true_p)"
     trace_rc_file true "$1"
 }
 
 exit_rc_file()
 {
     trace_rc_file false "$1"
+    #echo 1>&2 "$1(exit): $(type true_p)"
+
 }
 
 dp_source()

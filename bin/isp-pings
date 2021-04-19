@@ -1,22 +1,34 @@
 #!/usr/bin/env bash
 #
 # $Id: isp-pings,v 1.11 2005/05/01 08:20:10 davep Exp $
-# 
+#
 # isp-pings: ping a list of sites to see where things are hosed.
 #set -x
 source script-x
 source ping-lib.sh
 
+set -u
+
+iter=0
+
+current_isp='verizon.net'
 #: ${LAN_GW=$(netstat -rn | sed -rn 's/(^default[[:space:]]+)([^[:space:]]+)(.*)/\2/p')}
 
 : ${LAN_GW:=192.168.1.1}
 bad_nodes=
+good_nodes=
 
 : ${zzz:=0}
-[ -z "$ISP" ] && ISP=$($HOST_INFO -n verizon.net ISP)
+if [ -n "${HOST_INFO}" ]
+then
+    ISP="${current_isp}"
+else
+    ISP=$($HOST_INFO -n "${current_isp}" "ISP")
+fi
+echo "ISP: ${ISP}"
 
 # hopefully increasing in distance
-# for verizon, 
+# for verizon,
 # incoming.$ISP, outgoing.$ISP, news.$ISP don't respond to pings.
 
 # (news|incoming). ISP==verizon doesn't respond to pings.
@@ -24,9 +36,11 @@ bad_nodes=
 #     www.ucsd.edu  --> seem to have blocked pings.  Need a likely west coast. M$?
 
 other_places=(
-    www.$ISP 
-    www.mit.edu 
-    www.yahoo.com 
+    sam
+    chicxulub
+    www.$ISP
+    www.mit.edu
+    www.yahoo.com
     www.ibm.com)
 
 add_failure()
@@ -38,17 +52,34 @@ add_failure()
     prefix='***'"[$num_failures]"'***'
 }
 
-dump_bad_nodes()
+add_success()
 {
-    [ -z "$*" ] && {
-        echo "No bad nodes detected."
-        return
-    }
-    echo "Bad nodes:"
-    for bn in "$@"
-    do
-      echo "  $bn"
-    done
+    local node=$1; shift
+
+    good_nodes=$(pathadd -s ', ' "$good_nodes" "$node")
+    num_successes=$((num_successes + 1))
+}
+
+dump_node_lists()
+{
+    dump_nodes "bad" ${bad_nodes}
+    dump_nodes "good" ${good_nodes}
+}
+
+
+# @todo XXX ??? Call this if we get a signal (especially SIGINT)?
+dump_count()
+{
+    local of_msg=
+    local num_loops="${1}"; shift
+    local max_loops="${1}"; shift
+    if ((num_loops < 0))
+    then
+	of_msg="(infinity - 1)"
+    else
+	of_msg="${max_loops}"
+    fi
+    echo "Completed ${iter} of ${of_msg} iterations."
 }
 
 sig_exit ()
@@ -57,6 +88,7 @@ sig_exit ()
         local sig_num=$1; shift
         echo
         echo "sig_exit, sig_num: $sig_num"
+	dump_count "${num_loops}" "${orig_num_loops}"
         dump_bad_nodes $bad_nodes
         exit 1
     } 1>&2
@@ -68,8 +100,10 @@ do
 done
 
 num_failures=0
+num_successes=0
 prefix=
 
+# default is 2^64 - 1, [ as of: 2021-03-04T11:36:21 ]
 num_loops=${1-${kwa_num_loops-"-1"}}
 
 do_pings ()
@@ -78,16 +112,21 @@ do_pings ()
     then
         prefix='***'"[$num_failures]"'***'
     fi
-    pingit "$LAN_GW" "$prefix(LAN-GW)" || add_failure "$LAN_GW"
+    if pingit "$LAN_GW" "$prefix(LAN-GW)"
+    then
+	add_success "$LAN_GW"
+    else
+	add_failure "$LAN_GW"
+    fi
 
     # !!! find verizon gateway (hopefully programmatically)
     # pingit 66.92.73.1 '(ISP-GW) '
-    
-    for s in `find_nameservers` 
+
+    for s in `find_nameservers`
     do
         pingit "$s" "$prefix(NS)" || add_failure "$2"
     done
-    
+
     for s in ${other_places[@]}
     do
         pingit "$s" "$prefix" || add_failure "$s"
@@ -98,17 +137,22 @@ do_pings ()
 #other_places+=("$@")
 #echo "other_places>${other_places[@]}<"
 
-iter=0
+orig_num_loops="${num_loops}"
+wan_ip=$(my-wan-ip)
+echo "External IP: ${wan_ip} [$(nslookup ${wan_ip})]"
+
 while [ "$num_loops" -ne 0 ]
 do
-    echo "iteration: $((++iter))"
+    echo "iteration: ${iter}"
     do_pings
     [ "$zzz" -gt 0 ] && echo "zzz($zzz)"
     sleep "$zzz"
-    [ "$num_loops" -lt 0 ] || : $((--num_loops))
+    ((++iter))
+    [ "$num_loops" -lt 0 ] || ((--num_loops))
 done
 
-dump_bad_nodes
+dump_count "${num_loops}" "${orig_num_loops}"
+dump_node_info
 
 exit 0
 

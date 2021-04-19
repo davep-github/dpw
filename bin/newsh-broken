@@ -107,4 +107,4 @@ Usage_error()
 
 : shell=${shell:=${SHELL}}
 
-EExec eval "${shell}" -l
+EExec -x exec "${shell}" -l &

@@ -160,6 +160,7 @@
     ;; The again, ' takes no quoting.
     "^No \".*\" in index$"		; XEmacs.
     "^No '.*' in index"			; Emacs.
+    "^No ‘.*’ in index"			; Emacs, too.  Or are the '' wrong?
     "^This is the first Info node you looked at$"
 
     ;; imenu

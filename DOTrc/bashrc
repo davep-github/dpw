@@ -2,26 +2,16 @@
 # $Id: bashrc,v 1.55 2005/06/25 08:20:21 davep Exp $
 # NB: all non-bash code is old, crufty and untested in a long time.
 # Suppress any other means of enabling this.  NB: may break some stuff.
-#set +x
-#set -x
-#echo "PS1:0>$PS1<"
-#echo "\$0>$0<"
-#echo "\$@>$@<"
-#echo "\$PS1:0 | hd:"
-#echo "$PS1" | ~/yokel/bin/hd
-#echo "dp_NH:-1>$dp_NH<"
-# $@ is unset when called for a new/login shell.
-#echo "@>$@<"
 
-#echo "LC>${LC_DP_YES_DP_ENV_P}<"
-#echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
+echo 1>&2 'BASHYOPP!'
 
 if type emulate >/dev/null 2>/dev/null; then emulate bash; fi
 
 # This was supposed to make sure I had my environment if I had su'd
 # somewhere, and $USER didn't change.
 # I think it works, since I usually add things like this to fix a current
-# issue that's bugging the hell out of me, so it probably work at least once.
+# issue that's bugging the hell out of me, so it probably worked at
+# least once.
 if [ "$USER" = "davep" ]
 then
     DP_RC_DIR=~davep/.rc
@@ -30,9 +20,6 @@ else
 fi
 export DP_RC_DIR
 
-# I don't know who came first, but some things are stupid, idiotically,
-# worthlessly and foolishly incompatible.
-#echo "PATH>$PATH<"
 source ${DP_RC_DIR}/dp_shells_compat.sh
 source ${DP_RC_DIR}/echo_id
 
@@ -82,7 +69,9 @@ then
     }
 fi
 
-# bashrc, technically, wasn't tried because it was loaded implicitly by the shell.
+# bashrc, technically, wasn't tried because it was loaded
+# implicitly by the shell.
+# Really stupid name "DP_RC_LIST_OTHERS"
 export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
 export DP_RC_LIST_OTHERS_TRIED=
 export DP_RC_LIST_OTHERS_ERRORS=
@@ -901,27 +890,7 @@ case "${IMASCREENINSTANCE-}" in
         ;;
 esac
 
-#echo >> ~/tmp/dp-path "before do_go2env========================================================================"
-#echo >> ~/tmp/dp-path "PATH>${PATH}<"
-#echo >> ~/tmp/dp-path
 do_go2env
-#type python >> ~/tmp/dp-path
-#echo "PS1:1>$PS1<"
-#echo "dp_NH:0>$dp_NH<"
-# !!! What the Motherfucking what??!?!?
-# [ -z "$dp_NH" ] && echo 'Noooo!!!!!' && nh
-# executes nh even when echo up there shows dp_NH:0><
-#[ "$dp_NH" == 'y' ] && echo 'Noooo!!!!!' && nh
-# [ -n "$ZZZ" ] && echo "?>$?< WTF ZZZ>$NHZZZ<"
-# [ -n "$Xdp_NH" ] && echo "?>$?< WTF Xdp_NH>$Xdp_NH<"
-# [ -n "$dpNH" ] && echo "?>$?< WTF dpNH>$XdpNH<"
-# [ -n "$dp_NH" ] && echo "[ -n ], ?>$?< WTF dp_NH:2>$dp_NH<"
-# [ "$dp_NH" != "" ] && echo "[ != ], ?>$?< WTF dp_NH:3>$dp_NH<"
-# [ "$dp_NH" != "" ] && echo "?>$?< WTF dp_NH:3>$dp_NH<"
-# [ -n "$dp_NH" ] && {
-#         echo "4: about to nh"
-#         nh
-# }
 vsetp "${dp_NH-}" && {
     nh
 }

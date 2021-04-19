@@ -1,6 +1,12 @@
 #!/bin/bash
 # $Id: eexec,v 1.16 2005/12/17 08:11:04 davep Exp $
 #
+# @todo XXX Fix up all the stupid bullshit surrounding the use of eexec.
+# known:
+# 1) Breaks during login.  eexec: echo_id: command not found.
+# 1.1) In eexec, but possibly other programs.
+# 2) echo_id: true_p: command not found.
+source ~/.rc/echo_id
 # run a program with variable amounts of verbosity and 
 # error reporting
 #
@@ -185,7 +191,7 @@ EExecDashV_p()
     [ -n "$EExecDashV_opt" ]
 }
 
-# Should be named something like EExecSetVerbose (EExec_set_verbose)
+# Defecated
 EExecVerbose()
 {
     # To turn off verbosity after turning it on, it can be disabled thus:
@@ -205,6 +211,16 @@ EExecVerbose()
     # Use this to propagate -n ed ness.
     ${EExecExporter} EExecDashV_opt="-v"
     ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashV_opt"
+}
+
+EExecSetVerbose()
+{
+    EExecVerbose "$@"
+}
+
+EExec_set_verbose()
+{
+    EExecVerbose "$@"
 }
 
 EExecVerbose_k()
@@ -360,7 +376,7 @@ EExec()
     local eexecErrorReporter="${EExecErrorReporter}"
     local fake_success_p=
     local executor=
-    local make_command_p=
+    local make_command_p=false
     local command_file_name=
     local command_cd_cmd=
     local ok_error=
@@ -394,9 +410,9 @@ EExec()
           -q|--quiet-errors) eexecErrorReporter=;;
           -x|--executor|--execute-with) shift; executor="$1";;
           -b|--bg|--background) executor=EExec_background;;
-          --make-cmd|--sh) make_command_p=t;;
+          --make-cmd|--sh) make_command_p=true;;
           --make-cmd:|--sh:) shift; command_file_name="${1}"
-                             make_command_p=t;;
+                             make_command_p=true;;
           --cmd-cd|--sh-cd) command_cd_cmd="cd $PWD";;
           --cmd-cd:|--sh-cd:) shift; command_cd_cmd="${1}";;
           --status-banner) status_banner_p=t;;
@@ -424,7 +440,7 @@ EExec()
     # This should probably be initially predicated on EExecDashN_p, then
     # overridable via make_command_p, but it's convenient to be able to drop
     # the individual indexing scripts.
-    true_p "${make_command_p}" && {
+    "${make_command_p}" && {
         vunsetp "${command_file_name}" && {
             command_file_name=$(basename "$1")-eexec.sh
         }

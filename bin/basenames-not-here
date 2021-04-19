@@ -107,19 +107,24 @@ getem()
     while read
     do
 	[ -z "${REPLY}" ] && {
-	    echo "Skipping blank line."
+	    EExec_verbose_msg "Skipping blank line."
 	    continue
-	} 1>&2
+	}
 	[ -d "${REPLY}" ] && {
-	    echo "Skipping dir: ${REPLY}."
+	    EExec_verbose_msg "Skipping dir: ${REPLY}."
 	    continue
-	} 1>&2
+	}
 	bn=$(basename "${REPLY}")
-	echo 1>&2 "${REPLY}, ${bn}"
 	[ -e "${bn}" ] && {
-	    echo "Ditching ${REPLY}"
+	    EExec_verbose_msg "Ditching existing file>${REPLY}<"
+	    EExec_verbose_msg "ls -l ${bn} $(ls -l *"${bn}")"
 	    continue
-	} 1>&2
+	}
+        [[ "${REPLY}" =~ '^(//|;|#)' ]] && {
+	    EExec_verbose_msg "Comment>${reply}<"
+            continue
+	}
+	EExec_verbose_msg "emitting >${REPLY}<"
 	echo "${REPLY}"
     done
 }
@@ -133,9 +138,10 @@ getem()
 
 while (( $# > 0))
 do
-    EExec cat "${1}" | EExec getem
+    # Clearly, more was planned.
+    ###EExec cat "${1}" | EExec getem
+    EExec getem
     shift
 done
 
 getem
-	  

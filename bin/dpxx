@@ -168,9 +168,15 @@ fi
 
 if [ -n "$name" ]
 then
-    if [[ "$xterm_bin" =~ konsole|lxterminal ]]
+    if [[ "$xterm_bin" == konsole ]]
     then
 	name="-T $name"
+    elif [[ "$xterm_bin" == lxterminal ]]
+    then
+	# [ at this time: 2020-11-04T13:38:20 ], on Lubuntu 20.04, LXQt, with
+	# zsh, if I use the -T option, then I cannot use escape sequences to
+	# change the title.
+	name=""
     else
 	name="-name $name -T $name"
     fi

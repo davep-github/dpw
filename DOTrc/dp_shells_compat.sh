@@ -18,7 +18,7 @@ dp_zsh_p()
 if dp_zsh_p
 then
     DP_EXPORT_FUNC() {
-	:
+	autoload -Uz "$@"
     }
     DP_ZSH_ONLY() {
 	"$@"
@@ -35,7 +35,7 @@ then
     export DP_BASH_p=false
     export DP_SHELL=zsh
 
-else	# BASH
+else	# not ZSH
 
     DP_EXPORT_FUNC() {
 	export -f "$@"

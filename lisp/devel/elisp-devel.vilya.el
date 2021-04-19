@@ -5954,3 +5954,79 @@ bubba: WRITE ME!!!: bubba (a b c)
 I am bubba!
 nil
 
+
+========================
+Saturday November 14 2020
+--
+;installed (defun dp-switch-to-minibuffer-window ()
+;installed   "switch to minibuffer window (if active)"
+;installed   (interactive)
+;installed   (if (active-minibuffer-window)
+;installed       (progn
+;installed 	(select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+;installed 	(select-window (active-minibuffer-window)))
+;installed     (ding)
+;installed     (message "No active minibuffer.")))
+
+
+;installed (global-set-key [(shift meta ?x)] 'dp-switch-to-minibuffer-window)
+
+========================
+Thursday November 19 2020
+--
+(cl-pp printable-chars)
+
+#^nil
+[nil nil nil 
+#^^[3 0 nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil] #^^[1 0 #^^[2 0 
+#^^[3 0 nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil] 
+#^^[3 128 nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t] t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t] t t t t t t t t t t t t t t t] t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t #^^[1 4128768 t t t t t t t t t t t t t t t #^^[2 4190208 t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t t nil]]]
+
+(setq dp-prompt-string "davep@vilya:~/notes 
+[36m(6:zsh) 3220<130>[39m 
+")
+
+"davep@vilya:~/notes 
+[36m(6:zsh) 3220<130>[39m 
+"
+
+"davep@vilya:~/notes 
+[36m(6:zsh) 3220<130>[39m 
+"
+"davep@vilya:~/notes 
+[36m(6:zsh) 3220<130>[39m 
+"
+"davep@vilya:~/notes 
+[36m(6:zsh) 3220<130>[39m 
+"
+
+
+"davep@vilya:~/notes 
+[36m(6:zsh) 3220<130>[39m 
+"
+
+(setq comint-prompt-regexp "^\\(davep@vilya:.*\\|([0-9]+: zsh) [0-9]+> \\)$")
+
+"^\\(davep@vilya:.*\\|([0-9]+: zsh) [0-9]+> "
+^([0-9]+:zsh)
+
+^\\(([0-9]+:zsh) [0-9]+>\\)
+
+
+^\(davep@vilya:.*\|^([0-9]+:zsh)\)
+
+"^\\(davep@vilya:.*\\|^([0-9]+:zsh)\\)"
+
+(setq dp-pre "^\\(davep@vilya:.*\n([0-9]+:zsh) [0-9]+> \\)")
+"^\\(davep@vilya:.*
+([0-9]+:zsh) [0-9]+> \\)"
+
+
+
+; works
+(setq comint-prompt-regexp "^[^#$%>\n]*[#$%>]+ *")
+
+; not
+comint-prompt-regexp "^\\(davep@vilya:.*\n([0-9]+:zsh) [0-9]+> *\\)"
+First up goes to a few chars from ^ and recalls something.
+C-PgDn then up works.

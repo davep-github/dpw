@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # $Id: dp-std-date,v 1.3 2003/08/13 07:07:22 davep Exp $
 # print a date in a standard format so date parsers are less stressed.

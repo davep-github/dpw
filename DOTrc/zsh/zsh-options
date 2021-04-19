@@ -56,7 +56,8 @@ setopt						\
     shfileexpansion				\
     noshoptionletters				\
     shortloops					\
-    shwordsplit
+    shwordsplit					\
+    correct
 
 # Causes a full screen of spew.  I bad and naughty global guy.
    ## warncreateglobal \

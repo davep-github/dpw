@@ -120,6 +120,16 @@ Make it buffer local since there can be >1 minibuffers.")
      (undo-boundary)
      return "1**** CANNOT FIND REGION ***")))
 
+(defun dp-switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (if (active-minibuffer-window)
+      (progn
+	(select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+	(select-window (active-minibuffer-window)))
+    (ding)
+    (message "No active minibuffer.")))
+
 (defun dp-minibuffer-setup-hook ()
   "Sets up personal minibuffer options."
 ;;CO;   (dmessage "dp-minibuffer-setup-hook, buf: %s, pre: %s\n bl: %s"

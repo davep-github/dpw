@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#  @todo XXX
+# -v -- print current name on mismatch.
+# -e|-x -- export OSName (must needs be a function).
+
+OSName=$(uname --kernel-name)
+if (($# < 1))
+then
+    echo $OSName
+else
+    echo "$OSName" | egrep -q "$1"
+fi
+
+exit $?

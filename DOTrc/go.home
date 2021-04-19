@@ -25,8 +25,9 @@ Ee|bashrc|brc|                  ${rc}/bashrc
 Ee|bashprofile|bashpro|bpro|    ${rc}/bash_profile
 Ee|bashlogout|bashlo|blo|       ${rc}/bash_logout
 Ee|bashcomp|                    /usr/share/bash-completion/
-Ee|zshcompletion|               /usr/share/zsh-completion/
+# N.B. ZSH defined in zshenv
 Ee|zshrc|zrc|                   ${ZSH}/zshrc
+Ee|usrsharezcompletion|uszshcompletion|uszcomp|   /usr/share/zsh-completion/
 Ee|zshprofile|zshpro|zpro|      ${ZSH}/zsh_profile
 Ee|zshlogout|zshlo|zlo|         ${ZSH}/zsh_logout
 Ee|zcompdump|zcdump|            ${ZSH}/compdump
@@ -415,6 +416,7 @@ Ee|omztools|omztls|       /home/davep/.oh-my-zsh/tools/
 Ee|wrk|       /home/davep/tmp/bashrc-for-zsh/
 Ee|zshfu|       /home/davep/.rc/zsh-fucked-up-after-working/
 Ee|dpzshcomp|dpzc|       /home/davep/.rc/zsh/completions/davep/
+Ee|zshcomp|zcomp|        ${dpzshcomp}
 Ee|man1|       /usr/share/man/man1/
 Ee|zshman|zman|       /usr/share/man/man1/
 Ee|uszsh|usz|       /usr/share/zsh/
@@ -427,6 +429,14 @@ Ee|omzrepo|       /home/davep/.oh-my-zsh/
 Ee|gitto|       /home/davep/local/build/gitted/
 Ee|etsy|       /home/davep/dpw/dpw/DOTrc/
 Ee|dpdb|       /home/davep/var/db/
+Ee|desktop|dsktop|dtop|       /home/davep/Desktop/
+Ee|debzshcomp|debzcomp|       /usr/share/zsh/functions/Completion/Debian/
+
+Ee|tmpcomp|tcomp|       /home/davep/tmp/completion/
+Ee|eid|       /etc/init.d/
+Ee|etcapt|eapt|       /etc/apt/
+Ee|ufw|       /usr/lib/ufw/
+Ee|vlufw|       /usr/lib/ufw/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***

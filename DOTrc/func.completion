@@ -15,7 +15,7 @@ gnu_global_complete()
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(global -c $cur))
 }
-DP_BASH_ONLY complete -F gnu_global_complete global
+complete -F gnu_global_complete global
 
 dp_binaries_complete()
 {
@@ -23,14 +23,20 @@ dp_binaries_complete()
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(compgen -c $cur))
 }
-DP_BASH_ONLY complete -F dp_binaries_complete sp run-iff xit lessit
+complete -F dp_binaries_complete sp run-iff xit lessit
 
-_dp_sp_complete_exp()
+# Ripped off from /bfd/sundry/davep/RCS/RCS.sam/home.davep/.rc/bash_completion,v
+# I know not from whence it originally came.
+# @(...) is an extended glob (extglob)
+_dp_sp_complete()
 {
     set -x
-    local cur prev words cword
-    _init_completion || return
+    local words cword
+    local cur=${COMP_WORDS[COMP_CWORD]}
+    local prev=${COMP_WORDS[COMP_CWORD-1]}
 
+    echo "COMP_WORDS: ${COMP_WORDS[@]}"
+    echo "COMP_TYPE: ${COMP_TYPE}"
     local i
     for (( i=1; i <= COMP_CWORD; i++ )); do
         if [[ ${COMP_WORDS[i]} != -* ]]; then
@@ -43,8 +49,6 @@ _dp_sp_complete_exp()
 
     case "$prev" in
         -x)
-            ## COMPREPLY=( $( compgen -c -- "$cur" ) )
-            ## COMPREPLY=( $( compgen -c -- "$cur" ) )
 	    cur=${COMP_WORDS[COMP_CWORD]}
             COMPREPLY=($(compgen -c $cur))
             return
@@ -62,6 +66,8 @@ _dp_sp_complete_exp()
         return
     fi
 }
+complete -F _dp_sp_complete sp
+
 #
 # I copped most of this and hacked it, but I don't really know how it works.
 # :-(
@@ -70,7 +76,6 @@ _dp_sp_complete_hide()
 {
     _dp_sp_complete_exp_guts "$@"
 }
-DP_BASH_ONLY complete -F _dp_sp_complete_exp sp_exp
 
 dp_go_complete()
 {
@@ -78,7 +83,7 @@ dp_go_complete()
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(go2env --grep-name-only "^$cur"))
 }
-DP_BASH_ONLY complete -F dp_go_complete g go dogo
+complete -F dp_go_complete g go dogo
 
 dp_ctags_etags_expand()
 {

@@ -108,10 +108,14 @@ Usage_error()
 : ${indentation:=0}		# list of chars to use for indentint
 : ${indentation_width:=4}
 : ${indentation_string:=''}
+istr=""
 
 while read
 do
     case "${REPLY}" in
+	'//'*|'#'*) echo "!${REPLY}"
+	       continue
+	       ;;
 	*Enter:*)		# Increase indentation.
 	    istr="${indentation_string}"
 	    ((++indentation))

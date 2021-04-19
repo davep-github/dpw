@@ -321,7 +321,6 @@
         scripts are in place.  Script logs executing, xset q shows
         proper speed, but no effect on running system.
     -->
-
     <!-- Select and raise XEmacs editing server. -->
     <keybind key="A-W-x">
       <action name="Execute">
@@ -528,6 +527,11 @@
     <keybind key="W-r">
       <action name="Execute">
         <command>mpc-random-album</command>
+      </action>
+    </keybind>
+    <keybind key="S-W-r">
+      <action name="Execute">
+        <command>lxqt-runner</command>
       </action>
     </keybind>
   </keyboard>

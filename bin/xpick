@@ -32,7 +32,7 @@ class XLister(Frame):
 
     def exit(self):
         sys.exit(self.exit_rc)
-                
+
     def dump_event(self, event):
         print(repr(event))
         print(event.__dict__)
@@ -64,7 +64,7 @@ class XLister(Frame):
 
     def create_buttonbar(self):
         bb = self.buttonbar = Frame(self)
-        self.exit_button = Button(bb, text="Done", 
+        self.exit_button = Button(bb, text="Done",
                                   command=self.emit_and_exit)
         self.exit_button.pack(side=LEFT, expand=TRUE)
         self.clear_button = Button(bb, text="Clear",
@@ -136,10 +136,10 @@ class XLister(Frame):
             l = self.listbox.get(item)
             if p.search(l) >= 0:
                 func(item, item)
-                                
+
     def resel(self, event):
         self.sel_or_desel_pattern(self.sel_desel)
-        
+
     def select_pattern(self):
         self.sel_or_desel_pattern('s')
 
@@ -157,7 +157,7 @@ class XLister(Frame):
 
     def create_patternframe(self):
         pf = self.patternframe = Frame(self)
-        self.pf_label = Label(pf, 
+        self.pf_label = Label(pf,
                               text=self.make_pflabel())
         self.pf_label.pack(side=LEFT)
         self.pf_pattern = Entry(pf)
@@ -172,13 +172,13 @@ class XLister(Frame):
                               command=self.deselect_pattern)
         self.pf_deselect.pack(side=LEFT)
         pf.pack(side=TOP, expand=FALSE, fill=X)
-        self.pf_pattern.bind('<Control-s>', 
+        self.pf_pattern.bind('<Control-s>',
                              self.select_pattern_event)
-        self.pf_pattern.bind('<Control-d>', 
+        self.pf_pattern.bind('<Control-d>',
                              self.deselect_pattern_event)
 
     def create_widgets(self):
-        self.create_buttonbar() 
+        self.create_buttonbar()
         self.create_patternframe()
         self.create_scrollbox()
         self.listbox_take_focus()
@@ -254,4 +254,3 @@ if __name__ == "__main__":
     app = XLister(allow_new_item_p=allow_new_item_p)
     app.mainloop()
     sys.exit(0)
-    

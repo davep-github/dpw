@@ -4272,6 +4272,13 @@ FORCE-P forces a new datestamp, regardless."
 
 (defalias 'ds 'dp-tf)			;<d>ate<s>tamp
 
+
+(defun dp-tf-force (&optional pre suf)
+  (interactive "*")
+  (dp-tf pre suf t))
+
+(dp-defaliases 'dsf 'dp-tf-force)
+
 (defun dnf (&optional note-file-arg extension skip-tf-p year-first other-win)
   "Edit a dated note file, derived from the current date.
 Create a note filename based on the current date in the default notes

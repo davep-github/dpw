@@ -3,8 +3,32 @@
 # Shouldn't this be in zshenv?  Yes, yes it should.  Away, away! To zshenv
 # with PATH!  export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Actually into zsh_path
-set -e
+
+#echo 1>&2 "starting zshrc."
+#dp_zsh_sig_trap ()
+#{
+#    {
+#        local sig_num=$1; shift
+#        echo
+#        echo "sig_exit, sig_num: $sig_num"
+#	echo "Press <Enter> to continue."
+#	read
+#        exit 1
+#    } 1>&2
+#}
+#
+#for sig in 2 3 4 5 6 7 8 15
+#do
+#    trap "dp_zsh_sig_trap $sig" $sig
+#done
+
+
+#set -e
 #set -x
+
+zmodload zsh/zprof
+
+source ${DP_RC_DIR}/func.early
 
 export DP_ZSH_ENVIRONMENT_FUCKED=true
 export DP_ZSH_FIX_FUCKED_ENVIRONMENT=true
@@ -42,7 +66,7 @@ CASE_SENSITIVE="true"
 
 # Uncomment the following line to use hyphen-insensitive completion.
 # Case-sensitive completion must be off. _ and - will be interchangeable.
-HYPHEN_INSENSITIVE="true"
+HYPHEN_INSENSITIVE="false"
 
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"

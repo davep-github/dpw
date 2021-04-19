@@ -13,7 +13,7 @@
 ;;\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/
 ;; NB use ?x for char in key sequences so that it is easier to search for them.
 ;; Always use vector key sequences.
-;; Always order modifiers control, meta, shift
+;; Always order modifiers control, meta, shift (alphabetically)
 ;;/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\
 
 (eval-when-compile
@@ -329,6 +329,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control meta -)] 'dp-meta-minus-other-window)
 (global-set-key [(control meta ?!)] 'dp-shell-command-in-minibuffer)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key [(shift meta ?x)] 'dp-switch-to-minibuffer-window)
+
 
 ;;; <:add-new "normal"/global binding:>
 (global-set-key [(meta ?q)] 'dp-fill-paragraph-or-region)

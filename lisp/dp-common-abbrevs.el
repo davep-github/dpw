@@ -360,6 +360,10 @@
     ((("subdir" "subdirs")
       "subdirectory" "subdirectories" "sub-directory" "sub-directories")
      dp-manual)
+    ((("cwd" "current working directory" "working directory"
+       "default directory" "pwd")
+      'circular)
+     dp-manual)
     ((("paren" "parens")
       "parenthesis" "parentheses" "parenthesize")
      dp-manual)

@@ -108,16 +108,25 @@ Usage_error()
 : ${files=}
 : ${nopkgs=}
 
-# @todo XXX Formalize this to add repos, etc.
-sudo add-apt-repository ppa:landronimirc/skippy-xd-daily
+# @todo XXX Formalize this to add repos, etc? Not really worth just putting
+# the repos in an array and loading them since adding 1 by 1 and a single
+# update is pretty much the same.
+
+# Gone, pphhhhhhtt.
+#sudo add-apt-repository ppa:landronimirc/skippy-xd-daily
+sudo add-apt-repository ppa:danielrichter2007/grub-customizer
+# For "fixed" skippy from google code.
+sudo add-apt-repository ppa:landronimirc/skippy-xd
 # <:new repos above me:>
 
 sudo apt-get update
 
+# @todo XXX chromium-browser is now a snap package.
+# @todo XXX spotify is a snap package.
+
 packages=(
 bison
 ccache
-chromium-browser
 cscope
 ctags
 curl
@@ -154,6 +163,7 @@ gpm
 imagemagick
 ipython
 ipython-doc
+python2
 libcurl4-openssl-dev
 libdbus-1-dev libdbus-glib-1-dev
 libdmalloc-dev
@@ -257,7 +267,29 @@ stgit
 skippy-xd
 exfat-fuse
 exfat-utils
-# <:new packages:>
+locate
+net-tools
+xtightvncviewer
+tigervnc-viewer
+lxterminal
+qterminal
+grub-customizer
+lxshortcut
+# Is this *my* future?  I was always z-curious.
+# But we also know shit comes from assholes.
+zsh
+oh-my-zsh
+ario
+skippy-xd
+# These should pull in the correct Python dependency.
+python-tk
+python3-tk
+# ipython-alike, part of a much larger package like (same as) the notebook stuff.
+jupyter
+feh
+### <:New Entry Placeholder:> ###
+# For external app adding utility, it can sed this exact text with a new entry
+# and add another placeholder.
 )
 
 something_was_installed=
@@ -323,10 +355,9 @@ isatty >& /dev/null || {
 }
 
 echo 'Some suggestions, if I may so bold:
-GUI grub customizer:
-sudo add-apt-repository ppa:danielrichter2007/grub-customizer
-sudo apt-get update
-sagi grub-customizer
+1) vipw, vigr, 
+2) visudo ==> %sudo ALL=(ALL:ALL) >>>NOPASSWD:<<< ALL
+3) sudo update-alternatives --debug --install /usr/bin/python python /usr/bin/python3 1
 '
 bite_me=$(readlink /bin/sh)
 if [ "${bite_me}" = "dash" ]
