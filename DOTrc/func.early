@@ -1,5 +1,13 @@
 # -*-Shell-script-*-
 
+if [ -n "${DP_DEBUG_STARTUP}" ]
+then
+    set -x
+elif [ -n "${DP_NODEBUG_STARTUP}" ]
+then
+    set +x
+fi
+
 dp_log_header()
 {
     echo -n "$(date +'%j:%R:%S')"
@@ -27,7 +35,8 @@ vunsetp()
 DP_EXPORT_FUNC vsetp vunsetp
 
 DP_TRUTH_VAL=t                  # Preferred
-#echo defining true_p
+#echo defining true_p 1>&2
+#add_rc_text 'defining true_p'
 true_p()
 {
     case "${1-}" in
@@ -36,9 +45,10 @@ true_p()
     esac
     return 1
 }
+#add_rc_text 'defined true_p'
 DP_EXPORT_FUNC true_p
-#echo "$DP_EXPORT_FUNC true_p"
-#echo defined true_p
+#echo "$DP_EXPORT_FUNC true_p" 1>&2
+#echo defined true_p 1>&2
 
 false_p()
 {
@@ -72,5 +82,7 @@ source ${DP_RC_DIR}/echo_id
 
 DP_EXPORT_FUNC echo_id echo_id_err echo_id2 echo_id_ornate
 DP_EXPORT_FUNC eko_id eko_id_err eko_id2
+
+set +x
 
 true

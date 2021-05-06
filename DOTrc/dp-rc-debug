@@ -4,8 +4,10 @@ add_rc_text()
 {
     s="${1-s:Nada}"; shift
     s2="${1-s2:Nada}"; shift
-    export DP_SHELL_RCS="${DP_SHELL_RCS}$(type true_p)"
-    export DP_SHELL_RCS="${DP_SHELL_RCS}${s}${s2}"
+
+    export DP_SHELL_RCS="${DP_SHELL_RCS}..${s}${s2}"
+    
+    export DP_SHELL_RCS="${DP_SHELL_RCS}__$(type true_p): "
 }
 
 trace_rc_file()
@@ -14,10 +16,10 @@ trace_rc_file()
     local name=$1; shift
     if $enter
     then
-	s="${name}: Enter: $(date -Ins)\n"
+	s="${name}: Enter: $(date -Ins):\n"
 	s2=
     else
-	s="${name}: Exit: $(date -Ins)\n"
+	s="${name}: Exit: $(date -Ins):\n"
 	s2=
     fi
 

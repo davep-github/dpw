@@ -21,21 +21,21 @@ then
 	autoload -Uz "$@"
     }
     DP_ZSH_ONLY() {
-	"$@"
+	autoload -Uz "$@"
     }
     DP_BASH_ONLY() {
-	:
+	autoload -Uz :
     }
 
     DP_BASH_TYPE_t() {
-	whence -w
+	autoload -Uz whence -w
     }
 
     export DP_ZSH_p=true
     export DP_BASH_p=false
     export DP_SHELL=zsh
 
-else	# not ZSH
+else	# not ZSH, assumed to be bash[-like]
 
     DP_EXPORT_FUNC() {
 	export -f "$@"
@@ -55,7 +55,7 @@ else	# not ZSH
 	type -t "$@"
     }
     DP_EXPORT_FUNC DP_BASH_TYPE_t
-
+    ##@todo XXX !!! Keep an eye on this change.  Back it out if the .rc files new "features."
     export DP_ZSH_p=true
     export DP_BASH_p=false
     export DP_SHELL=zsh

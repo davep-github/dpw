@@ -1,7 +1,9 @@
 # -*-Shell-script-*-
 set -e
 
-echo 1>&2 "Enter zshenv."
+echo 1>&2 "************* Starting zshenv ****************"
+
+##echo 1>&2 "Enter zshenv."
 
 # See https://gist.github.com/philoserf/b797d42dbf31bdb7e313
 # 2: ~/.zshenv, Interactive login, Interactive non-login, Script
@@ -59,3 +61,6 @@ dp_source "${DP_RC_DIR}/env.common"
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
 exit_rc_file "zshenv"
+
+echo 1>&2 "******* zshenv: type DP_EXPORT_FUNC(): $(type DP_EXPORT_FUNC)"
+echo 1>&2 "************* Done zshenv ****************"

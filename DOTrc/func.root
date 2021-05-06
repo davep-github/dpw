@@ -298,7 +298,7 @@ dp_rc_to_text()
     false
 }
 
-: ${DPBRC_Clear_set_x_p=t}
+: ${DPBRC_Clear_set_x_p}=t
 : ${DPBRC_Show_rc_in_prompt_p=t}
 : ${DPBRC_Verbose_rc_in_prompt_p=t}
 #echo_id2 DPBRC_set_x_post_prompt_command_val

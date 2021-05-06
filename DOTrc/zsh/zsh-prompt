@@ -11,8 +11,8 @@
 # directory, so it must have the current working directory (aka `default-directory') in it somewhere. [ at this time: 2021-03-25T15:09:34 ] the regexp I use to extract the cwd is:
 # "^$(user)@$(machine):\\([~/][[:graph:]]*\\)\\(.*\\)$"
 # for some reason, when the prompt string is read by comint before being sent to the recognition routine, it looks like garbage, serious garbage, all garbage, ?all? non-ASCII.  Hopefully it's due to the colorization, so lets turn that off in Emacs' shells.
-: ${PS1_backup=PS1}
-: ${PROMPT_backup=PROMPT}
+: ${PS1_backup=$PS1}; export PS1_backup
+: ${PROMPT_backup=$PROMPT}; export PROMPT_backup
 setopt PROMPT_SUBST
 unset PROMPT
 # DP_XTITLE_ID always goes first so wmctrl(1), or other similar, can ID the
