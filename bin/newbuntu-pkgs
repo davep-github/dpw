@@ -287,6 +287,7 @@ python3-tk
 # ipython-alike, part of a much larger package like (same as) the notebook stuff.
 jupyter
 feh
+dict
 ### <:New Entry Placeholder:> ###
 # For external app adding utility, it can sed this exact text with a new entry
 # and add another placeholder.
