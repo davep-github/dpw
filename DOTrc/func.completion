@@ -30,13 +30,15 @@ complete -F dp_binaries_complete sp run-iff xit lessit
 # @(...) is an extended glob (extglob)
 _dp_sp_complete()
 {
-    set -x
+    #set -x
     local words cword
     local cur=${COMP_WORDS[COMP_CWORD]}
     local prev=${COMP_WORDS[COMP_CWORD-1]}
 
-    echo "COMP_WORDS: ${COMP_WORDS[@]}"
-    echo "COMP_TYPE: ${COMP_TYPE}"
+    {
+	echo "COMP_WORDS>${COMP_WORDS[@]}<"
+	echo "COMP_TYPE>${COMP_TYPE}<"
+    } 1>&2
     local i
     for (( i=1; i <= COMP_CWORD; i++ )); do
         if [[ ${COMP_WORDS[i]} != -* ]]; then

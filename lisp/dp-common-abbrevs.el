@@ -486,8 +486,15 @@
     ((("args" "arguments" "arg" "argument")
       'circular)
      ;; << enough to handle plurals.
-
      dp-manual)
+
+    ;; Homer's a roll modle.
+    ((("smart" "S-M-R-T" "s-m-r-t" "SMRT" "smrt"
+       "`I am so smart, S-M-R-T'")
+      'circular)
+     ;; << enough to handle plurals.
+     dp-manual)
+        
     ((("P" "Python" "py")
       'circular)
      dp-manual)
@@ -600,6 +607,8 @@
     (("psse" "print >>sys.stderr, ")
      dp-manual)
     (("hc" "hard coded" "hard-coded")
+     dp-manual)
+    (("janine" "someone with your qualifications would have no trouble finding a top-flight job in either the food service or housekeeping industries.")
      dp-manual)
     ;; Extra quote is really used.
     ((("ctor" "constructor" "construct")
