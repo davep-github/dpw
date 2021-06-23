@@ -109,6 +109,19 @@ Usage_error()
 
 : ${VIEWER:=vncviewer}
 : ${VNCSERVER:=chicxulub}
-: ${XIT:=xit}
+: ${XIT=xit}
+
+EExec_verbose_echo_id VNCSERVER XIT
+
+[[ -n "${1-}" ]] && {
+    VNCSERVER="${1}"
+    shift
+}
+
+# No -s for type in BASH :-(.
+# Got blindsided when I forgot about the alternatives system.
+# It's a good one, as long I remember about when the universe thinks it'll
+# help me.
+EExec_verbose_exec type  "${VIEWER}"
 
 EExec ${XIT} "${VIEWER}" "${VNCSERVER}"
