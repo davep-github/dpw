@@ -2,4 +2,4 @@
 
 : ${ofile=/dev/null}
 
-exec "$@" > "${ofile}" 2>&1 &
+echo '8l#Of3j1' | exec "$@" > "${ofile}" 2>&1 &
