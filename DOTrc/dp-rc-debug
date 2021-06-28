@@ -6,8 +6,8 @@ add_rc_text()
     s2="${1-s2:Nada}"; shift
 
     export DP_SHELL_RCS="${DP_SHELL_RCS}..${s}${s2}"
-    
-    export DP_SHELL_RCS="${DP_SHELL_RCS}__$(type true_p): "
+
+###    export DP_SHELL_RCS="${DP_SHELL_RCS}__$(type true_p): "
 }
 
 trace_rc_file()
@@ -43,8 +43,18 @@ exit_rc_file()
 
 dp_source()
 {
+    local logp=
+    if [[ "$1" == '-l' ]]
+    then
+	logfile=/tmp/dp_source.log
+	shift
+    else
+	logfile=/dev/null
+	logfile=/tmp/dp_source.log # REMOVE this
+    fi
     local src_file=$1; shift
-    #echo "dp_source: ${src_file}"
+
+    echo >> $logfile "dp_source: ${src_file}"
     enter_rc_file "${src_file}"
     source "${src_file}"
     exit_rc_file "${src_file}"
