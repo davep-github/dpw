@@ -2,7 +2,7 @@
 
 echo_name_and_val()
 {
-    local echo_name_and_val_arg=
+    local echo_name_and_val_sym=
     local echo_name_and_val_anno=""
     local echo_name_and_val_noAnno=
     local echo_name_and_val_prefix=""
@@ -17,8 +17,8 @@ echo_name_and_val()
 
     while [[ "${1-}" =~ ^- ]]
     do
-      echo_name_and_val_arg="$1"
-      case "$echo_name_and_val_arg" in
+      echo_name_and_val_sym="$1"
+      case "$echo_name_and_val_sym" in
           -q) echo_name_and_val_noAnno=t;;
           -t|--text) shift; echo_name_and_val_text="${1} ";;
           -T|--TEXT) shift; echo_name_and_val_text="${1}";;
@@ -26,7 +26,7 @@ echo_name_and_val()
           -s) shift; echo_name_and_val_suffix="$1";;
           -e|--echo-cmd) shift; echo_cmd="${1}";;
           -b|--bare) bare_p=t;;
-          *) echo 1>&2 "echo_name_and_val: unknown option: $echo_name_and_val_arg";
+          *) echo 1>&2 "echo_name_and_val: unknown option: $echo_name_and_val_sym";
              return 1;;
       esac
       shift
@@ -44,6 +44,8 @@ echo_name_and_val()
             echo_name_and_val_anno=
         fi
 
+	# Trying to prevent s name collision.  Is there a less stupid way to
+	# do this?  Local isn't enough since it can shadow a existing variable.
         case "$__use_a_name_like_this_and_you_get_what_you_deserve__" in
             -*) echo_name_and_val_name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
                 type_suffix='[]'
