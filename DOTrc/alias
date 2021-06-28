@@ -102,7 +102,7 @@ alias ls1=lsl
 #set -x
 
 grep_opts=
-: ${dp_grep_options:="--directories=skip"}
+true ${dp_grep_options:="--directories=skip"}
 
 if inside_emacs_p
 then
@@ -114,7 +114,7 @@ then
     # unset vars are.
     #!<@todo make standard util to parse a ^.*?:\d+:.*$ out of grep matches.
     # ??? (\d+:)? and/or (^.*?:)?
-    : ${dp_emacs_grep_options:="-n --color=never ${dp_grep_options}"}
+    true ${dp_emacs_grep_options:="-n --color=never ${dp_grep_options}"}
     export dp_emacs_grep_options
     #echo "dp_emacs_grep_options>$dp_emacs_grep_options<"
     dp_emacs_dash_n_greps()
@@ -354,6 +354,23 @@ alias expauthsock='export SSH_AUTH_SOCK="$(sshauthsock)"'
 alias jcons='jupyter-console'
 alias jcon='jcons'
 
+# nordvpn status command
+alias nvstat="nordvpn status"
+# Lazy way to add a note.  Seriously, aliasen lower the energy barrier of
+# saving a note, lessens the cost of the interruption of train of thought to
+# make a note and can be easily used (sans nice editing) in a text shell, one
+# in a lesser OS, Windwoes, where it's hard to access Emacs w/o a good X
+# server or VNC session.
+alias here-note="cat << 'EOF' >> ~/notes/import-these-info-the-journal"
+# Always use the link name since hopefully I or my replacement will keep it
+# updated.
+alias zshref="evince ~/doc/zshref"
+alias zshman="evince ~/doc/zshman"
+# I just use it so fucking often.
+# 99% of time, including plain wc.
+alias wcl='wc -l'
+alias tmux='dp-tmux'
+# <:new aliases should be added above.:>
 #
 # HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
 # HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
