@@ -29,25 +29,31 @@ verbosity_check() {
     # echo 1>&2 "B:verbosity_check(): \"returning\" @>$@<"
     # echo "$@"
     # An axshul real genuwine non-wat-the-fick-is-ronge-now-eko.
+#    echo 1>&2 "verbososity_check(): verbose>$verbose<"
     echo "$verbose"
 }
 
-dp_source_rc()
+function dp_source_rc()
 {
-    # eko 1>&2 "dp_source_rc():Enter, @:" "$@"
-    # For now, must be 1st arg.
+    #set -x
+#    echo 1>&2 "dp_source_rc():Enter, @:" "$@"
     local verbose=$(verbosity_check "$@")
+#    echo 1>&2 "dp_source_rc: verbose>$verbose<"
     [[ "${verbose}" == ":" ]] || shift
-    # echo 1>&2 "dp_source_rc(): verbose>${verbose}<"
+#    echo 1>&2 "dp_source_rc: 1: after verbose:" "\$@>$@<"
+#    echo 1>&2 "dp_source_rc(): verbose>${verbose}<"
     # eko 1>&2 "dp_source_rc(): @>" "$@"
     # echo 1>&2 "B:dp_source_rc(): @>$@<"
     #read -p "verbose>${verbose}<, @>$@<, press <enter>"
+    #verbose="dp_echo2 "
+#    echo 1>&2 "2: after junk after verbosity_check: \$@>$@<"
     for rcf in "$@"; do
-	$verbose "dp_source_rc() considering >$rcf<"
+	#set -x
+#	echo 1>&2 $verbose "dp_source_rc considering >$rcf<"
         DP_RC_LIST_OTHERS_TRIED="$DP_RC_LIST_OTHERS_TRIED $rcf"
 	if [ -r $rcf ]
 	then
-	    $verbose "dp_source_rc() sourcing >$rcf<"
+	    #echo 1>&2 "dp_source_rc sourcing >$rcf<"
             source $rcf  || {
 		echo 1>&2 "dp_source_rc(): error source rcf>$rcf<"
 		DP_RC_LIST_OTHERS_ERRORS="$DP_RC_LIST_OTHERS_ERRORS $rcf"
@@ -56,12 +62,15 @@ dp_source_rc()
         else
 	    DP_RC_LIST_OTHERS_UNREADABLE="$DP_RC_LIST_OTHERS_UNREADABLE $rcf"
 	fi
+	#set +x
     done
+    #set +x
 }
+#set +
 
 dp_source_rc $HOME/.rc/func.root
 
-dp_LOGGER()
+function dp_LOGGER()
 {
     local logname="$1"
     shift
@@ -70,7 +79,7 @@ dp_LOGGER()
     echo "$prefix: $0: $@" >> "$logname"
 }
 
-dp_DEPRECATED()
+function dp_DEPRECATED()
 {
     # Try to capture info about the program using the deprecated thing.
     dp_LOGGER "$dp_DEPRECATED_log" deprecated "$@"
@@ -78,24 +87,24 @@ dp_DEPRECATED()
 }
 
 # Verbose versions of true and false. Useful for debugging and prototyping.
-truev()
+function truev()
 {
     echo "true"
     true
 }
 
-falsev()
+function falsev()
 {
     echo "false"
     false
 }
 
-vsetp_b0rked()
+function vsetp_b0rked()
 {
     [ -n "$@" ]
 }
 
-vnullp()
+function vnullp()
 {
     # I can't figure out how to get the variable passed here without evaluating
     # it.
@@ -104,7 +113,7 @@ vnullp()
     #CO#b0rked>> eval echo ${$1?huh?}
 }
 
-yes_p()
+function yes_p()
 {
     local rc
     case "$1" in
@@ -115,26 +124,26 @@ yes_p()
 }
 DP_EXPORT_FUNC yes_p
 
-shell_var_pred_t()
+function shell_var_pred_t()
 {
     [ -n "$1" ]
 }
 DP_EXPORT_FUNC shell_var_pred_t
 
-shell_var_pred_nil()
+function shell_var_pred_nil()
 {
     ! shell_var_pred_t "$@"
 }
 
 DP_EXPORT_FUNC shell_var_pred_t
 
-nope_p()
+function nope_p()
 {
     ! yes_p "$1"
 }
 DP_EXPORT_FUNC nope_p
 
-invert_shell_var_pred()
+function invert_shell_var_pred()
 {
     if [ -z "$1" ]; then
         true
@@ -144,32 +153,32 @@ invert_shell_var_pred()
 }
 DP_EXPORT_FUNC invert_shell_var_pred
 
-inv_truth_p()
+function inv_truth_p()
 {
     dp_DEPRECATED "inv_truth_p-->invert_shell_var_pred"
     invert_shell_var_pred "$@"
 }
 DP_EXPORT_FUNC inv_truth_p
 
-not_disabled_p()
+function not_disabled_p()
 {
     dp_DEPRECATED "not_disabled_p-->shell_var_pred_t"
     shell_var_pred_t "$1"
 }
 DP_EXPORT_FUNC not_disabled_p
 
-feature_requested_p()
+function feature_requested_p()
 {
     not_disabled_p "$@"
 }
 DP_EXPORT_FUNC feature_requested_p
 
-empty_string_p()
+function empty_string_p()
 {
     shell_var_pred_nil "$1"
 }
 
-invert_flag()
+function invert_flag()
 {
     if shell_var_pred_t "$1"; then
         echo ""
@@ -181,13 +190,13 @@ invert_flag()
 }
 DP_EXPORT_FUNC invert_flag
 
-dp_progname()
+function dp_progname()
 {
     echo "${progname:-${prog_name:-${prog:-${0:-dp_progname: can\'t find program name}}}}"
 }
 DP_EXPORT_FUNC dp_progname
 
-dpio_echo ()
+function dpio_echo ()
 {
     local redir=$1
     local ofile=$2
@@ -200,7 +209,7 @@ export dpdbg_redir='1>&2'
 export dpdbg_ofile=''
 export dpdbg_enable=''
 
-dpdbg_echo ()
+function dpdbg_echo ()
 {
     if [ -n "$dpdbg_enable" ]
     then
@@ -208,14 +217,14 @@ dpdbg_echo ()
     fi
 }
 
-dp_echo()
+function dp_echo()
 {
     local pname=${DP_ECHO_PROGNAME:-$(dp_progname)}
     echo "${dp_echo_prefix-}${pname}:" "$@"
 }
 DP_EXPORT_FUNC dp_echo
 
-dp_echo2 ()
+function dp_echo2 ()
 {
     local pname=${DPE_ECHO_PROGNAME:-$(dp_progname)}
     echo 1>&2 "${pname}:" "$@"
@@ -234,7 +243,7 @@ alias dpe_echo=dp_echo2
 alias dp_echo_err=dp_echo2
 
 # Works via side effects.
-aappend()
+function aappend()
 {
     # 	    rc[${#rc[@]}]="$src"
     # 	    ${aname}[${#${aname}[@]}]="$@"
@@ -251,7 +260,7 @@ aappend()
 # @todo XXX Put in bashrc so this is done once?
 # @todo XXX Better to fix my sourcing overload/repetition.
 export DP_RC_FILES_EXPANDED=()
-expand_source_list()
+function expand_source_list()
 {
     #{				# @todo XXX @todo XXX
 	# Print 'em before any shifts, etc.
@@ -325,18 +334,18 @@ expand_source_list()
     fi
 }
 
-source_list()
+function source_list()
 {
-    # eko 1>&2 "source_list():Enter, @:" "$@"
-    # For now, must be 1st arg.
+#    echo 1>&2 "source_list():Enter, \$@:" "$@"
     local verbose=$(verbosity_check "$@")
+#    echo 1>&2 "source_list: verbose>$verbose<"
     [[ "${verbose}" == ":" ]] || shift
-    # echo 1>&2 "source_list(): verbose>${verbose}<"
-    # eko 1>&2 "dp_source_rc(): @" "$@"
-    $verbose echo 1>&2 "1:source_list(): verbose>${verbose}<"
-    $verbose eko "2:source_list():@" "$@"
-    $verbose eko "3: source_list():@" "$@"
-    $verbose echo 1>&2 "4:source_list(): verbose>${verbose}<"
+    # echo 1>&2 "source_list: verbose>${verbose}<"
+#    echo 1>&2 "source_list: \$@" "$@"
+    # $verbose echo 1>&2 "source_list: 1:source_list(): verbose>${verbose}<"
+    # $verbose eko "2:source_list():@" "$@"
+    # $verbose eko "3: source_list():@" "$@"
+    # $verbose echo 1>&2 "4:source_list(): verbose>${verbose}<"
     local src
     local dprc_rc=0
     sources=$(expand_source_list "$@")
@@ -351,7 +360,7 @@ source_list()
     return $dprc_rc
 }
 
-dpFATAL()
+function dpFATAL()
 {
     local rc=$1
     shift
@@ -359,12 +368,12 @@ dpFATAL()
     exit $rc
 }
 
-dp_die()
+function dp_die()
 {
     dpFATAL "$@"
 }
 
-dpe_error()
+function dpe_error()
 {
     local rc_msg=""
     local rc="$1"
@@ -377,17 +386,17 @@ dpe_error()
     return $rc
 }
 
-dpWARN()
+function dpWARN()
 {
     dp_echo2 "WARNING:" "$@"
 }
 
-dpe_warn()
+function dpe_warn()
 {
     dpWARN "$@"
 }
 
-dpe_warning()
+function dpe_warning()
 {
     dpWARN "$@"
 }
@@ -396,7 +405,7 @@ DP_EXPORT_FUNC expand_source_list source_list dpFATAL dp_die
 DP_EXPORT_FUNC dpdbg_echo dpio_echo dpWARN
 DP_EXPORT_FUNC dpe_error dpe_warn dpe_warning
 
-inside_emacs_p()
+function inside_emacs_p()
 {
     [ "$TERM" = "emacs" -o "$TERM" = "eterm" -o -n "${EMACS-}" ]
 }
@@ -416,15 +425,21 @@ if inside_emacs_p; then
     }
 fi
 
-g()
+function g()
 {
+    local arg="${1-}"
+    if [[ "$1" == '--x' ]]
+    then
+	set -x;
+	shift
+    fi
     case "$1" in
 	-*)
 	    go-mgr "$@" ;;
 	*)
-	    # If a file name is given, assume we want to go to the containing
-	    # directory.
-            if [ -f "${1}" ]
+	    # If arg is file name is given, assume we want to go to the
+	    # containing directory.
+            if [[ -f "${1}" ]]
             then
                 dir=$(dirname "${1}")
 		# If $1 is a file and its dir part is '.' then we really want
@@ -439,7 +454,7 @@ g()
     esac
 }
 
-gr()
+function gr()
 {
     case "$1" in
 	-*)
@@ -454,7 +469,7 @@ gr()
     esac
 }
 
-scanl()
+function scanl()
 {
     local lines=$((${LINES:-25} - 2))
     local folder="+${1:-inbox}"
@@ -462,7 +477,7 @@ scanl()
     scan $folder 'last:'$vlines | fgrep -v '**SPAM**' | tail -n$lines
 }
 
-pwd_title()
+function pwd_title()
 {
     :
 }
@@ -490,14 +505,14 @@ esac
 DP_EXPORT_FUNC g
 DP_BASH_ONLY typeset -f -x g
 
-dp_cd()
+function dp_cd()
 {
     "cd" "$@"; pwd_title
 }
 
 #
 # convert leading occurences of the home directory into ~
-tildefy()
+function tildefy()
 {
     local dir=${dir#$HOME/}
     case $dir in
@@ -509,23 +524,23 @@ tildefy()
 
 #. $DP_RC_DIR/dirstack
 
-do_xtitle()
+function do_xtitle()
 {
     echo -n "]2;$1 ]1;$2" >/dev/tty
 }
 
-do_xtitle2()
+function do_xtitle2()
 {
     echo -n "]2;$1 ]1;$2"
 }
 
-console()
+function console()
 {
     do_xtitle "console@$1" "console@$1"
     /rtty/bin/console $1
 }
 
-distribute_name()
+function distribute_name()
 {
     local base=$1
     shift
@@ -539,7 +554,7 @@ distribute_name()
     echo $out
 }
 
-viline_BAD()
+function viline_BAD()
 {
     local line="$@"
     local tmpfile=$(mktemp /tmp/viline_BAD.XXXXX);
@@ -550,7 +565,7 @@ viline_BAD()
 }
 DP_EXPORT_FUNC viline_BAD
 
-vienv()
+function vienv()
 {
     local vienv_verbose=
     if [ "$1" = "-v" ]
@@ -567,7 +582,7 @@ vienv()
     fi
 }
 
-vienv_obs()
+function vienv_obs()
 {
     local vienv_verbose=
     if [ "$1" = "-v" ]
@@ -584,7 +599,7 @@ vienv_obs()
     fi
 }
 
-viprompt()
+function viprompt()
 {
     local verbose=
     if [ "$1" = "-v" ]
@@ -601,7 +616,7 @@ viprompt()
     fi
 }
 
-vi()
+function vi()
 {
     local vi
     local VI_ALIKES="vim nvi vi"
@@ -622,7 +637,7 @@ vi()
     fi
 }
 
-tailp()
+function tailp()
 {
     local ld
     if [ "$1" = '-d' ]
@@ -635,7 +650,7 @@ tailp()
     tail -n$lines "$@"
 }
 
-headp()
+function headp()
 {
     local ld
     if [ "$1" = '-d' ]
@@ -648,7 +663,7 @@ headp()
     head -n $lines "$@"
 }
 
-kde_p ()
+function kde_p()
 {
     case "$envDTE" in
 	kde*) ret=0;;
@@ -657,7 +672,7 @@ kde_p ()
     return $ret
 }
 
-xpick_dirs()
+function xpick_dirs()
 {
     local d=$(for d in $(dirs "$@"); do echo "$d"; done | xlist)
     local ret
@@ -671,7 +686,7 @@ xpick_dirs()
     return $ret
 }
 
-xpick_cd ()
+function xpick_cd()
 {
     local d
     if d=$(xpick_dirs "$@")
@@ -701,7 +716,7 @@ then
     DP_EXPORT_FUNC repeatX
 fi
 
-src_controlled_p ()
+function src_controlled_p()
 {
     local dir=$1
     shift
@@ -724,26 +739,26 @@ src_controlled_p ()
 }
 DP_EXPORT_FUNC src_controlled_p
 
-bash_knows_bracket_bracket_p()
+function bash_knows_bracket_bracket_p()
 {
     false                       # For now
 }
 DP_EXPORT_FUNC bash_knows_bracket_bracket_p
 
-svn_p ()
+function svn_p()
 {
     src_controlled_p "./.svn" svn "$@"
 }
 DP_EXPORT_FUNC svn_p
 
-cvs_p ()
+function cvs_p()
 {
     src_controlled_p "./CVS" cvs "$@"
 }
 DP_EXPORT_FUNC cvs_p
 alias cvsp=cvs_p
 
-perforce_p()
+function perforce_p()
 {
     find-up .p4config >/dev/null 2>&1 && {
         sc_name=p4
@@ -754,7 +769,7 @@ perforce_p()
     }
 }
 
-do_src_control ()
+function do_src_control()
 {
     local called_as=$1
     shift
@@ -809,7 +824,7 @@ export SP_BIN=$HOME/bin/sp
 export SVN_BIN=$($SP_BIN -1 svn)
 unalias svn >/dev/null 2>&1
 true
-svn ()
+function svn()
 {
     # Add some new command words that are implemented by me.  They have their
     # own svn-* names, but sometimes I forget to add the -, e.g. I type "svn
@@ -830,7 +845,7 @@ svn ()
 }
 DP_EXPORT_FUNC svn
 
-pick_screen ()
+function pick_screen()
 {
     local screen
     screen=$(nth-screen "$@")
@@ -849,7 +864,7 @@ pick_screen ()
 alias pick-screen=pick_screen
 
 # copy .go* items into environment
-do_go2env()
+function do_go2env()
 {
     if [ -x $HOME/bin/go2env ]
     then
@@ -858,7 +873,7 @@ do_go2env()
 }
 DP_EXPORT_FUNC do_go2env
 
-go2rc()
+function go2rc()
 {
     eval $(go2env)
     if inside_emacs_p
@@ -867,7 +882,7 @@ go2rc()
     fi
 }
 
-do_sed_path()
+function do_sed_path()
 {
     # NO /, since it is a common dir sep char ;->
     local K_delim_chars_sed_regexp='(.*?)([!|])'
@@ -906,18 +921,18 @@ do_sed_path()
 }
 DP_EXPORT_FUNC do_sed_path
 
-mkcd()
+function mkcd()
 {
     mkdir -p "$@" && cd "$1"
 }
 DP_EXPORT_FUNC mkcd
 
-show_current_kde()
+function show_current_kde()
 {
     ls -l $HOM_/.kde
 }
 
-hist_cat()
+function hist_cat()
 {
     prefix=${1:-echo}
     # The history mechanism seems to use comments to hold time stamps for
@@ -930,7 +945,7 @@ hist_cat()
 }
 DP_EXPORT_FUNC hist_cat
 
-hist_snap()
+function hist_snap()
 {
     # Put something in front of name since HISTFILEs tend to start with a dot.
     snap_file=HSnap$(basename $HISTFILE)-$(dp-std-timestamp).snap
@@ -938,10 +953,10 @@ hist_snap()
 }
 DP_EXPORT_FUNC hist_snap
 
-: ${DP_FAV_GREPPER:=egrep}
-: ${DP_HIST_GREP_GREPPER:=$DP_FAV_GREPPER}
+true ${DP_FAV_GREPPER:=egrep}
+true ${DP_HIST_GREP_GREPPER:=$DP_FAV_GREPPER}
 
-hist_grep()
+function hist_grep()
 {
     [[ "${1-}" == "-x" ]] && {
 	set -x
@@ -988,22 +1003,22 @@ hist_grep()
 #CO#     hist_cat "#" | ${DP_HIST_GREP_GREPPER:=egrep} $hist_files
 }
 
-hist_fgrep()
+function hist_fgrep()
 {
     DP_HIST_GREP_GREPPER=fgrep hist_grep "$@"
 }
 
-hist_egrep()
+function hist_egrep()
 {
     DP_HIST_GREP_GREPPER=egrep hist_grep "$@"
 }
 
-hist_ggrep()
+function hist_ggrep()
 {
     DP_HIST_GREP_GREPPER=grep hist_grep "$@"
 }
 
-hist_emacs()
+function hist_emacs()
 {
     hist_grep ".*" | ec-stdin
 }
@@ -1012,7 +1027,7 @@ alias hemacs='hist_emacs'
 
 DP_EXPORT_FUNC hist_grep hist_ggrep hist_fgrep hist_egrep
 
-emacs_shell_grepper()
+function emacs_shell_grepper()
 {
     local grepper=$1
     shift
@@ -1023,21 +1038,21 @@ emacs_shell_grepper()
     $grepper -n $with_filename_opt "$@"
 }
 
-dp_mank_apropos()
+function dp_mank_apropos()
 {
     section="$1"
     shift
     apropos -s "$section" "$@"
 }
 
-tdim()
+function tdim()
 {
     # Terminal dimensions as imagined by the environment.
     echo $LINES x $COLUMNS
 }
 DP_EXPORT_FUNC tdim
 
-spg()
+function spg()
 {
     local to="$1"
     local cmd="\`sp -d $to'"
@@ -1055,13 +1070,13 @@ spg()
     fi
 }
 
-ps1()
+function ps1()
 {
     echo "$PS1" | hd
 }
 DP_EXPORT_FUNC ps1
 
-mutt_with_inbox()
+function mutt_with_inbox()
 {
     local inbox="${1-}"
     shift
@@ -1073,12 +1088,12 @@ mutt_with_inbox()
     EDITOR=${MUTT_EDITOR-${EDITOR-vi}} $(sp -1 mutt) ${inbox_opt} "$@"
 }
 
-mutt()
+function mutt()
 {
     mutt_with_inbox "${MUTT_INBOX-}" "$@"
 }
 
-pmutt()
+function pmutt()
 {
     echo 1>&2 B0rked
     echo 1 B0rked
@@ -1086,17 +1101,17 @@ pmutt()
     mutt_with_inbox "${PRISTINE_MUTT_INBOX-}"
 }
 
-psa()
+function psa()
 {
     ps augx
 }
 
-psal()
+function psal()
 {
     psa | less
 }
 
-term_has_xterm_type_title_p()
+function term_has_xterm_type_title_p()
 {
     case "$TERM" in
         [XxAa][Tt][Ee][Rr][Mm]|[Rr][Xx][Vv][Tt]) return 0;;
@@ -1105,7 +1120,7 @@ term_has_xterm_type_title_p()
     esac
 }
 
-dpf_comma_sep_list()
+function dpf_comma_sep_list()
 {
     local sep="$1"
     shift
@@ -1124,13 +1139,13 @@ dpf_comma_sep_list()
 }
 export dpf_comma_sep_list
 
-dp_import()
+function dp_import()
 {
     DP_IMPORTING_P=t source "$@"
 }
 DP_EXPORT_FUNC dp_import
 
-name_is___main__()
+function name_is___main__()
 {
     # Are we sourcing or running?
     # My convention (not a BASH command), `innovated'(as per M$) from Python.
@@ -1138,7 +1153,7 @@ name_is___main__()
 }
 DP_EXPORT_FUNC name_is___main__
 #alias dp_runme="name_is___main__"
-dp_runme()
+function dp_runme()
 {
     name_is___main__ "$@"
 }
@@ -1151,30 +1166,30 @@ DP_EXPORT_FUNC dp_runme
 # (command not found) in at least these fucking fucked scripts:
 # dp-getopt+.sh as called by rcgrep.
 # Hopefully, dumbass wrapper functions do work
-running_as_script()
+function running_as_script()
 {
     name_is___main__ "$@"
 }
 # But the dumbass programmer needs to export the dumbass scripts.
 DP_EXPORT_FUNC running_as_script
 
-dp_ima_script()
+function dp_ima_script()
 {
     name_is___main__ "$@"
 }
 DP_EXPORT_FUNC dp_ima_script
 
-dp_ima_lib()
+function dp_ima_lib()
 {
     ! dp_ima_script "$@"
 }
 
-invert_string_pred()
+function invert_string_pred()
 {
     if [ -z "$1" ]; then echo t; else echo ""; fi
 }
 
-dictl()
+function dictl()
 {
     dict "$@" | less
 }
@@ -1183,7 +1198,7 @@ dictl()
 # But, func is needed.
 #echo "who's calling me again and again? 0>$0<"
 
-rmcore()
+function rmcore()
 {
     local ls_p=
     local core_glob='*.CR'
@@ -1220,7 +1235,7 @@ rmcore()
     vunsetp $show_me_p && rm -f $core_glob
 }
 
-scrn_root_bash()
+function scrn_root_bash()
 {
     local NAMER
     # Allow name to be overridden by argument.
@@ -1234,7 +1249,7 @@ scrn_root_bash()
     screen sudo -E $NAMER IMASCREENINSTANCE=yes bash
 }
 
-add_ps1_prefix()
+function add_ps1_prefix()
 {
     local prefix1="${1-}"; shift
     local title_prefix="${1-$prefix1}";
@@ -1252,7 +1267,7 @@ add_ps1_prefix()
 
 export dp_NH=""
 export dp_NH_indicator=""
-nh()
+function nh()
 {
     export dp_NH=y
     dp_NH_indicator='(nh)'
@@ -1262,7 +1277,7 @@ nh()
 }
 DP_EXPORT_FUNC nh
 
-unset_by_re()
+function unset_by_re()
 {
     local re                    # Needed with loop var?
     local n
@@ -1273,13 +1288,13 @@ unset_by_re()
 }
 DP_EXPORT_FUNC unset_by_re
 
-unset_mesrc()
+function unset_mesrc()
 {
     unset_by_re __ME_src
 }
 
 # Nag, nag, nag.
-dpcheck()
+function dpcheck()
 {
     case "$(basename $0)" in
         dp*) ;;
@@ -1291,7 +1306,7 @@ dpcheck()
     return 0                    # Faster than `true'?
 }
 
-cd_newest_deepest()
+function cd_newest_deepest()
 {
     local pushd_p
     local cd_command=cd
@@ -1317,12 +1332,12 @@ cd_newest_deepest()
     }
 }
 
-go_newest_deepest()
+function go_newest_deepest()
 {
     cd_newest_deepest --go "$@"
 }
 
-sed_ap_tree()
+function sed_ap_tree()
 {
     case "$1" in
         -|0) newap="ap";;
@@ -1332,7 +1347,7 @@ sed_ap_tree()
     sed_path '/ap[^/]*/' "/${newap}/"
 }
 
-exchange_ap_tree()
+function exchange_ap_tree()
 {
     local op="${1}"
     shift
@@ -1342,7 +1357,7 @@ DP_EXPORT_FUNC exchange_ap_tree
 alias xap='exchange_ap_tree g'
 alias cdap='exchange_ap_tree cd'
 
-p4_change_sandbox()
+function p4_change_sandbox()
 {
     (($# < 1)) && {
         echo "A sandbox name/abbrev is required."
@@ -1353,13 +1368,13 @@ p4_change_sandbox()
 export p4_change_sandbox
 alias chsb=p4_change_sandbox
 
-lessnew()
+function lessnew()
 {
     less $(newest-file "$@")
 }
 DP_EXPORT_FUNC lessnew
 
-op_dir()
+function op_dir()
 {
     local op="${1}"; shift
     local dir="${1}"
@@ -1369,26 +1384,26 @@ op_dir()
     "${op}" "${dir}"
 }
 
-cddir()
+function cddir()
 {
     op_dir cd "$@"
 }
 
-gdir()
+function gdir()
 {
     op_dir g "$@"
 }
 
 DP_EXPORT_FUNC op_dir cddir gdir
 
-de_screenify()
+function de_screenify()
 {
     unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
 }
 DP_EXPORT_FUNC de_screenify
 alias descreenify='de_screenify'
 
-re_screenify()
+function re_screenify()
 {
     IMASCREENINSTANCE=1
     [ -n "${1-}" ] && {
@@ -1408,7 +1423,7 @@ Invoke this function with a name as an argument."
 DP_EXPORT_FUNC re_screenify
 alias rescreenify='re_screenify'
 
-dp_mk_log_file()
+function dp_mk_log_file()
 {
     local name="${1}"
     local dir=
@@ -1427,7 +1442,7 @@ dp_mk_log_file()
     echo "${path_name}"
 }
 
-nix_ccache()
+function nix_ccache()
 {
     [ "${1-}" = "-x" ] && {
 	set -x
@@ -1464,7 +1479,7 @@ nix_ccache()
 }
 
 # Must be in the same shell instance to guarantee up-to-date results.
-ogreppit()
+function ogreppit()
 {
     local o="${1}"; shift
     set -o | egrep "${o}"
@@ -1472,7 +1487,7 @@ ogreppit()
 
 dp_source_rc $HOME/.rc/func.completion
 dp_source_rc $HOME/.rc/func.git
-repsh()
+function repsh()
 {
 	exec "${1-zsh}" -l
 }
