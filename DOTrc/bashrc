@@ -3,8 +3,9 @@
 # NB: all non-bash code is old, crufty and untested in a long time.
 # Suppress any other means of enabling this.  NB: may break some stuff.
 
-echo 1>&2 'BASHYOPP!'
-
+# Longer and more noticeable (aka annoying) is good if we're going to use it.
+echo 1>&2 'BASHYOPP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+#set -x
 if type emulate >/dev/null 2>/dev/null; then emulate bash; fi
 
 # This was supposed to make sure I had my environment if I had su'd
