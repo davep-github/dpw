@@ -1,13 +1,17 @@
+# Meant to be sourced.
 # Shared with root.
+
+#echo 1>&2  "YOPP! top of ~/bin/func.root SHELL>$SHELL< ***************************************************"
 
 #
 # These need to be here so that programs can use them.
 # I need to change all invocations to not use aliases.
 #
+echo "$(date):func.root" >> /tmp/func.root.sourcings
 
 # vsetp & friends moved to func.early.
 # this is sure to cause problems.
-settrue()
+function settrue()
 {
     local varname="${1}"
     shift
@@ -21,7 +25,7 @@ settrue()
     eval eval $export \$varname=t
 }
 
-sed_path()
+function sed_path()
 {
     local opts="" sep="" args=()
     local nopts=0 nargs=0
@@ -87,7 +91,7 @@ sed_path()
 }
 DP_EXPORT_FUNC sed_path
 
-sed_cd()
+function sed_cd()
 {
     cd $(sed_path "$@")
 }
@@ -95,7 +99,7 @@ DP_EXPORT_FUNC sed_cd
 alias cd-sed=sed_cd
 alias xcd=sed_cd
 
-sed_go()
+function sed_go()
 {
     g $(sed_path "$@")
 }
@@ -106,15 +110,15 @@ alias gg=sed_go
 
 # Exchange sandboxes
 
-exchange_sandboxes()
+function exchange_sandboxes()
 {
     [ -z "${1-}" ] && {
         echo "exchange_sandboxes(): Need a box name."
         return 1
     } 1>&2
-    
+
     xdir "$(scsandbox $PWD)" "$1"
-    
+
     # Is there another arg? That's a directory to `gr' to.
     [ -n "${2-}" ] && {
         gr "$2"
@@ -123,13 +127,13 @@ exchange_sandboxes()
 DP_EXPORT_FUNC exchange_sandboxes
 alias xsb=exchange_sandboxes
 
-sedp ()
+function sedp()
 {
     pushd $(sed-path "$@")
 }
 DP_EXPORT_FUNC sedp
 
-bglq ()
+function bglq()
 {
     echo "#$(date): $@" >> "$BGLQ_LOG"
     beagle-query "$@" | grep -v "file:///sundry/davep/beagle-config" \
@@ -138,7 +142,7 @@ bglq ()
 }
 DP_EXPORT_FUNC bglq
 
-dp_kill_job_id_n ()
+function dp_kill_job_id_n()
 {
 #set -x
     local jidn="$1"
@@ -153,9 +157,9 @@ dp_kill_job_id_n ()
 }
 DP_EXPORT_FUNC dp_kill_job_id_n 
 
-: ${DP_DEF_PIX_ARGS:=-FASs}
-: ${DP_PIX_COLORIZE:=-F}
-pix ()
+true ${DP_DEF_PIX_ARGS:=-FASs}
+true ${DP_PIX_COLORIZE:=-F}
+function pix()
 {
     # pix + Installed check
     local opts
@@ -174,7 +178,7 @@ pix ()
     eval eix $DP_PIX_COLORIZE $opts "$@" $less_opt
 }
 
-pixi ()
+function pixi()
 {
     # pix + Installed check
     local opts
@@ -195,7 +199,7 @@ pixi ()
 DP_EXPORT_FUNC pixi
 alias ipix=pixi
 
-dashify()
+function dashify()
 {
     ret=
     for o in $*; do
@@ -213,7 +217,7 @@ DP_EXPORT_FUNC dashify
 
 alias akrord=acroread
 
-grep_var_log_messages()
+function grep_var_log_messages()
 {
     if [[ "$1" == -HIGH_LAST ]]; then
 	shift
@@ -231,7 +235,7 @@ grep_var_log_messages()
     sudo $last_grep "$@" $first $last
 }
 
-page_tail()
+function page_tail()
 {
     local lines
     if [[ "$1" =~ ^[0-9]+$ ]]
@@ -246,7 +250,7 @@ page_tail()
     tail -n "${lines}" "$@"
 }
 
-page_of_history()
+function page_of_history()
 {
     local lines
     if [[ -z "$*" ]]; then
@@ -266,7 +270,7 @@ page_of_history()
 DP_EXPORT_FUNC page_of_history
 DP_BASH_ONLY typeset -f -x page_of_history
 
-demerge()
+function demerge()
 {
     local ask="--ask"
     [ "$1" == "-a" -o "$1" == '-y' ] && {
@@ -283,7 +287,7 @@ alias delmerge=demerge
 alias unmerge=demerge
 
 # Linux's /bin/kill does this, but wrap it in case others don't.
-dp_sig_n2n()
+function dp_sig_n2n()
 {
     local sig_num=$(($1 - 128))
     kill -l "${sig_num}" 2>/dev/null || {
@@ -293,34 +297,23 @@ dp_sig_n2n()
     }
 }
 
-dp_rc_to_text()
+function dp_rc_to_text()
 {
     false
 }
 
-: ${DPBRC_Clear_set_x_p}=t
-: ${DPBRC_Show_rc_in_prompt_p=t}
-: ${DPBRC_Verbose_rc_in_prompt_p=t}
+true ${DPBRC_Clear_set_x_p=t}
+export DPBRC_Clear_set_x_p
+true ${DPBRC_Show_rc_in_prompt_p=t}
+export DPBRC_Show_rc_in_prompt_p
+true ${DPBRC_Verbose_rc_in_prompt_p=t}
+export DPBRC_Verbose_rc_in_prompt_p
 #echo_id2 DPBRC_set_x_post_prompt_command_val
 #echo 1>&2 "\$0>$0<"
-: ${DPBRC_set_x_post_prompt_command_val='+x'}
-#echo_id2 DPBRC_set_x_post_prompt_command_val
-
-dp_set_x_fini()
-{
-    local set2=${1:-${DPBRC_set_x_post_prompt_command_val}}
-    if vsetp $DPBRC_Clear_set_x_p; then
-        set +x
-    elif [ -n "$set2" ]
-    then
-        # Set set [-x|+x] as per default
-        set "$set2"
-    fi
-
-    true
-}
-
-prompt_command_errno()
+true ${DPBRC_set_x_post_prompt_command_val='+x'}
+export DPBRC_set_x_post_prompt_command_val
+#echo 1>&2 "DPBRC_set_x_post_prompt_command_val>$DPBRC_set_x_post_prompt_command_val<"
+function prompt_command_errno()
 {
     if vsetp ${dp_verbose_rc_in_prompt_p-}; then
         if [ "${1-}" == 0 ]; then
@@ -336,7 +329,7 @@ prompt_command_errno()
 #
 # Move this to func?
 #
-prompt_command()
+function prompt_command()
 {
     # Status is still set from the last command.
     local rc="$?"
@@ -368,7 +361,7 @@ prompt_command()
 export PROMPT_COMMAND=prompt_command
 DP_EXPORT_FUNC prompt_command
 
-pathff()
+function pathff()
 {
     PATH=$(cat "$@")
 }
@@ -379,7 +372,7 @@ export dp_sourcing=t
 source $HOME/bin/dp_stolen__git_ps1
 DP_EXPORT_FUNC dp_stolen__git_ps1
 
-__gitdir () 
+function __gitdir() 
 { 
     if [ -z "${1-}" ]; then
         if [ -n "${__git_dir-}" ]; then
@@ -400,7 +393,7 @@ __gitdir ()
     fi
 }
 
-xxx_newest()
+function xxx_newest()
 {
     local op="${1}"; shift
     local depth=1
@@ -425,7 +418,7 @@ xxx_newest()
     return "$?"
 }
 
-cdnew()
+function cdnew()
 {
     xxx_newest cd "$@"
     return "$?"
@@ -433,7 +426,7 @@ cdnew()
 DP_EXPORT_FUNC cdnew
 alias cd_newest=cdnew
 
-go_newest()
+function go_newest()
 {
     xxx_newest g "$@"
     return "$?"
@@ -441,7 +434,7 @@ go_newest()
 DP_EXPORT_FUNC go_newest
 alias gonew=go_newest
 
-xxx_newto()
+function xxx_newto()
 {
     local op="${1}"; shift
     local dest
@@ -453,18 +446,19 @@ xxx_newto()
 }
 DP_EXPORT_FUNC xxx_newto
 
-cdnewto()
+function cdnewto()
 {
     xxx_newto cd "$@"
     return "$?"
 }
 DP_EXPORT_FUNC cdnewto
 
-gnewto()
+function gnewto()
 {
     xxx_newto g "$@"
     return "$?"
 }
 DP_EXPORT_FUNC gnewto
 
+#echo 1>&2 "YOPP! end of ~/bin/func.root SHELL>$SHELL< ***************************************************"
 true
