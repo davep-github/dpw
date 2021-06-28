@@ -215,6 +215,8 @@ export LC_COLLATE=C
 export DP_CODE_INDEX_FINDER_FILE=cscope.files
 export DP_CODE_INDEX_FINDER_WORK_FILE=${DP_CODE_INDEX_FINDER_FILE}.work
 
+export PASSWORD_STORE_ENABLE_EXTENSIONS=true
+
 # Unconditionally add these.  verify path will hack them out if they're not
 # there.
 PATH=$(dp_add_to_path_iff \
