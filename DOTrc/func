@@ -9,13 +9,21 @@
 # move to them, and assocs, when convenient.
 source ~/.rc/dp_shells_compat.sh
 
-: ${dp_DEPRECATED_log:=${DP_LOG_DIR:=$HOME/log}/dp_DEPRECATEDS.log}
+true ${dp_DEPRECATED_log:=${DP_LOG_DIR:=$HOME/log}/dp_DEPRECATEDS.log}
 export dp_DEPRECATED_log
 
-: ${envDTE=}
+true ${envDTE=}
 
-# For now, must be 1st arg.
-verbosity_check() {
+# For now a verbosity arg, must be 1st arg.
+# If there was an arg passed to verbosity_check,
+# then the caller must consume it when we return.
+# ':' Means there was no arg specifically passed to verbosity_check and
+# there is nothing to consume.
+# Use this after a call.
+# [[ "${verbose}" == ":" ]] || shift
+# Sorry.  Maybe I could do the shift here and return the new $@.
+# But too many evaluations, I am fearing.
+function verbosity_check() {
     #echo 1>&2 "0:verbosity_check(): @>$@<"
     local verbose="VERBOSITY CHECK ERROR"
     case "$1" in
@@ -493,7 +501,7 @@ case $TERM in
 	}
 	;;
     emacs|eterm)
-        man()
+        function man()
         {
             /usr/bin/man "$@" | col -b
         }
