@@ -83,6 +83,6 @@ source ${DP_RC_DIR}/echo_id
 DP_EXPORT_FUNC echo_id echo_id_err echo_id2 echo_id_ornate
 DP_EXPORT_FUNC eko_id eko_id_err eko_id2
 
-set +x
+#set +x
 
 true
