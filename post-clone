@@ -1,6 +1,5 @@
 #!/bin/bash
 set -u
-
 # Use "real" symlinks on Windwoes/cygwin.
 # Set this unconditionally since it shouldn't hurt in a real environment.
 # NB this doesn't work in a "Git Bash" since that is a minGW app, not cygwin.
@@ -91,6 +90,18 @@ repo_ln()
       local src="${repo}/${eatshit}"
       local dest=$(basename "${src}")
         safe_ln "${repo}/${eatshit}" "${dest}"
+    done
+}
+
+function mk_dirlist()
+{
+    local dir_to_make_in="${1}"; shift
+
+    echo "Making dirs in>${dir_to_make_in}<"
+    echo "pwd>${PWD}<"
+    for dir_to_make in "$@"
+    do
+	${EZEC} mkdir -p "${dir_to_make_in}/${dir_to_make}"
     done
 }
 
@@ -187,25 +198,34 @@ ${EZEC} mkdir ipc
 ${EZEC} mkdir tmp
 ${EZEC} mkdir .screen
 ${EZEC} mkdir notes
+${EZEC} mkdir -p droppings
 
-droppings="droppings/bash_history \
-droppings/editors/xemacs \
-droppings/editors/xemacs/session-auto-saves.d \
-droppings/editors/xemacs/tramp.d \
-droppings/editors/xemacs/tramp.d/auto-saves.d \
-droppings/editors/xemacs/xebacs.d \
-droppings/editors/xemacs/ephemeral.d \
-droppings/editors/xemacs/auto-saves.d \
-droppings/editors/xemacs/ephemeral.d \
-droppings/persist/gdb_history \
-droppings/persist/emacs-history"
+mk_dirlist_files="bash_history
+editors/xemacs
+editors/xemacs/session-auto-saves.d
+editors/xemacs/tramp.d
+editors/xemacs/tramp.d/auto-saves.d
+editors/xemacs/xebacs.d
+editors/xemacs/ephemeral.d
+editors/xemacs/auto-saves.d
+editors/xemacs/ephemeral.d
+persist/gdb_history
+persist/emacs-history"
+# Kinda going out on a limb here, but It's almost always better to use a
+# variable rather than the value EVERY FUCKING WHERE it's needed.
+# The cost of doing it initially, even if used once, is insignificant
+# compared to retrofitting.  Simple typing all the way to QC.  Since no one's
+# ever made a typo or had M-/ grab the wrong value (mea culpa 10^6)
+: ${mk_dirlist_dir:=$HOME/droppings}
 
-safe_ln "droppings/editors/xemacs" "droppings/editors/emacs"
+mk_dirlist "${mk_dirlist_dir}" ${mk_dirlist_files}
 
-for dropping in ${droppings}
+for mkdir_file in "${droppings}"
 do
   ${EZEC} mkdir -p "${dropping}"
 done
+
+safe_ln "editors/xemacs" "editors/emacs"
 
 echo 'Other new Linux installation actions:
 0) If a *buntu installation, run newbuntu-pkgs.
@@ -223,6 +243,7 @@ echo 'Other new Linux installation actions:
    XEmacs C-SPC (dp-expand-abbrev).
 7) Any location dependent stuff? E.g. ~/bin.<place-of-work>
 8) fstab
+9) cd /var/lib/mpd/music; sudo ln -s /mnt/USBThe2nd/mvsik
 
 For driver/kernel dev:
 0) Text mode boot. We want to see the boot process.
@@ -235,6 +256,4 @@ GRUB_CMDLINE_LINUX="persistent modprobe.blacklist=amdgpu drm.debug=0x00"
 1) Text mode console, no GUI:
      run ~/bin/text-mode-boot
 '
-
 echo "TODO! Try to link ~/.rc/xxx.<host> and then ~/.rc/xxx into ~"
-
