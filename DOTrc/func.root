@@ -286,15 +286,68 @@ DP_EXPORT_FUNC demerge
 alias delmerge=demerge
 alias unmerge=demerge
 
-# Linux's /bin/kill does this, but wrap it in case others don't.
-function dp_sig_n2n()
+function dp_ternary()
 {
-    local sig_num=$(($1 - 128))
-    kill -l "${sig_num}" 2>/dev/null || {
-        /bin/kill --list=$(($1 - 128)) 2>/dev/null || {
-            echo "NUM:${sig_num}"
-        }
-    }
+    local rc=$(eval "${1}" && echo "true" || echo "false")
+    echo "${rc}"
+    ${rc}
+}
+# Linux's /bin/kill does this, but wrap it in case others don't and we need
+# to write it.
+
+alias dp_exxit='set +; exit '
+
+# A good test:
+# $ exit-with-x $((128 + <some-signal-num>))
+# $ exit-with-x $(( somethin < 128 ))
+
+##alias dp_decode_cmd_status='unalias dp_decode_cmd_status; source dp_decode_cmd_status'
+
+function dp_decode_cmd_status()
+{
+    local rc="${1}"; shift
+    local signum_min=128
+    local signame="SIGNAME_UNSET"
+    local signum=$((${rc} - ${signum_min}))
+    # echo 1>&2 "signum>${signum}<"
+    local num_sigs=$(/bin/kill -l | wc -w)
+    # echo 1>&2 "rc>${rc}<"
+    # echo 1>&2 "signum>${signum}<"
+    # echo 1>&2 "num_sigs>${num_sigs}<"
+    #read -p "Enter plz..."
+
+    # User return codes should not be >= 128.
+    if (("${rc}" <= "${signum_min}"))
+    then
+	# Special case to separate 128 from 0 (128 - 128)
+	if [[ "${rc}" == "${signum_min}" ]]
+	then
+	    echo "pseudoSIG0"
+	else
+	    echo "${rc}"
+	fi
+	rc="${rc}"
+    elif ((${signum} > ${num_sigs}))
+    then
+	# Is the signum > max signum?
+	echo "$rc:Illegal SIGNUM"
+	rc=1
+    elif  signame=$(/bin/kill -l "${signum}") 2>/dev/null
+    then
+	#echo 1>&2 "signame>${signame}<"
+	# Did kill find the signum pleasing?
+	# We already know the code isn't too big.
+	# zsh and bash have builtin kill commands that display
+	# the list of signals differently.
+	echo "SIG${signame}"
+	rc=0
+    else
+	echo "${rc}: EINVAL: confuzed"
+	# Eat the effing rc, MFer.
+	# rc=$rc
+    fi
+    # Eat the effing rc, MFer.
+    return "${rc}"
 }
 
 function dp_rc_to_text()
@@ -337,8 +390,12 @@ function prompt_command()
     PS1_terminator="$BASE_PS1_terminator"
     # Have 0, the most common rc, be plain and simple.
     if [ "$rc" != 0 ]; then
-	if vsetp DPBRC_Verbose_rc_in_prompt_p && ((rc >= 128)); then
-	    rc_str="$rc:SIG$(dp_sig_n2n $rc)"
+	# @todo XXX the check for rc in signal range is done in decode.
+	# Remove it here when I'm not so gdmf tired.
+	if vsetp DPBRC_Verbose_rc_in_prompt_p
+	then
+	    #type dp_decode_cmd_status
+	    rc_str="$(dp_decode_cmd_status $rc)"
 	else
 	    rc_str=$(prompt_command_errno "$rc")
 	fi
