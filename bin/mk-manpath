@@ -27,6 +27,7 @@ fi
 : ${pathin:=${PATH}}
 export pathin                   # Used by path(dp1)
 
+# Try to deduce (aka guess) man paths from various bin dirs in the usual places.
 # q=$(pathadd "" $(path -1 | sed -r 's!(/bin(/?))!/man\2!'))
 #                    sed -r 's!(/(s?)bin(/?))!/man\3!'
 manpath0=$(path -1 | sed -r 's!(/(s?)bin(/?))!/man\3!')

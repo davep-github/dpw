@@ -105,6 +105,31 @@ Usage_error()
 # template end.
 ########################################################################
 
+function wrap_up_suggestions()
+{
+    echo 'Some suggestions, if I may so bold:
+1) vipw, vigr,
+2) visudo ==> %sudo ALL=(ALL:ALL) >>>NOPASSWD:<<< ALL
+3) sudo update-alternatives --debug --install /usr/bin/python python /usr/bin/python3 1
+4) Set up /etc, etc source code control.  RCS seems best.
+   Use link to ~/some-where-safe
+5) Create sd device named mount points.  Makes quick/temp mounts easier to do and
+remember.
+> sudo mkdir sd{a,b,c,d,e,f,g,h,i,j,k}{1,2,3,4,5,6,7}
+The letters and number might as well go to infinity, so I never have to mkdir(1).
+The letters are because there are so many devices due to USB drives.
+Also look at /etc/fstab for /mnt entries, like so:
+> sed -rn "s!(LABEL=)([^[:space:]]+)([[:space:]]+)(/mnt/)([^[:space:]]+)([[:space:]]*.*)!"
+"\2\t\4\5!p" /etc/fstab
+'
+}
+
+if [[ "${1-}" = '-s' ]]
+then
+    wrap_up_suggestions
+    exit 0
+fi
+
 : ${files=}
 : ${nopkgs=}
 
@@ -117,7 +142,7 @@ Usage_error()
 sudo add-apt-repository ppa:danielrichter2007/grub-customizer
 # For "fixed" skippy from google code.
 sudo add-apt-repository ppa:landronimirc/skippy-xd
-# <:new repos above me:>
+# <:add new repos above me:>
 
 sudo apt-get update
 
@@ -203,6 +228,7 @@ meld
 mesa-utils
 meson
 mpd
+mpc
 msmtp
 mutt
 ncurses-base
@@ -219,12 +245,13 @@ opensymbol
 pcregrep
 rcs
 realpath
-sagi libgif-dev
-sagi libjpeg-dev
-sagi libtiff-dev
-sagi libxpm-dev
+libgif-dev
+libjpeg-dev
+libtiff-dev
+libxpm-dev
 scalable
 screen
+tmux
 thunderbird
 tree
 unifont
@@ -288,6 +315,12 @@ python3-tk
 jupyter
 feh
 dict
+pinentry-fltk
+pinentry-gtk2
+pinentry-qt
+pinentry-qt4
+pinentry-tty
+pinentry-x2go
 ### <:New Entry Placeholder:> ###
 # For external app adding utility, it can sed this exact text with a new entry
 # and add another placeholder.
@@ -355,11 +388,8 @@ isatty >& /dev/null || {
     install_from_stream "stdin"
 }
 
-echo 'Some suggestions, if I may so bold:
-1) vipw, vigr, 
-2) visudo ==> %sudo ALL=(ALL:ALL) >>>NOPASSWD:<<< ALL
-3) sudo update-alternatives --debug --install /usr/bin/python python /usr/bin/python3 1
-'
+wrap_up_suggestions
+
 bite_me=$(readlink /bin/sh)
 if [ "${bite_me}" = "dash" ]
 then

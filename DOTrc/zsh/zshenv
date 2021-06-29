@@ -1,10 +1,6 @@
 # -*-Shell-script-*-
 set -e
 
-echo 1>&2 "************* Starting zshenv ****************"
-
-##echo 1>&2 "Enter zshenv."
-
 # See https://gist.github.com/philoserf/b797d42dbf31bdb7e313
 # 2: ~/.zshenv, Interactive login, Interactive non-login, Script
 
@@ -40,6 +36,7 @@ dp_source ${DP_RC_DIR}/echo_id
 # make a func dp_source that just does a source.
 # NB: Keep immediately after sourcing dp_shells_compat.sh
 unset DP_SHELL_RCS
+PASSWORD_STORE_ENABLE_EXTENSIONS=true
 
 dp_source ~/.rc/func.early
 
@@ -47,7 +44,7 @@ dp_source ~/.rc/func.early
 # file, zsh does.
 enter_rc_file "zshenv"
 
-# The zsh env rc files are the only ones read by a script.
+# The zsh env rc files are the only ones read when a script runs.
 # In fact they're read all the time.
 #
 
@@ -61,6 +58,3 @@ dp_source "${DP_RC_DIR}/env.common"
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
 exit_rc_file "zshenv"
-
-echo 1>&2 "******* zshenv: type DP_EXPORT_FUNC(): $(type DP_EXPORT_FUNC)"
-echo 1>&2 "************* Done zshenv ****************"

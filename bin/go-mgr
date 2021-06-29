@@ -20,7 +20,7 @@ ENV_NAME_MIN_LEN=4
 flags='Ee'
 flags_set_p=
 GOPATH_WITH_SPACES=$(echo $GOPATH | sed 's/:/ /g')
-if [ -n "$FAMILY_ZONE" -a "$FAMILY_ZONE" != "none-default-family-zone" ]
+if [[ -n "${FAMILY_ZONE-}" && "$FAMILY_ZONE" != "none-default-family-zone" ]]
 then
     ext=".$FAMILY_ZONE"
 else

@@ -4,7 +4,7 @@
 # echo 1>&2 "zsh-alias: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
 
 #@todo XXX merge into bashrc init style and stream.
-dp_source "${DP_RC_DIR}"/alias
+dp_source "${DP_RC_DIR}/alias"
 
 # This is duped from bashrc, which is a bad thing.
 source_list -l $DP_RC_DIR/alias "" $locale_rcs .work

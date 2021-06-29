@@ -104,3 +104,23 @@ find_nameservers ()
     #echo 1>&2 "out servers>$servers<"
     echo "$servers"
 }
+
+dump_bad_nodes()
+{
+    [ -z "$*" ] && {
+        echo "No bad nodes detected."
+        return
+    }
+    echo "Bad nodes:"
+    for bn in "$@"
+    do
+      echo "  $bn"
+    done
+}
+
+function dump_node_lists() {
+    local title="${1}"; shift
+
+    dump_bad_nodes "$@"
+    echo "Finish me!." 1>&2
+}
