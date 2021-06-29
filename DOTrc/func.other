@@ -2,10 +2,10 @@
 
 qsubrc()
 {
-    : ${inherited_dpxx_bg=linen}
+true ${inherited_dpxx_bg=linen}
     export inherited_dpxx_bg
 
-    : ${inherited_dpxx_fg=black}
+true ${inherited_dpxx_fg=black}
     export inherited_dpxx_fg
 
     ignoreeof=10

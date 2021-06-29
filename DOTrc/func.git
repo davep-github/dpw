@@ -3,11 +3,11 @@
 
 #echo "DP_LOG>${DP_LOG}<"
 
-: ${DP_GIT_BIN=git}		# Let path find it by default.
-: ${DP_GIT_LOG_P=true}
-: ${DP_GIT_LOG_DIR=$DP_LOG_DIR/${DP_GIT_BIN}}
-: ${DP_GIT_LOG_FILE=$DP_GIT_LOG_DIR/commands}
-: ${DP_GIT_LOG_FILE_ERR=${DP_GIT_LOG_FILE}.stderr}
+true ${DP_GIT_BIN=git}		# Let path find it by default.
+true ${DP_GIT_LOG_P=true}
+true ${DP_GIT_LOG_DIR=$DP_LOG_DIR/${DP_GIT_BIN}}
+true ${DP_GIT_LOG_FILE=$DP_GIT_LOG_DIR/commands}
+true ${DP_GIT_LOG_FILE_ERR=${DP_GIT_LOG_FILE}.stderr}
 # echo "DP_GIT_BIN>${DP_GIT_BIN}<"
 # echo "DP_GIT_LOG_P>${DP_GIT_LOG_P}<"
 # echo "DP_GIT_LOG_DIR>${DP_GIT_LOG_DIR}<"
