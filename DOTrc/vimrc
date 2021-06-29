@@ -12,3 +12,7 @@ colorscheme elflord
 syntax off
 set nohlsearch
 set t_Co=0
+
+set backupdir=~/droppings/editors/vim/backups//,/tmp//
+set directory=~/droppings/editors/vim/backups//,/tmp//
+set undodir=~/droppings/editors/vim/backups//,/tmp//
