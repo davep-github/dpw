@@ -15,10 +15,13 @@
 ;;;###autoload
 
 
+;; ??? Why the `dd' prefix vs `d'?  Short for dp?
+
 ;;;###autoload
 (dp-defaliases 'dds 'dictionary-search)
+
 ;;;###autoload
-(dp-defaliases 'ddl 'ddlud 'dlu 'dld 'dictionary-lookup-definition)
+(dp-defaliases 'ddl 'ddlud 'dlud 'dlu 'dld 'dictionary-lookup-definition)
 (add-hook 'dictionary-mode-hook 'dp-dictionary-mode-hook)
 
 (provide 'dp-dict)

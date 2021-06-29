@@ -2,7 +2,7 @@
 #
 # template begin.
 
-# davep specific code -------------8><------------------
+# davep specific code begin -------------8><------------------
 source script-x
 set -u
 progname="$(basename $0)"
@@ -26,7 +26,7 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
-# davep specific code -------------8><------------------
+# davep specific code end  -------------8><------------------
 
 #mutually exclusive with real EExec# EExec=
 #mutually exclusive with real EExec# no_exec_p=

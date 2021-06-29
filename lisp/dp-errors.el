@@ -306,6 +306,8 @@
     "^Can’t shift all lines enough$"
     "^No definition found$"
 
+    ;; ayunc.
+    "^No cross-reference here$"
     ;; <:new-errors|misc-errors:>
     )
   "*My list of ignored signals.  These will not cause an entry into the

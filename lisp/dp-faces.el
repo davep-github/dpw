@@ -400,6 +400,15 @@
   :group 'faces
   :group 'dp-faces)
 
+(defface dp-highlight-dp-style-bookmark
+  '(
+    (((class color) (background light)) (:background "green"))
+    (((class color) (background dark))
+     (:foreground "black" :background "lemon chiffon")))
+  "Face for my dp style bookmarks. See `dp-set-or-goto-bm' and friends."
+  :group 'faces
+  :group 'dp-faces)
+
 (defface dp-highlight-point-other-window-before-face
   '(
     (((class color) (background light)) (:background "DarkSeaGreen2" :bold t))
@@ -477,7 +486,6 @@
   "Face for gnuserv buffers."
   :group 'faces
   :group 'dp-faces)
-
 
 (defface dp-default-read-only-face
   '(

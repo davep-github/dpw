@@ -59,13 +59,52 @@
 ;;; Convenience binding in this file:
 ;;; C-c C-c (dp-save-and-redefine-abbrevs)
 ;;;
+;;; 'circular means that expansion can start anywhere in a list of abbrevs.
+;;; E.g. given '("args" "arguments" "arg" "argument" "articulate announcements")
+;;; pre-'circular only uses this list for expansion in this case"
+;;;  arg-!-C-SPC [runs the command dp-expand-abbrev]
+;;; But *will* wrap from "articulate announcements" back to "args"
+;;; @todo XXX 'circular is a suck-ass name.  Change it. AFSAP.
+;;; 'cicular will allow this expansion to begin anywhere in the list:
+;;;  arguments-!-C-SPC --> arg, C-SPC --> argument... and wraps also.
+;;; Note that
+;;;  articulate announcements-!-C-SPC doesn't begin an expansion sequence,
+;;; nor is it ever likely to.
+
+;;; @todo XXX I should review this code and weep.  I remember it being such a
+;;;  GDMF hack.  I'll blame it on CTCH "compile time code hacking"
+;;; @todo XXX Make 'dp-manual the fucking default if I haven't fixed it
+;;; already.
+;;; @todo XXX Allow case insensitive expansions.  E.g. no need to do this:
+;;; "chww" "CHWW" "code hacked while waiting"
+;;;  ====   ====
+
 ;;; This information is common between the abbrev file and dp-abbrev.el
 
 (defconst dp-common-abbrevs
-  '(((("dev" "development" "develop" "device")
+  '(
+    ((("chww" "CHWW" "code hacked while waiting"
+       "chwwe" "CHWWE" "code hacked while waiting excuse"
+       "chdc" "CHDC" "code hacked during compile"
+       "chdce" "CHDCE" "code hacked during compile excuse"
+       "chlp" "CHLP" "code hacked during lengthy process"
+       "chlpe" "CHLPE" "code hacked during lengthy process excuse"
+       )
       'circular)
      dp-manual)
-    (("teh" "the" "duh" "D'OH!")
+
+    ((("jic" "JIC" "just in case" "Jus T. Incase")
+      'circular)
+     dp-manual)
+
+    ((("dev" "development" "develop" "device")
+      'circular)
+     dp-manual)
+    ((("emp" "emap" "abscomp" "exaggerated to make a point"
+       "absurd comparison")
+      'circular)
+     dp-manual)
+    (("teh" "the" "duh" "d'uh" "D'UH!" "D'OH!")
      dp-manual global)
     (("plisttest" "a test of the plist type table.")
      (table-name dp-manual tmp t)
@@ -73,6 +112,8 @@
     (("cs" "c_str()" "char* ")
      (table-name dp-c++-mode))
     (("nn" "non-nil")
+     dp-manual)
+    (("orns" "logical or" "logical OR without shortcut evaluation.")
      dp-manual)
     (("wrt" "WRT" "with respect to")
      dp-manual)
@@ -141,7 +182,10 @@
      dp-manual)
     (("ok" "OK")
      dp-manual global)
-    (("wtf" "WTF")
+    ;; H/T to gumball and the Latins[sic] and FUTHORKer.  In descending order
+    ;; of PC factor.
+    ((("wtf" "WTF"  "what the what" "what the fv<k" "what the fuck")
+      'circular)
      dp-manual global)
     (("fo" "of")
      dp-manual global)
@@ -364,6 +408,9 @@
        "default directory" "pwd")
       'circular)
      dp-manual)
+    ((("em" "emacs" "Emacs" "xem" "XEmacs" "not vim")
+      'circular)
+     dp-manual)
     ((("paren" "parens")
       "parenthesis" "parentheses" "parenthesize")
      dp-manual)
@@ -479,22 +526,33 @@
       ".*\\.[ch]\\(pp\\)?$")
      dp-manual)
 
-    ;; >> Wish I was smart
+    ;; >> Wish I was smart...
     ((("arg" "argument" "arguments")
       'circular)
      dp-manual)
-    ((("args" "arguments" "arg" "argument")
+    ((("args" "arguments" "arg" "argument" "articulate announcements")
       'circular)
-     ;; << enough to handle plurals.
+     ;; << ...enough to handle plurals with elisp.
+     ;; Motivation and time help, too.  Help me el shrinko!
+     ;; Adderal? Addermost? Addersome? Adderall?
      dp-manual)
 
     ;; Homer's a roll modle.
     ((("smart" "S-M-R-T" "s-m-r-t" "SMRT" "smrt"
        "`I am so smart, S-M-R-T'")
       'circular)
-     ;; << enough to handle plurals.
      dp-manual)
-        
+
+    ((("gdmf" "GDMF" "god damn mother fucking" "God Damn Mother Fucking"
+       "GOD DAMN MOTHER FUCKING"
+       "`I am so smart, S-M-R-T'")
+      'circular)
+     dp-manual)
+
+     ((("we" "whatever" "what ever" "WE")
+       'circular)
+     dp-manual)
+
     ((("P" "Python" "py")
       'circular)
      dp-manual)
@@ -591,6 +649,10 @@
      dp-manual)
     (("xer" "xerxes")
      dp-manual)
+    ;; Mother fucking lazy asshole.
+    ;; But this more fun than typing the expansion one more time.
+    (("etc" ", etc" "etc," "etc.")
+     dp-manual)
     ;; Make "/ssh:dpanarit@" a vary-able.
     ((("rcz" "rz") "/ssh:dpanarit@cz-fp4-bdc:")
      dp-manual)
@@ -607,6 +669,8 @@
     (("psse" "print >>sys.stderr, ")
      dp-manual)
     (("hc" "hard coded" "hard-coded")
+     dp-manual)
+    (("dwill" "does what it looks like")
      dp-manual)
     (("janine" "someone with your qualifications would have no trouble finding a top-flight job in either the food service or housekeeping industries.")
      dp-manual)

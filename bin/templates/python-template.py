@@ -57,11 +57,26 @@ def main(argv):
     app_args = oparser.parse_args()
     if app_args.quiet_p:
         print("I am being quiet.")
+    # Just got so fucking much mileage out of this template and its examples.
+    ## Lowering the energy barrier to copy (it's ok to copy examples), paste
+    ## and edit vs either
+    ## 1) wasting time recreating/locating the info.  Even just looking for
+    ## an example who knows where sucks.
+    ## 2) saying fuck it and getting no benefit of a overly baroque but not
+    ## completely useless, but, and this is the big butt, existing and
+    ## functional chunk of code.
+    ## Gottsta pat meself onna back afore muh joints freeze up with the
+    ## authoritis.  It's nice when a plan comes together.
+
     if app_args.debug_level >= 0:
         dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable_debugging_p=True)
 
+    ## # To whom it may concern.
+    ## noalfm = app_args.non_option_args_like_file_names or []
+    ## for zuzz in noalfm:
+    ##     pass
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
