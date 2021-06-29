@@ -5,6 +5,7 @@
 #
 source script-x
 set -u
+# DPGOP_ "Namespace" for PPGetOPt
 : ${DPGOP_dont_warn_about_redefining_Usage=t}
 : ${DPGOP_dont_redefine_Usage=t}
 : ${DPGOP_dont_define_Usage=}
@@ -36,29 +37,16 @@ then
     }
 fi
 
-if vunsetp "$DPGOP_dont_define_Usage" 
-then
-    Usage()
-    {
-        DPGOP_Usage "$@"
-    }
-    Usage2()
-    {
-        Usage "$@" 1>&2
-    }
-fi
-
-# defaults to placate -u and to educate user of this -- $0 -- utility.
-: ${DPGOP_Usage_args_info=${Usage_args_info="INFO: \$Usage_args_info is null.
-"}}
-: ${DPGOP_Usage_synopsis=${Usage_synopsis="INFO: \$Usage_synopsis is null.
-"}}
-: ${DPGOP_Usage_details=${Usage_details="INFO: \$Usage_details is null.
-"}}
-
 DPGOP_Usage()
 {
-    [[ -n "$@" ]] && echo "${progname}: $@"
+    (($# > 1)) && {
+	[[ "${1}" == "--title" ]] && {
+	    shift
+	    echo "${1}"
+	}
+    }
+    (($# > 0)) && echo "${progname}: $@"
+
     set +u                      # XXX @todo ICK!
     if ((${#long_options[@]} > 0))
     then
@@ -79,6 +67,36 @@ DPGOP_Usage2()
 {
     DPGOP_Usage "$@" 1>&2
 }
+
+if vunsetp "$DPGOP_dont_define_Usage" 
+then
+    Usage()
+    {
+        DPGOP_Usage "$@"
+    }
+    Usage2()
+    {
+	{
+            Usage "$@"
+	} 1>&2
+    }
+    # Requesting help is NOT an error.
+    Usage_help()
+    {
+	# For severe pain.
+	echo
+	DPGOP_Usage --title "Help request"
+    }
+fi
+
+# defaults to placate -u and to educate user of this -- $0 -- utility.
+: ${DPGOP_Usage_args_info=${Usage_args_info="INFO: \$Usage_args_info is null.
+"}}
+: ${DPGOP_Usage_synopsis=${Usage_synopsis="INFO: \$Usage_synopsis is null.
+"}}
+: ${DPGOP_Usage_details=${Usage_details="INFO: \$Usage_details is null.
+"}}
+
 #
 # Usage support.
 #############################################################################
@@ -120,7 +138,8 @@ running_as_script && {
 }
 
 #
-# A snippet/template/example for ease of use.
+# A snippet/template/example for ease of use is provided in
+# ~/bin/templates/dp-getopt.eg.sh
 #
 
 #e.g.# # Usage variable usage:
