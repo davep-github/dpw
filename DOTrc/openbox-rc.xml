@@ -12,7 +12,7 @@
        apply -->
     <followMouse>yes</followMouse>
     <!-- move focus to a window when you move the mouse into it -->
-    <focusLast>yes</focusLast>
+    <focusLast>no</focusLast>
     <!-- focus the last used window when changing desktops, instead of the one
        under the mouse pointer. when followMouse is enabled -->
     <underMouse>no</underMouse>
@@ -118,13 +118,17 @@
 
        use obconf if you want to change these without having to log out
        and back in -->
-    <number>4</number>
+    <number>8</number>
     <firstdesk>1</firstdesk>
     <names>
-      <!-- set names up here if you want to, like this:
-    <name>desktop 1</name>
-    <name>desktop 2</name>
-    -->
+      <name>local 1</name>
+      <name>local 2</name>
+      <name>local 3</name>
+      <name>local 4</name>
+      <name>remote cx</name>
+      <name>remote AMD</name>
+      <name>remote bubba</name>
+      <name>remote zuzz</name>
     </names>
     <popupTime>875</popupTime>
     <!-- The number of milliseconds to show the popup for when switching
@@ -221,6 +225,37 @@
         <to>4</to>
       </action>
     </keybind>
+    <keybind key="W-F5">
+      <action name="GoToDesktop">
+        <to>5</to>
+      </action>
+    </keybind>
+    <keybind key="W-F6">
+      <action name="GoToDesktop">
+        <to>6</to>
+      </action>
+    </keybind>
+    <keybind key="W-F7">
+      <action name="GoToDesktop">
+        <to>7</to>
+      </action>
+    </keybind>
+    <keybind key="W-F8">
+      <action name="GoToDesktop">
+        <to>8</to>
+      </action>
+    </keybind>
+    <keybind key="W-F8">
+      <action name="GoToDesktop">
+        <to>8</to>
+      </action>
+    </keybind>
+    <!-- goto remote window: vnc to Chicxulub -->
+    <keybind key="S-W-c">
+      <action name="GoToDesktop">
+        <to>5</to>
+      </action>
+    </keybind>
     <keybind key="W-d">
       <action name="ToggleShowDesktop"/>
     </keybind>
@@ -283,22 +318,22 @@
       </action>
     </keybind>
     <!-- Keybindings for window switching with the arrow keys -->
-    <keybind key="S-W-Right">
+    <keybind key="C-W-Right">
       <action name="DirectionalCycleWindows">
         <direction>right</direction>
       </action>
     </keybind>
-    <keybind key="S-W-Left">
+    <keybind key="C-W-Left">
       <action name="DirectionalCycleWindows">
         <direction>left</direction>
       </action>
     </keybind>
-    <keybind key="S-W-Up">
+    <keybind key="C-W-Up">
       <action name="DirectionalCycleWindows">
         <direction>up</direction>
       </action>
     </keybind>
-    <keybind key="S-W-Down">
+    <keybind key="C-W-Down">
       <action name="DirectionalCycleWindows">
         <direction>down</direction>
       </action>
@@ -312,7 +347,13 @@
         <command>ubuntu-sucks dpxx</command>
       </action>
     </keybind>
-    <keybind key="W-Down">
+    <!-- 
+         Moved this to S-W-Down so W-Down can be used with the other desktop
+         commands. I think I use the DT (or will soon) more often than
+         iconify, especially since there're a lot of DTs and I scan them all
+         to find what I want.
+    -->
+    <keybind key="S-W-Down">
       <action name="Iconify"/>
     </keybind>
     <!-- Set pointer speed, until I learn how to make udev do it. -->
@@ -353,6 +394,12 @@
     </keybind>
     <!-- Select and raise a Jupyter QT Console window. -->
     <keybind key="W-j">
+      <action name="Execute">
+        <command>run-iff -r -n "Jupyter QtConsole" jupyter-qtconsole</command>
+      </action>
+    </keybind>
+    <!-- Another M$ power grab -->
+    <keybind key="W-t">
       <action name="Execute">
         <command>run-iff -r -n "Jupyter QtConsole" jupyter-qtconsole</command>
       </action>
@@ -420,7 +467,15 @@
       </action>
     </keybind>
     <!-- run skippy-xd, an expose like window selector. -->
-    <keybind key="W-s">
+    <!-- Do I like W-Tab better.  'tis easier on the joints. -->
+    <!--
+        <keybind key="W-s">
+        <action name="Execute">
+        <command>/home/davep/local/bin/skippy-xd</command>
+        </action>
+        </keybind>
+    -->
+    <keybind key="W-Tab">
       <action name="Execute">
         <command>/home/davep/local/bin/skippy-xd</command>
       </action>
@@ -446,19 +501,38 @@
         <wrap>yes</wrap>
       </action>
     </keybind>
+    <keybind key="S-W-Left">
+      <action name="DesktopLeft">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
     <keybind key="W-Right">
       <action name="DesktopRight">
         <dialog>no</dialog>
         <wrap>yes</wrap>
       </action>
     </keybind>
-    <keybind key="C-W-Up">
+    <keybind key="S-W-Right">
+      <action name="DesktopRight">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="S-W-Up">
       <action name="DesktopUp">
         <dialog>no</dialog>
         <wrap>yes</wrap>
       </action>
     </keybind>
-    <keybind key="C-W-Down">
+    <keybind key="W-Up">
+      <action name="DesktopUp">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <!-- binding stolen from iconify. -->
+    <keybind key="W-Down">
       <action name="DesktopDown">
         <dialog>no</dialog>
         <wrap>yes</wrap>
