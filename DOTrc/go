@@ -25,10 +25,10 @@ Ee|dpwlisp|reallisp|realisp|rlisp|wlisp|         ${dpw}/lisp/
 Ee|dpwrc|drc|dotrc|                              ${dpw}/DOTrc
 Ee|fsffsfcompat|ffc|    ${lisp}/dp-fsf-fsf-compat.el
 Ee|xemacsfsfcompat|xfc| ${lisp}/dp-xemacs-fsf-compat.el
-Ee|greads|       /home/dpanarit/work/log/vg10-ecc/garbage-reads/
-Ee|bldrust|rustbld|       /home/dpanarit/local/build/rust/
-Ee|lispcontrib|lcont|lcon|       /home/dpanarit/lisp/contrib/
-Ee|emlisp|       /home/dpanarit/local/share/emacs/25.3/lisp/
+Ee|greads|       ${davep}/work/log/vg10-ecc/garbage-reads/
+Ee|bldrust|rustbld|       ${davep}/local/build/rust/
+Ee|lispcontrib|lcont|lcon|       ${davep}/lisp/contrib/
+Ee|emlisp|       ${davep}/local/share/emacs/25.3/lisp/
 
 Ee|dpbuild|dpbld|       ${davep}/davep/build/
 Ee|usdoc|usd|           /usr/share/doc/
@@ -50,24 +50,24 @@ Ee|dpwbuild|dpwbld|dpwbld|                       ${dpworld}build/
 Ee|dpylib|                                       ${davep}/lib/pylib/
 Ee|lubuntuconf|lubconf|                          ${davep}/.config/lxsession/Lubuntu/
 Ee|obconf|                                       ${davep}/.config/openbox/
-Ee|obrc|                                         ${obconf}/rc.xml
+Ee|obrc|obrcx|obrcf|                             ${obconf}/rc.xml
 Ee|obmenu|                                       ${obconf}/menu.xml
 Ee|cscopedbroot|                                 000-cscope-db-root
 Ee|csdb|                                         ${cscopedbroot}
 
 Ee|ipystartup|ipyup|ipyrc|   ${davep}/.config/ipython/profile_default/startup/
 
-Ee|dpvl|                        /home/dpanarit/var/log/
-Ee|dplog|                       /home/dpanarit/var/log/
-Ee|lobld|                       /home/dpanarit/local/build/
-Ee|hlb|                         /home/dpanarit/local/bin/
-Ee|hlbld|                       /home/dpanarit/local/build/
-Ee|drops|                       /home/dpanarit/droppings/
-Ee|droppings|                   /home/dpanarit/droppings/
+Ee|dpvl|                        ${davep}/var/log/
+Ee|dplog|                       ${davep}/var/log/
+Ee|lobld|                       ${davep}/local/build/
+Ee|hlb|                         ${davep}/local/bin/
+Ee|hlbld|                       ${davep}/local/build/
+Ee|drops|                       ${davep}/droppings/
+Ee|droppings|                   ${davep}/droppings/
 Ee|xemssas|                     ${droppings}/editors/xemacs/session-auto-saves.d/
 Ee|xemdrop|                     ${droppings}/editors/xemacs/
 Ee|eddrop|                      ${droppings}/editors/
-Ee|hi|                          /home/dpanarit/etc/pydb/
+Ee|hi|                          ${davep}/etc/pydb/
 Ee|emacsdropping|edrop|emd|     ${droppings}/editors/emacs/
 Ee|xemacsdropping|xedrop|xmd|   ${droppings}/editors/xemacs/
 Ee|originmaster|origmas|origm|omaster|omas| origin/master
