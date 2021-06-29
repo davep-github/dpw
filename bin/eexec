@@ -13,9 +13,8 @@ source ~/.rc/echo_id
 # usage:
 # . eexec
 # EExec some-command
-# INTTMIG (It Needs This To Make It Go -- Various Paclids.)
 # EExec requires command lines like this if you want to EExec both sides of a
-# pipe.  Sorry.
+# pipe.
 # E.g.:
 #EExec man -k "$@" \
 #    | EExec egrep -e "$regexp"
@@ -39,6 +38,7 @@ source ~/.rc/echo_id
 # EExecVerbose        Set up standard verbosity.
 # EExecQuiet          Turn off verbosity.
 # EExec_verbose_func  Function to display EExec_verbose_msg messages.
+#                     "And a whole lot more."
 #
 # You can reference:
 # EExecDash[NVQ]_opt  Contain the corresponding -n, -v or -q if they've been used.
@@ -186,9 +186,16 @@ EExecDashN_p()
     [ -n "${EExecDashN_opt-}" -o -n "${DP_GLOBAL_DASH_P-}" ]
 }
 
+# Much better name w/no implication that -v was used.
+EExec_verbose_p()
+{
+    [[ -n "$EExecDashV_opt" ]]
+}
+
+
 EExecDashV_p()
 {
-    [ -n "$EExecDashV_opt" ]
+    EExec_verbose_p "$@"
 }
 
 # Defecated
@@ -286,6 +293,11 @@ EExec_verbose_echo_id()
       sep="${sep2}"
     done
     EExec_verbose_msg "$prefix$msg$suffix"
+}
+
+EExec_verbose_exec()
+{
+    EExec_verbose_p && EExec -y "$@"
 }
 
 EExecQuiet()

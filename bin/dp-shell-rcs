@@ -110,6 +110,7 @@ Usage_error()
 : ${indentation_string:=''}
 istr=""
 
+# Usually fed like so: echo $DP_SHELL_RCS |
 while read
 do
     case "${REPLY}" in
