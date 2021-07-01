@@ -7,12 +7,80 @@
 # so: sed-path /c/ /c2/
 #
 
-if [ -z "$3" ]
-then
-    str="$PWD"
-else
-    str="$3"
-fi
-echo "$str" | sed "s!$1!$2!"
-exit 0
+#was this enough? if [ -z "$3" ]
+#was this enough? then
+#was this enough?     str="$PWD"
+#was this enough? else
+#was this enough?     str="$3"
+#was this enough? fi
+#was this enough? echo "$str" | sed "s!$1!$2!"
+#was this enough? exit 0
 
+# This was a .rc function.  Not used enough to warrant all the space.
+# Even when needed, speed don't enner'innuit.
+function sed_path()
+{
+    local opts="" sep="" args=()
+    local nopts=0 nargs=0
+    local swap_em=
+    local slash_g=
+    local i
+    for i in "$@"
+    do
+      case "$1" in
+          -r|--reverse) swap_em=t;;
+          -g|--global) slash_g="---trailing-opts g";;
+          --) shift; break;;
+          *) break;;
+      esac
+      shift
+    done
+    for i in "$@"
+    do
+	#echo "0:i>$i<" 1>&2
+	if [[ "$i" == ---[^-]* ]]
+	then
+	    #echo "opt>$i<" 1>&2
+	    opts="$opts$sep$i"
+	    sep=" "
+	    : $((++nopts))
+	    #echo "0:opts>${opts[*]}<" 1>&2
+	else
+	    #echo "arg>$i<" 1>&2
+	    args[$nargs]=$i
+	    : $((++nargs))
+	    #echo "0:args>${args[*]}<" 1>&2
+	fi
+    done
+
+    #echo "1:args>${args[*]}<" 1>&2
+    if [ "$nargs" == 1 ]
+    then
+        echo "nargs == 1" 1>&2
+        # Assume this is a single sed expression.
+	#do_sed_path "$@" ""
+	args=("${args[@]}" "")  
+	((++nargs))
+    fi
+    #echo "2:args>${args[*]}<" 1>&2
+    #echo "2:$(echo_id nargs)" 1>&2
+    if [ "$nargs" == 2 ]
+    then
+        if [ -n "$swap_em" ]; then
+            local t="${args[0]}"
+            args[0]="${args[1]|}"
+            args[1]="$t"
+        fi
+        #echo "args[0]>${args[0]}<" 1>&2
+        #echo "args[1]>${args[1]}<" 1>&2
+	local sed_cmd="s|${args[0]}|${args[1]}"
+        #echo_id opts 1>&2
+        #echo_id sed_cmd 1>&2
+	do_sed_path $opts ${slash_g} $sed_cmd
+    else
+	echo 1>&2 "sed_path(): I'm comfuzed by this command line>$@<"
+	return 1
+    fi
+}
+
+sed_path "$@"
