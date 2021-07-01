@@ -301,59 +301,55 @@ alias dp_exxit='set +; exit '
 # $ exit-with-x $((128 + <some-signal-num>))
 # $ exit-with-x $(( somethin < 128 ))
 
-##alias dp_decode_cmd_status='unalias dp_decode_cmd_status; source dp_decode_cmd_status'
 
-function dp_decode_cmd_status()
-{
-    local rc="${1}"; shift
-    local signum_min=128
-    local signame="SIGNAME_UNSET"
-    local signum=$((${rc} - ${signum_min}))
-    # echo 1>&2 "signum>${signum}<"
-    local num_sigs=$(/bin/kill -l | wc -w)
-    # echo 1>&2 "rc>${rc}<"
-    # echo 1>&2 "signum>${signum}<"
-    # echo 1>&2 "num_sigs>${num_sigs}<"
-    #read -p "Enter plz..."
+#
+# # change this to skip this if the type is function or alias,
+# if [[ $(type -t "dp_decode_cmd_status") =~ function) ]]
+# then
+#     banner "FUNC!"
+# elif 
+#     alias dp_decode_cmd_status='echo; unalias dp_decode_cmd_status; source dp_decode_cmd_status'
+#     echo 1>&2 "*********** defining alias ***********"
+# fi
 
-    # User return codes should not be >= 128.
-    if (("${rc}" <= "${signum_min}"))
-    then
-	# Special case to separate 128 from 0 (128 - 128)
-	if [[ "${rc}" == "${signum_min}" ]]
-	then
-	    echo "pseudoSIG0"
-	else
-	    echo "${rc}"
-	fi
-	rc="${rc}"
-    elif ((${signum} > ${num_sigs}))
-    then
-	# Is the signum > max signum?
-	echo "$rc:Illegal SIGNUM"
-	rc=1
-    elif  signame=$(/bin/kill -l "${signum}") 2>/dev/null
-    then
-	#echo 1>&2 "signame>${signame}<"
-	# Did kill find the signum pleasing?
-	# We already know the code isn't too big.
-	# zsh and bash have builtin kill commands that display
-	# the list of signals differently.
-	echo "SIG${signame}"
-	rc=0
-    else
-	echo "${rc}: EINVAL: confuzed"
-	# Eat the effing rc, MFer.
-	# rc=$rc
-    fi
-    # Eat the effing rc, MFer.
-    return "${rc}"
-}
+# local ddcs_type="$(type -t dp_decode_cmd_status)"
+# echo 1>&2 "WTF is dp_decode_cmd_status? $(banner spoiler: $ddcs_type)"
+# case  "${ddcs_type}" in
+#      function) banner case:FUNC;;
+#      alias) banner case:ALIAS;;
+#      file) banner case:FILE;
+# 	   alias dp_decode_cmd_status='echo "alias: dp_decode_cmd_status"; unalias dp_decode_cmd_status; source dp_decode_cmd_status'
+# 	   ##source "dp_decode_cmd_status"
+# 	   echo -n "case file: should be alias: "
+# 	   banner "$(type -t dp_decode_cmd_status)"
+# 	   ;;
+#      *) echo "unknown type $(type -t dp_decode_cmd_status)";
+# 	read -p "RET to cont?"
+# 	;;
+# esac 1>&2
+# echo 1>&2 "End of WTF case: $(type -t dp_decode_cmd_status)"
 
-function dp_rc_to_text()
-{
-    false
-}
+# echo 1>&2 "$0: $(type -t dp_decode_cmd_status) ---------------"
+# #read -p "$0: enter to continue? "
+
+if [[ $(type -t dp_decode_cmd_status 1>/dev/null 2>&1) != "function" ]]
+then
+    echo "func.root >>>>>>>>>>>>>>>>> defining dp_decode_cmd_status function"
+    echo "+++++++++ $$, son of $PPID"
+    set -x
+    echo $(type -t dp_decode_cmd_status)
+    function dp_decode_cmd_status()
+    {
+	echo "faux decode:\$1>$1<"
+    }
+    export -f dp_decode_cmd_status
+    echo $(type -t dp_decode_cmd_status)
+    set +x
+    echo "func.root <<<<<<<<<<<<<<<<<"
+else
+    echo "func.root: dp_decode_cmd_status already a function."
+fi 1>&2
+echo 1>&2 "after:  ================ $(type -t dp_decode_cmd_status)"
 
 true ${DPBRC_Clear_set_x_p=t}
 export DPBRC_Clear_set_x_p
@@ -394,7 +390,9 @@ function prompt_command()
 	# Remove it here when I'm not so gdmf tired.
 	if vsetp DPBRC_Verbose_rc_in_prompt_p
 	then
-	    #type dp_decode_cmd_status
+	    echo 1>&2 "in prompt_command()"
+	    echo "!!prompt_command: dp_decode_cmd_status: $(type -t dp_decode_cmd_status)"
+	    dp_decode_cmd_status $rc
 	    rc_str="$(dp_decode_cmd_status $rc)"
 	else
 	    rc_str=$(prompt_command_errno "$rc")
