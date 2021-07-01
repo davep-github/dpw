@@ -1,6 +1,16 @@
 ########################################################################
 #
 # template begin.
+#
+banner "
+Explain the name. e.g. cx --> Change file to be eXecutable.
+cx was a *very* early first script.  Copped from Kerighan and Pike.
+Knowing the name can help you to remember what it does.
+Add a short comment about what this script does.
+Like:
+Makes text file into a script by making it executable.
+"
+exit 88
 
 # davep specific code begin -------------8><------------------
 source script-x
