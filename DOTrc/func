@@ -1157,7 +1157,7 @@ function name_is___main__()
 {
     # Are we sourcing or running?
     # My convention (not a BASH command), `innovated'(as per M$) from Python.
-    [ -z "${DP_IMPORTING_P-}" ]
+    [[ -z "${DP_IMPORTING_P-}" && "${DP__name__-}" == __main__ ]]
 }
 DP_EXPORT_FUNC name_is___main__
 #alias dp_runme="name_is___main__"
