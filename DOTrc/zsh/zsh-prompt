@@ -1,7 +1,7 @@
 #-*-shell-script-*-
 
 # @todo XXX I need to make this whole file work during a root login.
-
+# see man zshmisc.  D'uh.
 # echo 1>&2 "zsh-prompt: DP_ZSH_ENVIRONMENT_FUCKED>$DP_ZSH_ENVIRONMENT_FUCKED<"
 # echo 1>&2 "zsh-prompt: DP_ZSH_FIX_FUCKED_ENVIRONMENT>$DP_ZSH_FIX_FUCKED_ENVIRONMENT<"
 
@@ -41,8 +41,15 @@ then
 else
     line2_color="cyan"
 fi
+
+function precmd() {
+    # See, the internet *is* useful.
+    # In a prompt string, %v expands to the value of psvar.
+    psvar=$(dp_decode_cmd_status $?)
+}
+
 PROMPT+="
-%F{${line2_color}}(${SHLVL}:zsh) %!%(0?||<%S%?%s)>%f "
+%F{${line2_color}}(${SHLVL}:zsh) %!%(0?||<%S%v%s)>%f "
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
