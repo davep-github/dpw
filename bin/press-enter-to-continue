@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+function press_enter_to_continue()
+{
+    local prompt=
+    if (($# > 0))
+    then
+	prompt="$1"; shift
+    else
+	prompt="Press enter to continue: "
+    fi
+
+    # If not zsh, assume bash until not.
+    if dp_zsh_p
+    then
+	read "?$prompt" "$@"
+    else
+	read -p "$prompt" "$@"
+    fi
+}
+
+dp_runme && press_enter_to_continue "$@"
