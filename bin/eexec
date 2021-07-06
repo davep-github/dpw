@@ -46,6 +46,11 @@ source ~/.rc/echo_id
 
 # MUST be set before sourcing or this will NOT work.
 # On by default. Call EExecNoExport to disable exportation.
+
+[[ dp_bash_p ]] || {
+    echo "$0: BASH only (for now?)"
+    exit 6
+}
 : ${EExecExporter:=export}
 # as of: 2014-12-04T18:12:50, use ${EExec} (NO quotes) vs EExec
 ${EExecExporter} EExec="EExec"
@@ -84,13 +89,14 @@ EExec_parse_option_str="nvq"
 
 EExec_parse()
 {
+    # echo 1>&2 "EExec_parse: enter\$@>$@<"
     local prog=""
     # Can NOT use getopt here because if you use ganged variables then
     # too many args will be shifted.
     # Until I learn how to return a *properly quoted* "$@"
     for i in "$@"
     do
-	#echo 1>&2 "\$1>$1<"
+	echo 1>&2 "EExec_parse:\$1>$1<"
 
       case "$1" in
           -n|--eexec-n) prog="${prog}EExecDashN ";;
@@ -98,13 +104,18 @@ EExec_parse()
           -v|--eexec-v) prog="${prog}EExecVerbose ";;
           -vk|--vk|--eexec-vk) prog="${prog}EExecVerbose_k ";;
           -q|--eexec-q) prog="${prog}EExecQuiet ";;
+	  ## Keep this long because and EExec-like because we want as few
+	  ## collisions as possible.
           --eexec-last-option|--eexec--) shift; break;;
+	  --eexec-debug) set -x;;
           --) prog="${prog}break"; break;; # Allow user to consume the --
+          ---) prog="${prog}break"; shift; break;;
           *) break;;
       esac
       shift
     done
-    #echo 1>&2 "\$@>$@<"
+    # echo 1>&2 "EExec_parse: exit\$@>$@<"
+    # press-enter-to-continue
     echo "$prog"
 }
 
