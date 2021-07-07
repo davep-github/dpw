@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+source script-x
+progname="$(basename $0)"
+
+
+function dp-set-var() {
+
+    local var_sym="${-1};" shift
+    local var_name=
+    eval var_name=\$$var_sym
+    local var_value=
+    eval var_name=${$var_name-''}
+
+    local default="$1"; shift
+
+    # Any extra arg means to force the new value.
+    if (($# > 0))
+    then
+	PROJECT="${default}"
+    else
+	case "${PROJECT}" in
+	    ""|.|-|/|\?) PROJECT="${default}";;
+	    ==?) ;;		# Leave it alone, explicitly.
+	    *) ;;		# Leave it alone, by default.
+	esac
+    fi
+    echo "${PROJECT}"
+    return 0
+}
+
+dp_runme && dp-set-project "$@"
