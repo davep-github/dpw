@@ -47,10 +47,13 @@ source ~/.rc/echo_id
 # MUST be set before sourcing or this will NOT work.
 # On by default. Call EExecNoExport to disable exportation.
 
-[[ dp_bash_p ]] || {
-    echo "$0: BASH only (for now?)"
-    exit 6
-}
+# @todo XXX !!! $SHELL says zsh when I run this from a zsh command line.
+# I don't know enough about this.
+# [[ "$SHELL" != bash ]] || {
+#     echo "$0: BASH only (for now?)"
+#     exit 6
+# } 1>&2
+
 : ${EExecExporter:=export}
 # as of: 2014-12-04T18:12:50, use ${EExec} (NO quotes) vs EExec
 ${EExecExporter} EExec="EExec"
@@ -87,16 +90,24 @@ EExec_parse_option_str="nvq"
 #e.g.   shift
 #e.g. done
 
+true ${eexec_debug_file:=/dev/null}
+
+function eexec_debug_message()
+{
+    echo 1>${eexec_debug_file} 2>&2
+    :
+}
+
 EExec_parse()
 {
-    # echo 1>&2 "EExec_parse: enter\$@>$@<"
+    eexec_debug_message "EExec_parse: XXXXXXXX enter\$@>$@<"
     local prog=""
     # Can NOT use getopt here because if you use ganged variables then
     # too many args will be shifted.
     # Until I learn how to return a *properly quoted* "$@"
     for i in "$@"
     do
-	echo 1>&2 "EExec_parse:\$1>$1<"
+	 eexec_debug_message "EExec_parse: YYYYYYYYYYYYYYYY\$1>$1<"
 
       case "$1" in
           -n|--eexec-n) prog="${prog}EExecDashN ";;
@@ -114,7 +125,7 @@ EExec_parse()
       esac
       shift
     done
-    # echo 1>&2 "EExec_parse: exit\$@>$@<"
+    eexec_debug_message "EExec_parse: exit\$@>$@<"
     # press-enter-to-continue
     echo "$prog"
 }
@@ -167,7 +178,7 @@ EExecNoExport()
     export EExecExporter=""
 }
 
-EExecDashN()
+function EExecDashN()
 {
     if [ "${1-}" == "-k" ]
     then
@@ -387,7 +398,7 @@ EExec_background()
 }
 
 # <:eexec:>
-EExec()
+function EExec()
 {
     # @todo XXX Is it worth it to do a full getopt?
     # Only if argv[1] has a leading `-'?
