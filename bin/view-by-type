@@ -1,0 +1,170 @@
+#!/usr/bin/env zsh
+########################################################################
+#
+# template begins. NOT.
+# Need a zsh template.
+#
+#
+# template end.
+########################################################################
+# Take the output of type and visit the file if possible.
+# I made this a zsh script because zsh's less, while incompatible, has better functionality.  E.g.
+# $ type less ->
+# less is /bin/less
+#         =========
+# $ type add_rc_text -->
+# add_rc_text is a shell function from /home/davep/.rc/dp-rc-debug
+#                                      ===========================
+# Alias types are problematical
+# $ type xsb -->
+# xsb is an alias for exchange_sandboxes
+# No filename.  Need to grep for it.
+#
+
+set -u
+progname="$(basename $0)"
+
+true "${no_exec_p:=false}"
+true "${exec_verbose_p=false}"
+Non_EExecer()
+{
+    {
+	echo "{-} $@"
+    } 1>&2
+}
+
+Verbose_EExecer()
+{
+    {
+	echo "{+} $@"
+	"$@"
+    } 1>&2
+}
+
+function EExecer()
+{
+    "$@"
+}
+
+function EExec()
+{
+    if "${no_exec_p}"
+    then
+	Non_EExecer "$@"
+    elif "${exec_verbose_p}"
+    then
+	Verbose_EExecer "$@"
+    else
+	"$@"
+    fi
+}
+
+function EExec_verbose_msg()
+{
+    {
+	"${exec_verbose_p}" && echo "$@"
+    } 1>&2
+}
+
+function with_saved_rc()
+{
+    local rc="$?"
+    "$@"
+    return "${rc}"
+}
+
+# WTF are you?
+function xxx_recognizer()
+{
+    EExec_verbose_msg "$0: \$#>$#<"
+    "$exec_verbose_p" && eko "in xxx_recognizer()" "$@" 1>&2
+    local sed_regexp="${1-}"; shift
+    local type_command_results="${1-}"; shift
+    EExec_verbose_msg "$0: echo \"${type_command_results}\" | sed -rn \"${sed_regexp}\""
+    local sed_response=$(echo "${type_command_results}" | sed -rn "${sed_regexp}")
+    set -x
+    with_saved_rc echo "sed_response>${sed_response}<" 1>&2
+    with_saved_rc echo "${sed_response}"
+    set +x
+}
+
+# function:
+# running_as_script is a shell function from /home/davep/.rc/func
+function func_recognizer()
+{
+    local typee_base="${1}"; shift
+    local xxx_regexp="s/(${typee_base}"' is a shell function from )(.*$)/\2/p'
+
+    xxx_recognizer "${xxx_regexp}" "$@"
+}
+
+# file:
+# (ec-type-zsh is )(/home/davep/bin/ec-type-zsh<)
+function file_recognizer()
+{
+    local typee_base="${1}"; shift
+    local xxx_regexp="s/(${typee_base}"' is )(.*$)/\2/p'
+
+    xxx_recognizer "${xxx_regexp}" "$@"
+}
+
+# alias:
+# xsb is an alias for exchange_sandboxes
+function alias_recognizer()
+{
+    local typee_base="${1}"; shift
+    local alias_regexp="s/(${typee_base}"' is an alias for )(.*$)/\2/p'
+    # We can't (lazily)  know an alias's defining file.
+    local file_says=$(EExec xxx_recognizer "${alias_regexp}" "$@")
+    if [[ -n "${file_says}" ]]
+    then
+	echo "$@: is an alias. Not looking for it's file yet."
+	# "A successful failure."
+	exit 2
+    fi
+}
+
+recognizers=(
+    "func_recognizer"
+    "file_recognizer"
+    "alias_recognizer"
+)
+
+function ec-type-zsh()
+{
+    typee=${1-}; shift
+    [[ -z "${typee}" ]] && {
+	echo "$progname: wants a runnable thing's name."
+	exit 1
+    } 1>&2
+
+    local typee_base=$(basename "${typee}")
+    local edit_me=''
+
+    for recognizer in "${recognizers[@]}"
+    do
+	type_command_results=$(type "${typee}")
+	EExec_verbose_msg "type_command_results>${type_command_results}<"
+	edit_me=$("${recognizer}" "${typee_base}" "${type_command_results}")
+	local rc="$?"
+	echo 1>&2 "1:edit_me>${edit_me}<"
+	# read "bubba?3:Press enter> "
+	[[ "$rc" == 0 ]] || {
+    	    echo "func_recognizer ${type_command_results} failed: $rc"
+    	    exit $rc
+	} 1>&2
+	echo 1>&2 "2:edit_me>${edit_me}<"
+	if [[ -n "${edit_me}" ]]
+	then
+	    EExec ec "${edit_me}"
+	    # We want ec(dp)'s return code.
+	    exit
+	fi
+    done
+    false
+}
+
+ec-type-zsh "$@" || {
+    echo "$progname: couldn't find a file to edit."
+    false
+} 1>&2
