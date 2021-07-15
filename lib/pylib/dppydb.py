@@ -13,7 +13,8 @@ We can always search the db by brute force."""
 # ??? How to name ??? k1, k2, etc ???
 #
 
-import string, re, types, os, sys, fnmatch, dp_sequences, dp_io
+import string, re, types, os, sys, fnmatch
+import dp_utils, dp_sequences, dp_io
 
 dp_io.debug_on()
 pydb_dir=''
@@ -42,13 +43,19 @@ fixes = field_fixes()
 # make it unlikey, inconvenient and illegal for a real node name
 #
 def family_to_node_name(fam):
-    return ' ...*FAM:%s!`` ' % fam
+    return ("family", fam)
 
 def default_to_node_name():
-    return ' ...default... '
+    return ("default", None)
+
+def domain_to_node_name(domain):
+    return ("domain", domain)
+
+def famDB_to_node_name():
+    return ("famDB", None)
 
 def def_formatter(prefix, field, value, fixes=fixes):
-    # this is almost 2x faster than string.join !
+    # this is almost 2x faster than str.join !
     return "%s%s%s%s%s%s%s" % (fixes.field_pre, prefix,
                                field, fixes.field_post,
                                fixes.value_pre, value, fixes.value_post)
@@ -202,7 +209,7 @@ class Entry:
 
         for d in l:
             for k in list(d.keys()):
-                for k2 in string.split(k, '|'):
+                for k2 in str.split(k, '|'):
                     self.fields[k2] = d[k2]
 
     ###############################################################
@@ -214,15 +221,13 @@ class Entry:
         If None --> match all (faster than matching .*)
         Return the entry if anything matches.
         Also search the referenced entries"""
-        
-        if type(pat) == bytes:
-            field_rex = re.compile(pat)
-        else:
-            field_rex = pat
-        if type(vpat) == bytes:
-            val_rex = re.compile(vpat)
-        else:
-            val_rex = vpat
+
+
+        field_rex = dp_utils.maybe_re_compile(pat)
+        val_rex = dp_utils.maybe_re_compile(vpat)
+        dp_io.vcprintf(5, "pat>{}<, type(pat)>{}<, vpat>{}<, type(vpat)>{}<",
+                       pat, type(pat), vpat, type(vpat))
+
         #
         # search the item for a match.
         #
@@ -235,7 +240,7 @@ class Entry:
                     if not val_rex or val_rex.search(self.fields[key]):
                         return self
                 except TypeError:
-                    print('*******keys:', list(self.fields.keys()))
+                    dp_io.eprintf('*******keys: {}', list(self.fields.keys()))
                     #print 'Not a string: f>%s< or v>%s<' % (key, self.fields[key])
                     continue
 
@@ -396,13 +401,13 @@ def mk_loclist(localize=None, loclist=None):
     into a locale list."""
     if loclist == None:
         if localize:
-            loclist = string.split(os.getenv('locale_rcs', ''))
+            loclist = str.split(os.getenv('locale_rcs', ''))
             loclist = [s[1:] for s in loclist]
         else:
             loclist = []
     loclist.append('')                  # '' will result in unlocalized name
     loclist = list(map(cleanup_locale, loclist))
-    #print 'loclist>%s<' % string.join(loclist, '<, >')
+    #print 'loclist>%s<' % str.join(loclist, '<, >')
     return loclist
 
 ###############################################################
@@ -427,7 +432,7 @@ def find_db_file(dbfile, localize=None, loclist=None):
                     ret.append(os.path.normpath(dir+'/'+modname+'.py'))
                 else:
                     continue
-    #print 'returning>%s<' % string.join(ret, ', ')
+    #print 'returning>%s<' % str.join(ret, ', ')
     return ret
 
 ###############################################################
@@ -465,7 +470,7 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None, loclist=No
             for loc in loclist:
                 w2.append(loc + w)
         wild = w2
-        #print 'wild>%s<' % string.join(wild, '<, >')
+        #print 'wild>%s<' % str.join(wild, '<, >')
 
     pandb = PythonDataBase()
     orig_syspath = sys.path

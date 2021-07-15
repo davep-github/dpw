@@ -19,6 +19,7 @@ SUCCESS = Success_t()
 
 num_failures = 0
 
+## @todo XXX Fix all uses to use dp_io.*verbose* type stuff.
 verbose = 0
 not_found_strings = []
 default_search = True
@@ -73,6 +74,7 @@ class Dumper_t(object):
         self.simple_emit(not_found_string, new_line=new_line)
 
     def found(self, info_item, data, new_line=True):
+        dp_io.ctracef(3, 'Dumper_t.found(): >{}< for >{}<\n', info_item, data)
         self.simple_emit(data, new_line=new_line)
 
 Def_dumper = Dumper_t()
@@ -87,23 +89,23 @@ def dump_all(info_list):
 ############################################################################
 def match_family_by_host(host):
     # XXX @todo Will need to preserve order somehow.
-    dp_io.vcprintf(-1, "match_family_by_host({})", host)
+    dp_io.ctracef(2, "match_family_by_host({})", host)
 
     def strcmp(s1, s2):
         return s1 == s2
 
     node_name = host_db.get(dppydb.famDB_to_node_name(), None)
-    dp_io.vcprintf(-1, "node_name>{}<", node_name)
+    dp_io.ctracef(2, "node_name>{}<", node_name)
 
     if node_name:
         famDB = node_name.get_item('db')
 
         # check for exact matches first.
-        dp_io.vcprintf(-1, "match_family_by_host({})", host)
+        dp_io.ctracef(2, "match_family_by_host({})", host)
         for (field_name, cmp_fun) in (("host", strcmp),
                                       ("host-pattern", re.search),
                                       ("host-default-pattern", re.search)):
-            dp_io.vcprintf(-1, "match_family_by_host({})", host)
+            dp_io.ctracef(2, "match_family_by_host({})", host)
             families = famDB.grep_fields(field_name)
             for fam in families:
                 field_value = fam.get_item(field_name)
@@ -118,8 +120,10 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 default_search=True,
                 wildcard_match=True,
                 dump_all_fields=False):
-    if verbose or 1:
+    if verbose:
         print('try >%s< for >%s<' % (host, info_item))
+        dp_io.ctracef(2, 'try >%s< for >%s<' % (host, info_item))
+
     #
     # find the info for the host.
     # try given, then fqdn
@@ -128,11 +132,11 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
     try:
         info = (host_db[host],)
     except KeyError:
-        dp_io.eprintf("D'OH!, no host>{}<\n".format(host))
+        dp_io.ctracef(5, "D'OH!, no host>{}<\n".format(host))
         # there's no entry named host in the db.
         # try the fqdn if there is a domain available.
         try:
-            dp_io.eprintf("domain>{}<\n".format(domain))
+            dp_io.ctracef(2, "domain>{}<\n".format(domain))
             if not domain:
                 raise KeyError
             fhost = host + '.' + domain
@@ -220,8 +224,7 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                         print('info>%s<' % info)
                     rc = RC_OK
 
-    if verbose:
-        print("rc: %s" % rc)
+    #dp_io.ctracef(2, 'rc: %s, tried >%s< for >%s<' % (rc, host, info_item))
     #
     # found the db entry, now get the requested info
     if rc == RC_OK:

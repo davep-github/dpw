@@ -429,13 +429,21 @@ def cdebug_exec(level, func, *args, **keys):
 debug_exec = cdebug_exec                # Defecated,
 ###############################################################
 def verbose_p(level):
-    return f_vprint and (verbose_level >= level or level == True)
+    """@todo XXX Make f_vprint a function that does this to allow simple one
+    off activations of verbose prints."""
+    if level <= -99:
+        fvpp = True
+    else:
+        fvpp = f_vprint
+    ret = fvpp and (verbose_level >= level or level == True)
+    return ret 
 
 def vcprintf(level, fmt, *args):
     """vcprintf: Verbose, conditional printf.
     Print messages depending on verbosity level."""
     #print "vc:level>%s<, fmt>%s<, args>%s<" % (level, fmt, args)
     return clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
+cverbosef = vcprintf
 
 ###############################################################
 def vprintf(fmt, *args):

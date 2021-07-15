@@ -21,7 +21,10 @@ function dp_decode_cmd_status()
     local pstr="pstr UNSET!"
 
     # User return codes should not be >= 128.
-    if (("${rc}" <= "${signum_min}"))
+    if [[ "${rc}" == "99" ]]
+    then
+	pstr="dp(1) debug exit"
+    elif (("${rc}" <= "${signum_min}"))
     then
 	# Special case to separate 128 from 0 (128 - 128)
 	if [[ "${rc}" == "${signum_min}" ]]

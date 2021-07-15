@@ -148,6 +148,22 @@ def locate_rc_file(name, path=None):
         except OSError:
             pass
 
+def string_like(s):
+    """Like sre_compile.isstring(): return isinstance(obj, (str, bytes))
+But, since it's a generally available function, I'll write one, too.
+SAD.
+I like my name better, since string is string and bytes is bytes.
+The need for this kind of a function indicates and error somewhere."""
+    return isinstance(s, (str, bytes))
+
+# FUCK YOU INCOMPATIBILITIES!
+# strings, bytes, compiled regexps.
+# py2: type re.compiled thing: _sre.SRE_Pattern.
+# py3: type re.compiled thing: re.Pattern.
+def maybe_re_compile(pat, *args, **keys):
+    if string_like(pat):
+        pat = re.compile(pat, *args, **keys)
+    return pat
 
 ## @todo XXX replace this with some form of "{0:#o}"
 def cbin(val, sep=False, sep_str=" ", field_width=4, word_size=32):

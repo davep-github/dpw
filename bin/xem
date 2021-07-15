@@ -146,6 +146,7 @@ vsetp "${set_sandbox_p}" && current_sb=$(dp4-sb-root -S) && {
 
 [ -z "$did_cd" ] && cd $HOME
 
+set -x
 if [ -n "${macs}" ]
 then
     BIN="${macs}"
