@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 ########################################################################
 #
 # template begins. NOT.
@@ -131,33 +131,35 @@ recognizers=(
 function ec-type-zsh()
 {
     typee=${1-}; shift
+    true "${opt:=ec}"
     [[ -z "${typee}" ]] && {
 	echo "$progname: wants a runnable thing's name."
 	exit 1
     } 1>&2
 
     local typee_base=$(basename "${typee}")
-    local edit_me=''
+    local file_to_edit=''
 
     for recognizer in "${recognizers[@]}"
     do
-	type_command_results=$(type "${typee}")
-	EExec_verbose_msg "type_command_results>${type_command_results}<"
+	exe_type=$(zsh -c "type ${typee}")
+	EExec_verbose_msg "exe_type>${exe_type}<"
 	EExec_verbose_msg "recognizer>${recognizer}<, typee_base>${typee_base} 
-type_command_results>${type_command_results}<"
+exe_type>${exe_type}<"
 
-	edit_me=$("${recognizer}" "${typee_base}" "${type_command_results}")
+	EExec_verbose_msg "recognizer>${recognizer}<"
+	file_to_edit=$("${recognizer}" "${typee_base}" "${exe_type}")
 	local rc="$?"
-	echo 1>&2 "1:edit_me>${edit_me}<"
+	echo 1>&2 "1:file_to_edit>${file_to_edit}<"
 	# read "bubba?3:Press enter> "
 	[[ "$rc" == 0 ]] || {
-    	    echo "func_recognizer ${type_command_results} failed: $rc"
+    	    echo "func_recognizer ${exe_type} failed: $rc"
     	    exit $rc
 	} 1>&2
-	echo 1>&2 "2:edit_me>${edit_me}<"
-	if [[ -n "${edit_me}" ]]
+	echo 1>&2 "2:file_to_edit>${file_to_edit}<"
+	if [[ -n "${file_to_edit}" ]]
 	then
-	    EExec ec "${edit_me}"
+	    EExec "${op}" "${file_to_edit}"
 	    # We want ec(dp)'s return code.
 	    exit
 	fi
