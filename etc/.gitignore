@@ -4,3 +4,10 @@ mailiases.el
 cron.d
 crontab.amd
 cron.d.amd
+
+# Copies live in places like:
+# /home/davep/local/share/emacs/27.2.50/etc/images/icons/hicolor/scalable/apps/emacs23.svg
+# ~locate emacs[23].svg~
+emacs.ico
+emacs.svg
+emacs23.svg

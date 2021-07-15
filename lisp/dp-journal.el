@@ -292,7 +292,7 @@ This way we can get alternating colors on journal mode structure in the text:
 	 (cons "^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
 	 (cons "^[	 ]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
 	 (cons "^[	 ]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
-	 (cons "^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+	 (cons "^[	 ]*[rR][eE]" ''dp-journal-low-info-face)
 	 (cons "^[	 ]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
 	 (cons "^[	 ]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
 	 (cons "^[	 ]*>>\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
@@ -303,11 +303,15 @@ This way we can get alternating colors on journal mode structure in the text:
 	 (cons "^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
 	 (cons "^[	 ]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
 	 (cons "^[	 ]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
-	 ;; e.g. (fyi: I have a eg --> e.g. abbrev)
-	 (cons "^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$"
+
+	 ;; fyi (fyi: I have an eg --> e.g. abbrev)
+	 (cons "^[	 ]*[fF][yY][iI]:\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+	 ;; e.g. (fyi: I have an eg --> e.g. abbrev)
+	 (cons "^[	 ]*[eE]\\.?[gG][.:]?\\(\\s-+\\|:\\).*$"
 	       ''dp-journal-high-example-face)
 	 ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-	 (cons "^[	 ]*[nN]\\.?[Bb][.:]?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+	 (cons "^[	 ]*[nN]\\.?[bB][.:]?\\( .*$\\|$\\)"
+	       ''dp-journal-extra-emphasis-face)
 
 	 ;; plain timestamps
 	 (cons (dpj-mk-topic-re "") ''dp-journal-timestamp-face)
@@ -2594,8 +2598,7 @@ SKIP-CURRENT-P says to not count the current AI when looking backwards."
       (if parent-indentation
 	  ;; Leaves us @ end of indentation.
 	  (indent-line-to parent-indentation)))))
-(defalias 'dpj-dedent 'dpj-outdent)
-(defalias 'dpj-back-dent 'dpj-outdent)
+(dp-defaliases 'dpj-dedent 'dpj-undent 'dpj-backdent 'dpj-outdent)
 
 (defun dpj-outdent-or-backward-delete-word ()
   "Delete the previous word or level of indentation depending on context.

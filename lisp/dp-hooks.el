@@ -101,7 +101,10 @@ Make it buffer local since there can be >1 minibuffers.")
               (dp-get--as-string--region-or... :bounder 'line-p)))))
 
 (defun dp-minibuffer-exit-hook ()
-  ;;(dmessage "dp-minibuffer-exit-hook, buf: %s" (current-buffer))
+  ;; (dmessage "dp-minibuffer-exit-hook, buf: %s" (current-buffer))
+  ;; Hey! I'm testing here!
+
+  (dp-set-buffer-background-color 'dp-Journal-Medium-Problem-Face)
   (setq dp-pre-minibuffer-buffer nil))
 
 ;; This isn't called if we bust out of the minibuffer, e.g., with C-g.
@@ -132,15 +135,20 @@ Make it buffer local since there can be >1 minibuffers.")
 
 (defun dp-minibuffer-setup-hook ()
   "Sets up personal minibuffer options."
-;;CO;   (dmessage "dp-minibuffer-setup-hook, buf: %s, pre: %s\n bl: %s"
-;;CO;             (current-buffer)
-;;CO;             dp-pre-minibuffer-buffer
-;;CO;             (buffer-list)
-;;CO;             )
-
+  ;;CO; (dmessage "dp-minibuffer-setup-hook, buf: %s, pre: %s\n bl: %s"
+  ;;CO; 	    (current-buffer)
+  ;;CO; 	    dp-pre-minibuffer-buffer
+  ;;CO; 	    (buffer-list)
+  ;;CO; 	    )
+  ;; More sucksinked.
+  ;; (dmessage "dp-minibuffer-setup-hook, buf: %s" (current-buffer))
+  ;; (dmessage "dp-minibuffer-setup-hook, win: %s" "show window of buffer!")
+  ;; ;; slightishly lighter than the usual bg, or trivially just inverse.
+  (dp-set-buffer-background-color 'dp-remote-buffer-face)
   ;; Where were we when we caused the minibuffer to be used?
   ;; SWAG.  3 or 4 tests and it looks to be 100% perfect for all of time in
-  ;; Emacs as well as the evil splitters, the "People's front of Macs."
+  ;; Emacs as well as the evil splitters, the "People's front of Macs" vs
+  ;; "The macsan people's front." ??? should it be peoples'
   (setq dp-pre-minibuffer-buffer (cadr (buffer-list))) ; SWAG++
   ;; Some minibuffer users, like isearch, provide their own key maps for the
   ;; minibuffer to use.  We don't want to nuke those maps (here), so let's do
@@ -162,11 +170,17 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(control ?p)] 'previous-complete-history-element)
     (define-key map [(meta ?p)] 'dp-parenthesize-region)
     (define-key map [(control ?n)] 'next-complete-history-element)
-;;; fsf no like v
+;;;             |
+;;; fsf no like v these mappings.  At least when I jumped ship,
+;;; from "that" proj.  Talk about an idiotic, counter-productive war.  Worse
+;;; than vi,* vs *macs.  Anti-macs-ers v anti-X-ers.  This comment added in 2021.
+    ;; Maybe FSFmacs can do this already.
+    ;; Grab the region and stuff it into the buffer.
     ;; (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
     ;; (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
     ;; (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
 ;;; fsf no like ^
+;;;             |
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
     ;;; FSF change
     (if (dp-xemacs-p)
@@ -193,6 +207,7 @@ Make it buffer local since there can be >1 minibuffers.")
     ;; use them to grab a path name from the current *sh* window.  We put the
     ;; function on both so that a simple repeat key press gives us a nice
     ;; remote file name.
+    ;; Olde, eh?  rsh?  Used in a very closed environment.
     (define-key map [(meta ?e)] 'dp-rsh-cwd-to-minibuffer)
     (define-key map [(meta ?w)] 'dp-rsh-cwd-to-minibuffer)
     (dp-minibuffer-abbrevs-post-hook))
@@ -215,7 +230,7 @@ Make it buffer local since there can be >1 minibuffers.")
 	(zmacs-make-extent-for-region (cons (point-marker t)
 					    (mark-marker t)))
 	))
-  ;;(dmessage "dp-minibuffer-setup-hook")
+  ;;(dmessage "dp-minibuffer-setup-hook, done.")
 )
 
 (require 'dp-buffer-menu)
@@ -2152,8 +2167,11 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
 (defadvice calc (before dp-calc activate)
   (dp-push-window-configuration))
 
+
 (defadvice describe-variable (around dp-desc-var activate)
+  "C-0 or C-- will use my describe-variable type function."
   (if (Cu-memq '(0 -))
+      ;; Magic!! Superior to the leading brand.
       (dp-show-variable-value (ad-get-arg 0))
     ad-do-it))
 

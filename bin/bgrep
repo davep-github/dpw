@@ -1,11 +1,13 @@
 #!/usr/bin/env perl
-
+#
+# Bracketing grep.
+#
 $to_stdout = 1;
 $debug = 1;
 
 if ($ARGV[0] =~ /-o/) {
-  $to_stdout = 0;
-  shift(@ARGV);
+    $to_stdout = 0;
+    shift(@ARGV);
 }
 $max_matches = 0;
 
@@ -23,7 +25,7 @@ $base = "out";
 $sep = "";
 $invert_match_sense = 0;
 if (!$max_matches) {
-  $max_matches = 0;
+    $max_matches = 0;
 }
 
 $till_eof = 1 if ($second eq '$^' || $second eq '.*');
@@ -33,54 +35,73 @@ $HANDLE_EOF_FLAG = "handle till-eof flag";
 
 $old_state = "perl bites";
 
+#print "s0.0: $sep<";
+print "$sep";
+$state = $HANDLE_EOF_FLAG;
+
 while (<>)
 {
-  if ($debug && !($old_state eq $state)) {
-      print STDOUT "state $state>$_<";
-      $old_state = $state;
+    chomp;			# Sigh.
+    if ($debug && !($old_state eq $state)) {
+	if ($debug) {
+	    print STDOUT "\t\t!!! state shift; $old_state --> $state\n";
+	}
+	$old_state = $state;
     }
-  if ($state eq "find-opening-regexp") {
-      if (/$first/o) {
-	  #print "s0.0: $sep<";
-	  print "$sep";
-	  $state = $HANDLE_EOF_FLAG;
-	  if (!$to_stdout) {
-	    $oname = sprintf("%s%04d", $base, $num);
-	    $num++;
-	    print STDERR "using oname>$oname<\n" if ($debug);
-	    open (OUT0, ">$oname") || die "canna open $oname, $!";
-	    $OUT = \*OUT0;
-	  } else {
-	    print STDERR "using stdout\n" if ($debug);
-	    $OUT = \*STDOUT;
-	  }
-	  #print $OUT "s0.1: $_<";
-	  print $OUT "$_";
-	  next;
+    if ($state eq "find-opening-regexp") {
+	if (/$first/o) {
+	    ## print $OUT "s0.1: $_<";
+	    print "$sep";
+	    $state = $HANDLE_EOF_FLAG;
+	    # We needa do this here, because I close the output file after
+	    # each match of the closing bracket pattern.  I can't recall why
+	    # I close it.  I think I hacked in the num_matches thing later
+	    # and that was the stupidest place to put it.
+	    # @todo XXX (1) Consider moving this out of the loop and not
+	    # closing the output file every time the closing pattern is found.
+	    if (!$to_stdout) {
+		$oname = sprintf("%s%04d", $base, $num);
+		$num++;
+		print STDERR "******** using oname>$oname<\n" if ($debug);
+		open (OUT0, ">$oname") || die "canna open $oname, $!";
+		$OUT = \*OUT0;
+	    } else {
+		print STDERR "using stdout\n" if ($debug);
+		$OUT = \*STDOUT;
+	    }
+	    # State change, no newline;
+	    print $OUT "$_";
+	    next;
 	}
     }
-  if ($state eq $HANDLE_EOF_FLAG) {
-      #print $OUT "s1.0: $_<";
-      if ($till_eof)
+    if ($state eq $HANDLE_EOF_FLAG) {
+	## print $OUT "s1.0: $_<";
+	if ($till_eof)
 	{
-          print $OUT "$_";
-	  $sep = "###################################################\n\n";
-	  next
+	    # There will never be another state change.
+	    # Depending on perl-regexps, we could just make the
+	    # closing bracket "$^"  EOL before BOL.
+	    print $OUT "$_\n";
+	    $sep = "###################################################\n\n";
+	    next
 	}
-      $state = "find-closing-regexp";
+	$state = "find-closing-regexp";
     }
-  if ($state eq "find-closing-regexp") {
-      #print $OUT "s2.0: $_<";
-      print $OUT "$_";
-      if (/$second/o) {
-        ++$num_matches;
-        print "!!!!!!!!!!!!!!!!!!! state --> find-opening-regexp\n";
-        $state = "find-opening-regexp";
-        close OUT0 if (!$to_stdout);
-        printf("max_matches>$max_matches<, num_matches>$num_matches<\n");
-        if ($max_matches && ($num_matches >= $max_matches)) {
-          exit(0);
-        }
-      }
+    if ($state eq "find-closing-regexp") {
+				#print $OUT "s2.0: $_<";
+	print $OUT "$_";
+	if (/$second/o) {
+	    ++$num_matches;
+	    print "******** !!!!!!!!!!!!!!!!!!! state --> find-opening-regexp\n";
+	    $state = "find-opening-regexp";
+	    # See XXX (1)
+	    # Move the close out of the loop
+	    # deal with the num_matches by breaking out of the loop
+	    close OUT0 if (!$to_stdout);
+	    printf("max_matches>$max_matches<, num_matches>$num_matches<\n");
+	    if ($max_matches && ($num_matches >= $max_matches)) {
+		exit(0);
+	    }
+	}
     }
 }

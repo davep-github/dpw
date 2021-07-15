@@ -1,0 +1,7 @@
+#!/bin/zsh
+echo before def
+type myfunc
+function myfunc() {
+    echo myfunc implementation
+}
+echo after def

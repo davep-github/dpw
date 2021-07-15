@@ -1,0 +1,41 @@
+========================
+2002-01-05T11:47:34
+--
+Do we need electric mode at all?
+If, when we startt up our buffer we save the buffer and a marker from
+whence we came, once we select the item to paste we can nuke our paste
+buffer and return to the original and insert the item where we were.
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------
+ancient notes:
+
+
+pop-up-windows
+
+Documentation:
+*Non-nil means display-buffer should make new windows.
+---------------------------------------------------------------------
+display-buffer: an interactive built-in function.
+
+Make BUFFER appear in some window but don't select it.
+BUFFER can be a buffer or a buffer name.
+If BUFFER is shown already in some window, just use that one,
+unless the window is the selected window and the optional second
+argument NOT-THIS-WINDOW is non-nil (interactively, with prefix arg).
+If `pop-up-frames' is non-nil, make a new frame if no window shows BUFFER.
+Returns the window displaying BUFFER.
+
+(display-buffer BUFFER &optional NOT-THIS-WINDOW)
+----------------------------------------------------------------------
+pop-up-frames's value is nil
+
+Documentation:
+*Non-nil means `display-buffer' should make a separate frame.

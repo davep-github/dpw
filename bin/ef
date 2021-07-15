@@ -49,8 +49,8 @@ echo '--' >> $LOG_FILE
 
 Usage()
 {
-   echo "${progname}: usage: $progname [-q]" 1>&2
-   exit 1
+    echo "${progname}: usage: $progname [-q]" 1>&2
+    exit 1
 }
 
 local_server_p()

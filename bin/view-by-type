@@ -8,7 +8,8 @@
 # template end.
 ########################################################################
 # Take the output of type and visit the file if possible.
-# I made this a zsh script because zsh's less, while incompatible, has better functionality.  E.g.
+# I made this a zsh script because zsh's less, while incompatible, has better
+# functionality.  E.g.
 # $ type less ->
 # less is /bin/less
 #         =========
@@ -18,9 +19,8 @@
 # Alias types are problematical
 # $ type xsb -->
 # xsb is an alias for exchange_sandboxes
-# No filename.  Need to grep for it.
+# No filename.  Need to grep for it, but at least I know where/what to grep.
 #
-
 set -u
 progname="$(basename $0)"
 
@@ -62,7 +62,7 @@ function EExec()
 function EExec_verbose_msg()
 {
     {
-	"${exec_verbose_p}" && echo "$@"
+	"${exec_verbose_p}" && echo "{v}: $@"
     } 1>&2
 }
 
@@ -82,10 +82,8 @@ function xxx_recognizer()
     local type_command_results="${1-}"; shift
     EExec_verbose_msg "$0: echo \"${type_command_results}\" | sed -rn \"${sed_regexp}\""
     local sed_response=$(echo "${type_command_results}" | sed -rn "${sed_regexp}")
-    set -x
     with_saved_rc echo "sed_response>${sed_response}<" 1>&2
     with_saved_rc echo "${sed_response}"
-    set +x
 }
 
 # function:
@@ -145,6 +143,9 @@ function ec-type-zsh()
     do
 	type_command_results=$(type "${typee}")
 	EExec_verbose_msg "type_command_results>${type_command_results}<"
+	EExec_verbose_msg "recognizer>${recognizer}<, typee_base>${typee_base} 
+type_command_results>${type_command_results}<"
+
 	edit_me=$("${recognizer}" "${typee_base}" "${type_command_results}")
 	local rc="$?"
 	echo 1>&2 "1:edit_me>${edit_me}<"
@@ -163,6 +164,14 @@ function ec-type-zsh()
     done
     false
 }
+
+(($# > 0)) || {
+    echo "Usage: ${progname} runnable...
+Visit or show file of runnable.  E.g. the file if executable,
+the file in which a shell function was defined.
+Or just print the fact the runnable is an alias.  grep(1) for it yourself."
+    exit 1
+} 1>&2
 
 ec-type-zsh "$@" || {
     echo "$progname: couldn't find a file to edit."

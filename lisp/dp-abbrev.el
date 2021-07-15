@@ -358,7 +358,7 @@ list in my DP-STYLE-ABBREV format (q.v.)"
                (setq save-abbrevs nil))))
           dp-emacs-style-abbrev-files)
   (dp-abbrev-refresh-buffers dp-go-abbrev-table)
-  (dingmsg "You may want to run go2rc(dp) in shell buffers and other shells"))
+  (dmessage "You may want to run go2rc(dp) in shell buffers and other shells"))
 
 (defun dp-save-and-redefine-abbrevs (&optional arg1)
   (interactive "P")

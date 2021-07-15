@@ -1,0 +1,14 @@
+#!/bin/bash
+# Make this an auto defining/exporting function.  1st call it defines itself
+# as a function, exports that and then that will be called for no on since
+# functions have call priority over bin files.
+dp_log_header () {
+	echo -n "$(date +'%j:%R:%S')"
+}
+
+dp_log_headerX () {
+    echo 1>&2 "$(realpath ${0}): AHAHAHAH!Total fraud, FIX my namesake."
+}
+
+dp_log_header "$@"
+exit

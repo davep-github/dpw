@@ -7,13 +7,11 @@
 
 # davep specific code -------------8><------------------
 source script-x
-set -u
 progname="$(basename $0)"
 source eexec
-if [[ -z "${eexec_program-}" ]] # Did the caller provide a program?
+if [[ -n "${eexec_program-}" ]] # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
-    eexec_program=''
 else
     eexec_program=$(EExec_parse "$@")
     EEXEC_SHIFT=shift
@@ -21,10 +19,9 @@ fi
 
 for op in $eexec_program
 do
-  $op
-  ${EEXEC_SHIFT}
+    $op
+    ${EEXEC_SHIFT}
 done
-EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.

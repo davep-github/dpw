@@ -12,35 +12,57 @@ do
 done
 unset eexec_program
 
-[ "${1-}" = "--help" ] && {
+[[ "${1-}" = --help ]] && {
     echo "usage: bin-search <glob>
 Search all bin dirs in \$PATH for <glob>.
 "
     exit 0
 }
 
-vunsetp "$*" && {
-    echo "A glob is needed."
+function list_files_by_glob() {
+    local bin="${1}"; shift
+    local glob="${1}"
+    ls -1 "${bin}/${glob}"
+}
+
+function list_files_by_regexp() {
+    local bin="${1}"; shift
+    local regexp="${1}"; shift
+    ls -1 "${bin}/" | "${GREPPER}" -e "${regexp}"
+}
+
+[[ -z "$*" ]] && {
+    echo "A pattern is needed."
     exit 1
 } 1>&2
 
-glob="${1}"
-shift
+true ${GREPPER:="egrep"}	# Keyword arguments ;->
 
+true "${use_regexp_p:=}"
+
+# @todo XXX Crap code is OK until more options are needed.
+if [[ "${1-}" == -r ]]
+then
+    philtre=list_files_by_regexp
+    shift
+else
+    philtre=list_files_by_glob
+fi
+
+pattern="${1}"
 spaced_path=$(echo "${PATH}" | sed -r 's/:/ /g')
 for bin in ${spaced_path}
 do
-  #echo_id bin
-  ls -1 "${bin}"/$glob 2>/dev/null | while read
-     do
-        #echo_id REPLY
-        [ -x "${REPLY}" ]
-        rc="$?"
-        case "$rc" in
-            0) ;;
-            *) echo -n "not executable: "
-        esac
-        echo "${REPLY}"
-     done
+    echo "${philtre}" "${bin}" "${pattern}" "|" "${philtre}"
+    "${philtre}" "${bin}" "${pattern}" | "${philtre}" | read
+    {
+	candidate="${REPLY}"
+	echo -n "${candidate}"
+        EExec_verbose_msg "candidate>${candidate}<"
+        [[ -x "${candidate}" ]] || {
+            echo -n ":not executable"
+        }
+	echo 
+    }
 done
 

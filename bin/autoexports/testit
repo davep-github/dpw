@@ -1,0 +1,9 @@
+
+echo "\$0>$0<"
+fname=$(basename "$0")
+eval 'function ${fname} () {
+     echo "autoexports:$name"
+     exit 99
+}'
+
+type "$fname"

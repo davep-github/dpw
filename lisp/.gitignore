@@ -10,3 +10,4 @@ places
 /elpa/
 auto-dp-autoloads.el
 custom.el
+/.cache/

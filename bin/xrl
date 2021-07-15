@@ -48,7 +48,7 @@ on_error()
 
 just_show=
 X_opt=-X
-for i in $*
+for i in "$@"
 do
   # Apply -N to next arg only. Multiple -Ns may be specified.
   [ "$i" = "-N" ] && {
@@ -73,11 +73,19 @@ do
   hname=${full_host:-$host}
   shost=$(echo $hname | cut -d. -f1)
   title_base=$(rx_name rlogin $hname)
-  rsh_bin=${XRL_BIN:-$($HOST_INFO -h $shost -n 'rsh' xrl_rsh_bin)}
-  xrl_bin_args=${XRL_BIN_ARGS:-$($HOST_INFO -h $shost -n '' xrl_xterm_bin_opts)}
+  # We need to know the xrl program to run on the rsh'ing host, not the rsh'd
+  # to host.
+  rsh_bin=${XRL_BIN:-$($HOST_INFO -n 'rsh' xrl_rsh_bin)}
+  # This is the xterm we run on our local machine.
   xrl_xterm_bin=${XRL_XTERM_BIN:-$($HOST_INFO -n 'xterm' xrl_xterm_bin)}
+  # These are local options needed by the local machine's rsh_bin.
+  xrl_bin_opts=${XRL_BIN_OPTS:-$($HOST_INFO -n '' xrl_xterm_bin_opts)}
   font=${XRL_XTERM_FONT:-$($HOST_INFO -n "${DEFONT-}" xrl_xterm_font)}
   [ -z "$font" ] && font=9x15
+  # Now we need info about the remote host.
+  # E.g. what are it's xterm colors?  We rsh to the remote host and our local
+  # xterm has the same appearance as a dpxx(dp) done locally on that host.
+  
 
   EExec dpxx $just_show -h $host -n $title_base -f $font \
         -- ${rsh_bin} ${X_opt} ${host}

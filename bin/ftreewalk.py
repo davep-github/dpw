@@ -22,6 +22,10 @@ EXCLUDE_DIRS_WITH_THIS_FILE = 'DP_NO_RCS_DIR'
 EXCLUDE_TREES_WITH_THIS_FILE = 'DP_NO_RCS_TREE'
 EXCLUDE_PER_DIR_FILE_NAME = "DP_RCS_EXCLUDE_FILES"
 
+# Expedience is the mother of all fucked up code.
+FINDER_FILE = os.environ.get("DP_CODE_INDEX_FINDER_FILE",
+                             "ftreewalk.py.finder_file")
+
 FILE_NAME_CLOSE_QUOTE = ''
 FILE_NAME_OPEN_QUOTE = ''
 
@@ -41,7 +45,7 @@ DEFAULT_EXCLUDE_FILE_REGEXPS = [
     '.*\.pyc$', '.*\.pyo$',
     '.*\.dvi$',
     '^n?cscope.out$', '^n?cscope.files$',
-    "^" + os.environ["DP_CODE_INDEX_FINDER_FILE"] + "$",
+    "^" + FINDER_FILE + "$",
     '^n?cscope.out.in$', '^n?cscope.po.out$',
     '^n?cscope.in.out$', '^n?cscope.po.out$',
     '^.xsession-errors$', '^.newsrc$',

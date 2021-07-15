@@ -4,9 +4,9 @@
 #set -x
 #set -e
 # These were clobbering each other across hosts.
-: ${DP_SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"}
-: ${DP_SSH_AGENT_RC_STDERR="${DP_SSH_AGENT_RC}.stderr"}
-: ${DP_SSH_AGENT_RC_LOG="${DP_SSH_AGENT_RC}.log"}
+true ${DP_SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"}
+true ${DP_SSH_AGENT_RC_STDERR="${DP_SSH_AGENT_RC}.stderr"}
+true ${DP_SSH_AGENT_RC_LOG="${DP_SSH_AGENT_RC}.log"}
 export DP_SSH_AGENT_RC_umask=0077
 export DP_SSH_AGENT_RC_STDERR_umask=${DP_SSH_AGENT_RC_umask}
 
@@ -182,7 +182,7 @@ dp_ssh_start_agent()
     }
     #export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
 
-    while :
+    while true
     do
       dp_ssh_start_agent0 "$@" >| "${DP_SSH_AGENT_RC_LOG}" 2>&1
       [ "$?" = 11 ] && {

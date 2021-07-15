@@ -68,7 +68,7 @@
 ;;; 'cicular will allow this expansion to begin anywhere in the list:
 ;;;  arguments-!-C-SPC --> arg, C-SPC --> argument... and wraps also.
 ;;; Note that
-;;;  articulate announcements-!-C-SPC doesn't begin an expansion sequence,
+;;;  "articulate announcements"-!-C-SPC doesn't begin an expansion sequence,
 ;;; nor is it ever likely to.
 
 ;;; @todo XXX I should review this code and weep.  I remember it being such a
@@ -78,7 +78,22 @@
 ;;; @todo XXX Allow case insensitive expansions.  E.g. no need to do this:
 ;;; "chww" "CHWW" "code hacked while waiting"
 ;;;  ====   ====
+;;; Old style (one of these) -> (any of those)
+;;; Are 99.999999999% likely better off as circular defs
+;;; e.g.
+;;; ((("dtrt" "DTRT")
+;;;   "do the right thing" "DTRT" "dtrt")
+;;;  dp-manual)
+;;; ((("dtrt" "DTRT" "do the right thing" "DTRT" "dtrt")
+;;;   'circular)
+;;;  dp-manual)
+;;; And since I'm so lazy, and did this once, here's a way for fyou to do this.
+;;; more lazily.
+;;; tbc --> to be continued...
 
+;;; @todo XXX ??? Leave deactivated region around resulting expansion?
+;;;               This can be very rude.
+;;;               But I do it with M-y runs the command dp-yank
 ;;; This information is common between the abbrev file and dp-abbrev.el
 
 (defconst dp-common-abbrevs
@@ -93,7 +108,16 @@
       'circular)
      dp-manual)
 
-    ((("jic" "JIC" "just in case" "Jus T. Incase")
+    ((("jic" "JIC" "just in case" "Jus T. Incase" "Justin Case")
+      'circular)
+     dp-manual)
+
+    ((("tbc" "to be continued" "to be continued...")
+      'circular)
+     dp-manual)
+
+    ((("wad" "WAD" "works as designed" "Works as designed"
+       "it's *not* broken, you fuck!")
       'circular)
      dp-manual)
 
@@ -168,11 +192,11 @@
     ((("iir" "IIR" "Iir")
       "if I recall" "IIR")
      dp-manual)
-    ((("appt" "appts")
-      "appointments" "appointment")
+    ((("appt" "appts" "appointments" "appointment")
+      'circular)
      dp-manual)
-    ((("p2p")
-      "peer-to-peer" "point-to-point")
+    ((("p2p" "peer-to-peer" "point-to-point")
+      'circular)
      dp-manual)
     ((("ptp")
       "point-to-point" "peer-to-peer")
@@ -182,9 +206,15 @@
      dp-manual)
     (("ok" "OK")
      dp-manual global)
-    ;; H/T to gumball and the Latins[sic] and FUTHORKer.  In descending order
-    ;; of PC factor.
-    ((("wtf" "WTF"  "what the what" "what the fv<k" "what the fuck")
+    ;; In ascending order of PC factor.
+    ((("wtf" "WTF" "what the fuck" "What The Fuck" "WHAT THE FUCK"
+       ;; Mince me baby.
+       "what the fv<k" "huh" "wha..."
+       ;; Gumball takes the mince pie.
+       "what the what")
+      'circular)
+     dp-manual global)
+    ((("fyi" "FYI"  "f.y.i" "F.Y.I")
       'circular)
      dp-manual global)
     (("fo" "of")

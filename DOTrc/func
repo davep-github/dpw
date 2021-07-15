@@ -295,7 +295,8 @@ function expand_source_list()
 	[[ "${suff}" =~ ^\.?-$ ]] && {
 	    # Too many things don't have a version of a file for all of the
 	    # extensions in ${locale_rcs}
-	    #echo "expand_source_list()@todo XXX : skipping suffix for>${base}|${suff}<"
+	    # echo "expand_source_list()
+	    # @todo XXX : skipping suffix for>${base}|${suff}<"
 	    continue
 	} 1>&2
 	#eko "rc: top of loop" "${rc[@]}" 1>&2 # @todo XXX
@@ -415,8 +416,15 @@ DP_EXPORT_FUNC dpe_error dpe_warn dpe_warning
 
 function inside_emacs_p()
 {
-    [ "$TERM" = "emacs" -o "$TERM" = "eterm" -o -n "${EMACS-}" ]
+    # If this is true then we're not in a shell buffer.
+    [[ "${TERM-}" =~ .*term.* ]] && false ||
+    [[ "$TERM" = "emacs" \
+	   || "$TERM" = "eterm" \
+	   || -n "${EMACS-}" \
+	   || ${EMACS-} == "t" \
+     ]]
 }
+
 DP_EXPORT_FUNC inside_emacs_p
 
 
@@ -1153,11 +1161,46 @@ function dp_import()
 }
 DP_EXPORT_FUNC dp_import
 
+
+### Are we sourcing or running?  We can use this to allow us to source a file
+### as a "library".
+### My convention (not a BASH command), `innovated'(as per M$)
+### from Python.
+### ~/bin/this_is_what_I_do
+### The style then becomes:
+### ...define... stuff
+### ...define... raison d'etre
+### function this_is_what_I_do()
+### {
+###     some_of_this
+###     some_of_that
+### }
+### dp_ima_lib || this_is_what_I_do "$@"
+### @todo see if we can make a function:
+### NB:
+### This *must* run the in context (e.g. shell) in which we want the definition
+### to appear. This means a sourced script or an alias.
+### dp_functionalize this_is_what_I_do()
+### {
+###     # This may be too *gasp* overblown.
+###     # $1 is filename $2 could be the function to be exported/autoloaded.
+###     local filename="${1}; shift
+###     local funcname
+###     if (($# > 0))
+###     {
+### 	funcname="${1-$(basename $1)"
+### 	shift
+###     }
+###     dp_import "${filename}" "${funcname}" "$@"
+###     DP_EXPORT_FUNC "${funcname}"
+### }
+
 function name_is___main__()
 {
-    # Are we sourcing or running?
-    # My convention (not a BASH command), `innovated'(as per M$) from Python.
-    [[ -z "${DP_IMPORTING_P-}" && "${DP__name__-}" == __main__ ]]
+    #  The default *must* be to run
+    ## [[ -z "${DP_IMPORTING_P-}" || "${DP__name__-}" == __main__ ]]
+    [[ -z "${DP_IMPORTING_P-}" ]]
+
 }
 DP_EXPORT_FUNC name_is___main__
 #alias dp_runme="name_is___main__"
@@ -1192,6 +1235,9 @@ function dp_ima_lib()
     ! dp_ima_script "$@"
 }
 
+###
+### 
+###
 function invert_string_pred()
 {
     if [ -z "$1" ]; then echo t; else echo ""; fi

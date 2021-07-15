@@ -316,9 +316,21 @@ PROPS."
   (interactive "Npriority: \nXpos: ")
   (dp-set-extent-priority arg pos 'dp-colorized-region-p extents))
 
+(defun* dp-colorized-region-boundaries (&key
+					(pos (point))
+					(prop 'dp-colorized-region-p))
+  (interactive)
+  (dp-extents-at-with-prop prop nil (or pos (point))))
+
+;; !!!! Collect feces on default bounders.
 (defun* dp-unextent-region (region-id &optional beg end buf-or-string
-				      (region-bounder 'buffer-p)
+				      &key
+				      (bounder 'rest-or-all-of-line-p)
 				      (verbose-p nil))
+  "Remove extents matching REGION-ID in the region-or...
+REGION-ID is a cons '(property-id . property-val) or a just property-id.
+If a cons, then the property-id must exist *and* the val must match.
+Else anything with the property-id will match."
     (interactive "sregion-id(lisp expr): ")
   ;; Region first.
   (when verbose-p
@@ -327,7 +339,7 @@ PROPS."
          (prop (if check-val-p (car region-id) region-id))
          (prop-val (cdr-safe region-id))
          (num-deleted 0)
-         (be (dp-region-or... :beg beg :end end :bounder region-bounder))
+         (be (dp-region-or... :beg beg :end end :bounder bounder))
 	 overlays olay)
     (when be
       (setq overlays (overlays-in (car be) (cdr be)))
@@ -344,13 +356,19 @@ PROPS."
 	(setq overlays (cdr overlays))))))
 
 
-(defun dp-uncolorize-region (&optional beg end preserve-current-color-index-p
-                             region-id)
+(defun* dp-uncolorize-region (&optional beg end preserve-current-color-index-p
+				       (region-id '(dp-colorized-region-p . t))
+				       (bounder 'rest-or-all-of-line-p))
   "Remove all of my colors in the region.
+REGION-ID is either
 The region is determined by `dp-region-or...'."
-  (interactive)
-  (dp-unextent-region (or region-id 'dp-colorized-region-p)
-		      beg end nil 'line-p)
+  (interactive "P")
+  ;; By default, look for regions with a property of 'dp-colorized-region-p
+  ;; and a val of t.
+  (dp-unextent-region region-id
+		      beg end nil
+		      :bounder bounder)
+  ;;yadda mc'yadda
   (unless preserve-current-color-index-p
     (setq dp-colorize-region-default-color-index 0)))
 

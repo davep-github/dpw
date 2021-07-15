@@ -107,21 +107,118 @@ Usage_error()
 # xit vncviewer chicxulub
 #
 
-: ${VIEWER:=vncviewer}
+# Set defaults.
+: ${VNCVIEWER:=vncviewer}
 : ${VNCSERVER:=chicxulub}
-: ${XIT=xit}
+: ${XIT=}
+: ${loopp:=false}
+: ${invertp:=false}
+: ${keep_going_p=true}
+: ${num_loops=100}
 
-EExec_verbose_echo_id VNCSERVER XIT
+EExec_verbose_echo_id VIEWER VNCSERVER XIT
 
-[[ -n "${1-}" ]] && {
+# Usage variable usage:
+Usage_args_info=' Set $Usage_args_info'
+Usage_synopsis='Usage_synopsis.  Set $Usage_synopsis'
+# Idiom:
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+# Who the FUCK is ever going to read this?
+# send an email to davep.i-read-a-comment@meduseld.net
+# [ as of: 2021-06-17T01:28:39 ] this is a working domain name email address.
+# But domains expire, dunnaye?
+Usage_details="${EExec_parse_usage}
+-o) flag o
+-O <val>) set Option to <val>
+"
+# Example of arg parsing.
+# NB: See eexec(dp), but [ as of: 2021-07-13T12:37:13 ]
+# -n, -v, -q, -nk, --nk, -vk, --vk and some --eexec-* option names are taken.
+# @todo XXX Remove as many as possible.  Too many aliases is one of my many
+# failings.
+# NB: -x is reserved for script-x
+option_str="lkis:c:xm:"
+declare -a long_options
+long_options=(
+    # E.g. loop until the command fails.
+    "loop-till-failure" "ltf"	# -l
+    # loop until then command succeeds.
+    "invert" "inv"		# -i
+    # loop-till-failure + invert
+    "keep-going"		# -k
+    # specify server.
+    "server:"			# -s
+    # client
+    "client:"			# -c
+    # use XIT
+    "xit"			# -x
+    # max loop count
+    "max:" "loops:" "max-loops:" "num-loops:" # -m
+)
+DP_IMPORTING_P=true source dp-getopt+.sh || exit 1
+EExec_verbose_msg "after dp-getopt+.sh: \$@>$@<"
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -l|--loop-till-failure|--ltf) loopp=true;;
+      -i|--invert|--inv) invertp=true;;
+      -k|--keep-going) keep_going_p=true;;
+      -s|--server) shift; VNCSERVER="${1}";;
+      -c|--client) shift; VNCVIEWER="${1}";;
+      -x|--xit) XIT=xit;;
+      -m|--nl|--max|--loops|--max-loops|--num-loops|--nl) shift; num_loops="${1}";;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+(($# > 0)) && {
+    # Arg beats option.
     VNCSERVER="${1}"
     shift
 }
+"${invertp}" && {
+    if "${loopp}"
+    then
+	loopp=false
+    else
+	loopp=true
+    fi
+}
 
 # No -s for type in BASH :-(.
-# Got blindsided when I forgot about the alternatives system.
-# It's a good one, as long I remember about when the universe thinks it'll
+# Got blindsided when I forgot about the alternatives system.  ps(1) never
+# showed the vncviewer I thought I was using.
+# It's a good one, as long I remember about it when the universe thinks it'll
 # help me.
-EExec_verbose_exec type  "${VIEWER}"
+#EExec_verbose_exec type  "${VNCVIEWER}"
+while true
+do
+    # @todo XXX Using xit is not recommended because it'll spawn processed
+    # speedy quick.  Can't even get to a console.
+    # It also loops like mad when EExec is in -n mode EExecDashN_p
+    EExec ${XIT} "${VNCVIEWER}" "${VNCSERVER}"
+    EExecDashN_p && {
+	EExec_verbose_msg "I'm not going to loop forever because you're using -n."
+	exit 3			# Or break --> returns 0.
+    } 1>&2 
+    ((--num_loops))
+    ((num_loops <= 0)) && break
+    #  Maybe break if XIT used?
+    rc="$?"
+    "${keep_going_p}" && continue
+    "${loopp}" && [[ "${rc}" != 0 ]] && break
+done
 
-EExec ${XIT} "${VIEWER}" "${VNCSERVER}"
+exit 0

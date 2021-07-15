@@ -10,6 +10,7 @@ set -u
 : ${DPGOP_dont_redefine_Usage=t}
 : ${DPGOP_dont_define_Usage=}
 
+###running_as_script && echo "running as script" || echo "not running as script"
 # Save "$@" in a way that preserves the existing tokenization.
 dp_getopt_dat=("$@")            # Save "$@"
 # set -- "${dat[@]}"               # Use saved "$@". Quotes are REQUIRED.
@@ -50,14 +51,15 @@ DPGOP_Usage()
     set +u                      # XXX @todo ICK!
     if ((${#long_options[@]} > 0))
     then
-        loo=$(addprefix_prefix_sep="" addprefix "--" "${long_options[@]}")
-        loo="[${loo}]"
+        dp_gop_long_options=$(addprefix_prefix_sep="" addprefix "--" "${long_options[@]}")
+        dp_gop_long_options="[${dp_gop_long_options}]"
     else
-        loo=""
+        dp_gop_long_options=""
     fi
     set -u                      # XXX @todo unICK!
 
-    echo -n "Usage: ${progname} [-$all_options]${loo}
+    # <:how Usage_* variables are used:>
+    echo -n "Usage: ${progname} [-$all_options]${dp_gop_long_options}
 $DPGOP_Usage_args_info
 $DPGOP_Usage_synopsis
 $DPGOP_Usage_details"
@@ -90,6 +92,7 @@ then
 fi
 
 # defaults to placate -u and to educate user of this -- $0 -- utility.
+# see <:how Usage_* variables are used:>
 : ${DPGOP_Usage_args_info=${Usage_args_info="INFO: \$Usage_args_info is null.
 "}}
 : ${DPGOP_Usage_synopsis=${Usage_synopsis="INFO: \$Usage_synopsis is null.
@@ -107,7 +110,8 @@ DEBUG=:
 
 # @todo XXX Why the fuck did I make this conditional?
 # Plus I haven't even settled on the lib vs program
-running_as_script && {
+if running_as_script
+then
   ###source eexec Why? This invocation will stomp things set by an earlier one.
   ### what will break now?
   [[ -z "${option_str}" ]] && [[ "${option_str-null}" == "null" ]] && \
@@ -125,7 +129,7 @@ running_as_script && {
 
   # New style getopt... fixes ugly quoting problems. Wh00t!
   q=$(getopt $getopt_args -o "$all_options" \
-        $long_options_opt $long_help_option -- "$@")
+             $long_options_opt $long_help_option -- "$@")
   if [ $? = 0 ]
   then
       eval set -- "$q"
@@ -135,7 +139,9 @@ running_as_script && {
       Usage2 "getopt failed."   # If getopt even returns after an error.
       false
   fi
-}
+else
+    echo 1>&2 "$0: not running as script"
+fi
 
 #
 # A snippet/template/example for ease of use is provided in
@@ -144,7 +150,7 @@ running_as_script && {
 
 #e.g.# # Usage variable usage:
 #e.g.# Usage_args_info=" Usage_args_info"
-#e.g.# Usage_synopsis="Usage_synopsis: Clean FS with sudo rm -rf /"
+#e.g.# Usage_synopsis="Usage_synopsis: Do something with [options] on [args...]"
 #e.g.# # Using ) after the args makes copy & paste between here and the
 #e.g.# # case statement easier.
 #e.g.# Usage_details="${EExec_parse_usage}

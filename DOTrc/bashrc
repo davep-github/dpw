@@ -451,7 +451,7 @@ case $HOSTNAME in
 	: ${WORK_ZONE:=$($HOST_INFO -n '-' work-zone)}
 
         # Project stuff:
-        : ${PROJECT:=$($HOST_INFO -n '-' project)}
+        : ${PROJECT:=$($HOST_INFO -n 'NO_PROJECT' project)}
 	;;
 esac
 export FAMILY

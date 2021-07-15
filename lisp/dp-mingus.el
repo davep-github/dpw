@@ -117,8 +117,5 @@ Make a string to use in the mode-line-help-echo for Mingus.
 
 (add-hook 'mingus-browse-hook 'dp-mingus-browse-mode-hook)
 
-(global-set-key [(control meta ?m)] 'mingus)
-(global-set-key [(control meta ?p)] 'dp-mingus-random-album)
-
 (provide 'dp-mingus)
 (dmessage "...dp-mingus loaded.")

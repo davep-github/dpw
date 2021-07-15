@@ -111,7 +111,6 @@ grep_for_pwdname()
         # Look for various versions of the current directory name.
         pat=":($PWD|$(pwd)|$(realpath .))/ "
 	EExec_verbose_echo_id pat
-        #echo "pat>$pat<"
         EExec -k -y -0 egrep_for_dirname "" "$pat"
     } | tee "${LOG_DIR}" | sort | uniq
 }

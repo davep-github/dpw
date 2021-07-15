@@ -2,6 +2,7 @@
 Some helpful utility functions."""
 
 import os, sys, stat, pprint, types, re, math, types, pdb
+import dp_io
 opath = os.path
 
 class DP_UTILS_RT_Exception(RuntimeError):
@@ -91,7 +92,7 @@ No args says to used the last set of args"""
         try:
             exec(compile(open(os.path.expanduser(file)).read(), os.path.expanduser(file), 'exec'), __GLOBALS__)
         except IOError:
-            eprint('source: Cannot open>%s<\n', file)
+            dp_io.eprint('source: Cannot open>%s<\n', file)
     __Last_rc_args__ = args
 
 
@@ -201,7 +202,6 @@ Convert val to binary as per cbin.  Add a bit index header for easy viewing."""
     # print >>debug_out, "cbinh>%s<" % (s0,)
     l0 = len(s0)
     s = s0
-    l = len(s)
     bit_num = -1
     for c in s0:
         if c in "01":
@@ -344,10 +344,10 @@ def prune_dict(d):
                 del d[k]
     return d
 
-def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
-            pretend_p=False, pre_cmd_cmd=None):
+def system(command, msg=True, exit_p=True, exit_code=1, debug_p=False,
+           pretend_p=False, pre_cmd_cmd=None):
     """if msg is True, then make a simple, default message using command name."""
-    if (debug):
+    if (debug_p):
         if (command[-1] not in "\n\r"):
             command = command + "\n"
         dp_io.printf ("-n: %s", command )
@@ -364,7 +364,7 @@ def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
             return ret
         except Exception as e:
             if msg is True:
-                msg = 'error running "%s".\n' % cmd
+                msg = 'error running "%s or %s".\n' % (pre_cmd_cmd, command)
             if msg:
                 if (msg[-1] not in "\n\r"):
                     msg = msg + "\n"
@@ -389,10 +389,7 @@ def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
     s = "%s" % (s,)
     m = re.search("^(\d+(\.\d+)?)\s*([dDcCkKmMgGtT]?)$", s)
     if not m:
-        # print("Warning: numWithUnits: no match for>%s<.", s, file=sys.stderr)
-        sys.stderr.write("version: {}\n" % sys.version)
-        print("version: {}.".format(sys.version))
-        print("No go files. Exiting.")
+        print("Warning: numWithUnits: no match for>{}<.".format(s), file=sys.stderr)
         return 0                   # Or should it be an error with no digits?
 
     n = float(eval(m.group(1)))
@@ -457,17 +454,17 @@ def pluralize(name, num, singular="", plural="s"):
 #######################################################################
 ##
 ## @brief Make the values of indict, keys in outdict.
-##
-def invert_dict(indict):
+def invert_dict(indict, dump_p=False):
     outdict = {}
     for k, v in list(indict.items()):
         vals = outdict.get(v, [])
         vals.append(k)
         outdict[v] = vals
 
-    for k, v in outdict:
-        print("key: {}, val: {}".format(k, v))
-
+    if dump_p:
+        for k, v in outdict:
+            print("key: {}, val: {}".format(k, v))
+    return outdict
 
 #######################################################################
 ##
@@ -574,8 +571,7 @@ def process_gopath(args=None):
         if opath.exists(f):
             xfiles.append(f)
     if not xfiles:
-        # print("No go files. Exiting.", file=sys.stderr)
-        print("No go files. Exiting.")
+        print("No go files. Exiting.", file=sys.stderr)
         sys.exit(1)
     # Keep most specific files last so values may be overridden.
     #print >>sys.stderr, "xfiles>{}<".format(xfiles)
@@ -847,11 +843,11 @@ p10_symbol = 2
 
 ########################################################################
 def p10_symbolic_abbrev(num, name_type=p10_symbol, num_is_exponent=False):
-    if type(num) == type(""):
+    if type(num) is type(""):
         num = eval(num)
     if not num_is_exponent:
         num = int(math.log10(num))
-    #print "num:", num
+    # print "num:", num
     symfo = p10_symbolic_info.get(num)
     if not symfo:
         symfo = "<10^{}>".format(num)
@@ -883,7 +879,7 @@ def p10_symbolic_abbrev(num, name_type=p10_symbol, num_is_exponent=False):
 ## to_eng_not = eng_notation_str
 ## eng_not = eng_notation_str
 
-def eng_notation_str(x, m_digits=3, symbolic_units_p=False):
+def eng_notation_str(x, m_digits=3, symbolic_units_p=False, num_is_exponent=False):
     x = defang_num(x)
     if x == 0:
         return "0e00"

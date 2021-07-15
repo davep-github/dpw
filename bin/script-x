@@ -25,9 +25,14 @@
 
 set_dash_x()
 {
+    # Why nuke the other versions?
+    # Too verbose for general debugging.
     #export PS4=${1-'${BASH_SOURCE}@${LINENO}(${FUNCNAME[0]}): '}
-#    export PS4=${1-'+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'}
-    export PS4='$0.$LINENO+ '
+    #    export PS4=${1-'+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'}
+
+    # ${FUNCNAME[0]} is often UNDEFINED, not just null.
+    export PS4='# ${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]-\"main\"}(): - [${SHLVL},${BASH_SUBSHELL},$?] '
+    #export PS4='$0.$LINENO+ '
     set -x
 }
 

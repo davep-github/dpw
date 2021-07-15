@@ -12,6 +12,7 @@ fi
 source script-x
 progname="$(basename $0)"
 source eexec
+set -u
 
 # Defer to any passed in "program"
 [ -z "${eexec_program-}" ] && {
@@ -26,14 +27,16 @@ unset eexec_program
 
 source find-best-editing-host
 
-LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
+true ${LOG_FILE:="$HOME/log/xemacs/ec-log-file.log"}
+true ${HOST:=NO HOST SET}
 
 : ${ask_if_no_display:=t}
 : ${ask_about_text_mode:=${ask_if_no_display}}
 # The known_* vars are searched in order, so that can be used to specify a
 # preference order.
-: ${known_servers:=gnuserv} # Emacs runs its server in lisp, so we can't detect it.
+: ${known_servers:=gnuserv} # Emacs (vs XEmacs) runs its server in lisp, so we can't detect it.
 : ${known_clients:="emacsclient gnuclient"}
+# Filter list for existing only?
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
 : ${editing_host=$(find_best_editing_host)}
 : ${client=}
@@ -56,11 +59,11 @@ now=$(date)
 
 echo '--' >> $LOG_FILE
 
-Usage()
-{
-   echo "${progname}: usage: $progname [-q]" 1>&2
-   exit 1
-}
+# Usage()
+# {
+#    echo "${progname}: usage: $progname [-q]" 1>&2
+#    exit 1
+# }
 
 determine_local_server_p()
 {
@@ -163,7 +166,7 @@ process_file ()
         EExec_verbose_echo_id "client"
         EExec_verbose_echo_id "nowait_opt"
         # Get all host editing info
-        editing_host_msg="editing on localhost: $HOST"
+        editing_host_msg="editing on localhost: ${HOST-NONE!!!???}"
         sb_name=$(find_best_editing_host sandbox-name)
         #echo_id sb_name
         if vsetp "${sb_name}"
@@ -185,7 +188,7 @@ process_file ()
     fi
 
     [[ -n "$problem" ]] && {
-        if [[ "$ask_about_text_mode" == t ]]; then
+        if [[ "${ask_about_text_mode-}" == t ]]; then
             local textModeEditor=$(find-bin ${known_text_mode_editors})
 	    echo -n "$progname: "
             read -e -p "$problem; use $textModeEditor instead[Y/n/f/q]? "
@@ -231,11 +234,12 @@ process_file ()
             echo "$editing_host_msg"
         fi
     fi
-    # Why did I not use an array?
+    # Why did I not use an array?  Like I don't know.
     EExecDashV_p && vsetp "$extra_editing_host_msg" && echo "$extra_editing_host_msg"
     vsetp "${client}" && set -- "${client}"
     vsetp "${editing_host_opt}" && set -- "$@" ${editing_host_opt}
     vsetp "${nowait_opt}" && set -- "$@" "${nowait_opt}"
+    ((${#emacs_args[@]} > 0)) && set -- "$@" "${emacs_args[@]}"
     vsetp "${eval_opt}" && set -- "$@" -eval "(progn ${eval_opt})"
     vsetp "${opts}" && set -- "$@" ${opts}
     vsetp "${file}" && set -- "$@" "${file}"
@@ -250,9 +254,11 @@ eval_opt=
 client=
 ECHO="echo $progname: "
 CL=
+declare +a emacs_args
+emacs_args=()
 
 std_options=""
-option_str="Qe:c:Ews:R12"
+option_str="Qe:c:Ews:R12l:"
 long_options=(
     "eval:" "eval-opt:" "eval-arg:"
     "eval-stdin" "eval-read" "read-eval"
@@ -266,10 +272,11 @@ long_options=(
     "be-quiet"
     "be-silent"
     "be-quiet" "be-silent"
-    "sudo-edit" "dse")
+    "sudo-edit" "dse"
+    "line:")
 
 source dp-getopt+.sh
-
+EExec_verbose_msg "\$@>$@<"
 while (($# > 0))
 do
     case "$1" in
@@ -286,11 +293,16 @@ do
         --no-raise-and-focus|--no-raise|--no-focus) raise_and_focus_p=;;
         --be-quiet|--be-silent) quiet_p=t;;
         --be-not-quiet|--be-not-silent|--no-silent|--no-quiet) quiet_p=;;
-	-s|--sudo-edit|--dse) case "$2" in	# sudo edit the given file
-	    /*) file=$2;;
-	    *)  file="$PWD/$2";;
+	-s|--sudo-edit|--dse)
+	    case "$2" in	# sudo edit the given file
+		/*) file=$2;;
+		*)  file="$PWD/$2";;
 	    esac
 	    eval_opt="$eval_opt (dp-sudo-edit \"$file\")"; shift;;
+	## line arg can include column, since no parsing is done, but it must
+	## match emacsclient(1) format: "+line[:column]", quotes not needed,
+	## depending on current shell metacharacters .
+	-l|--line) shift; emacs_args+=("+$1");;
 	--) shift ; break ;;
 	*)
 	    echo 1>&2 "Unsupported option>$1<";
@@ -301,6 +313,9 @@ done
 
 
 args=("$@")
+
+EExec_verbose_msg "args>${args[@]}<
+emacs_args>${emacs_args[@]}<"
 
 if [ -n "$CL" ]
 then
@@ -328,11 +343,13 @@ else
     eko "@>$@<" >> $LOG_FILE
     for file in "$@"
     do
-      #echo_id file
+	echo_id file
+	echo "\$1>${1-WHWHWHWHHW}<"
       opts=""
-      if [ "${1:0:1}" = "+" ]
-          then
+      if [ "${file:0:1}" = "+" ]
+      then
           opts="$1"
+	  EExec_verbose_echo_id opts
           shift
       fi
       f="$1"

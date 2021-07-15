@@ -1,0 +1,3 @@
+#!/bin/sh
+set -x
+globalprotect connect -p vpn.amd.com -u 'amd\dpanarit'

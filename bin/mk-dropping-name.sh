@@ -53,9 +53,8 @@ on_error()
 : ${mkdir_only_p=false}
 : ${use_project_as_a_prefix=}
 : ${prefix=}
-
-persist=
-$persist_p && persist=persist/
+: ${persist=}
+: ${persist_dir=persist}
 
 prefix=
 suffix=
@@ -64,21 +63,34 @@ do
     EExec_verbose_msg "1>${1}<"
     case "${1}" in
 	--use-project-as-suffix|--projsuff|--ups)
-            suffix="${PROJECT-brahma}"; suffix=".${suffix}";;
+	    # I need to fix how I specify empty locales.
+	    [[ "${PROJECT}" == '-' ]] && PROJECT=NO_PROJECT
+            suffix="${PROJECT-brahma}"; suffix=".${suffix}"
+	    ;;
+	--create?) creat_p=true;;
+	--no-create?) creat_p=false;;
+	--mkdir-only-p) mkdir_only_p=true;;
+	--no-mkdir-only-p) mkdir_only_p=false;;
 	--use-project-as-prefix|--projpre|--upp)
             prefix="${PROJECT-brahma}"; prefix="${prefix}.";;
-	--use-tty-as-a-suffix) suffix=".$(tty_as_suffix)";;
+	--use-tty-as-suffix) suffix=".$(tty_as_suffix)";;
 	--prefix) shift; prefix="${1}";;
 	--suffix) shift; suffix="${1}";;
+	--persist) persist_p=true;;
+	--persist-to|--persist-dir) shift; persist_dir="${1}";;
+	--name_only|--no) creat_p=false; mkdir_only_p=false;;
 	--) shift; break;;
 	*) break;;
     esac
     shift
 done
 
+$persist_p && persist_dir="${persist_dir}/"
+
 
 dir_name="$HOME/droppings/${persist}${DOT}${1-bash-history}"
 $creat_p || $mkdir_only_p && mkdir -p "${dir_name}"
 $mkdir_only_p && exit
 name="${dir_name}/${prefix}${HOSTNAME}${suffix}"
+echo "${progname}: $(date): name>${name}<" >> "/tmp/${progname}.log"
 echo "${name}"

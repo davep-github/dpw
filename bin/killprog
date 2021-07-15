@@ -165,7 +165,8 @@ close(PS);
 if (@pidList)
 {
   if ($inquire) {
-    kill_interactively (@pidList)
+    #dp-apply -i kill (@pidList)
+    print STDERR "$ProgName: inquire not supported yet.\n" if ($emsg && !$silent);
   } else {
     #print "siggie>$siggie<, pidList>@pidList<\n" if ($debug);
     print "kill ($siggie, @pidList);\n" if ($verbose);

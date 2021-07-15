@@ -1,0 +1,35 @@
+--- oem/emms-player-mpd.el	2010-06-03 13:33:24.000000000 -0400
++++ ./emms-player-mpd.el	2010-06-03 13:41:17.000000000 -0400
+@@ -1091,19 +1091,20 @@
+ This is a useful addition to `emms-info-functions'."
+   (if info
+       (emms-info-mpd-process track info)
+-    (when (and (eq 'file (emms-track-type track))
+-               (not (string-match "\\`http://" file)))
++    (when (and (eq 'file (emms-track-type track)))
++      ;; dp patch: 2010-06-03T13:40:47 
+       (let ((file (emms-player-mpd-get-mpd-filename (emms-track-name track))))
+-        (when (or emms-player-mpd-music-directory
+-                  (and file
+-                       (string-match emms-player-mpd-supported-regexp file)))
+-          (condition-case nil
+-              (emms-player-mpd-send
+-               (concat "find filename "
+-                       (emms-player-mpd-quote-file file))
+-               track
+-               #'emms-info-mpd-1)
+-            (error nil)))))))
++        (when (not (string-match "\\`http://" file))
++          (when (or emms-player-mpd-music-directory
++                    (and file
++                         (string-match emms-player-mpd-supported-regexp file)))
++            (condition-case nil
++                (emms-player-mpd-send
++                 (concat "find filename "
++                         (emms-player-mpd-quote-file file))
++                 track
++                 #'emms-info-mpd-1)
++              (error nil))))))))
+ 
+ ;;; Caching
+ 

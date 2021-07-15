@@ -313,6 +313,9 @@ NEWDEF is last to match the order of args to `defalias'."
 
 
   (defmacro dp-defaliases (&rest symbols-followed-by-newdef)
+    "Aliases should mostly be used by M-x vs used in code.
+@todo XXX I should've put the symbol to alias first.  Sometimes
+following precedence is bad."
     `(dp-defaliases0 defalias ,@symbols-followed-by-newdef))
   (put 'dp-defaliases 'lisp-indent-function
        (get 'defalias 'lisp-indent-function))
@@ -540,8 +543,8 @@ IF-BODY is a list: \(an-fset-var-or-sym REST..). "
   (put 'dp-aif-old 'lisp-indent-function 1)
 
   (defmacro dp-aif (if-body &rest else-body)
-    "Does this form please you?
-IF-BODY is a list: \(an-fset-var-or-sym REST..). "
+    "Does this form please you? ??? A variant of `dp-apply-if'??? But, why?
+IF-BODY is a list: \(an-fset-var-or-sym REST..)."
     (let* ((func (car if-body))
            (func-args (cdr if-body))
            (fp (dp-callable func)))

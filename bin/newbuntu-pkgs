@@ -113,7 +113,14 @@ function wrap_up_suggestions()
 3) sudo update-alternatives --debug --install /usr/bin/python python /usr/bin/python3 1
 4) Set up /etc, etc source code control.  RCS seems best.
    Use link to ~/some-where-safe
-5) Create sd device named mount points.  Makes quick/temp mounts easier to do and
+5) Make Eva Core files have useful names. see core(5) and ME3.  This me likes:
+At least: %e.core.  executable of death.
+%e.%s.%u.%p.core: executable.signal.real-uid.pid."core"
+# echo "kernel.core_pattern="%e.%s.%u.%p.core: executable.signal.real-uid.pid.core" \ 
+| sudo tee -a /etc/sysctl.d/50-coredump.conf
+# /lib/systemd/systemd-sysctl
+
+6) Create sd device named mount points.  Makes quick/temp mounts easier to do and
 remember.
 > sudo mkdir sd{a,b,c,d,e,f,g,h,i,j,k}{1,2,3,4,5,6,7}
 The letters and number might as well go to infinity, so I never have to mkdir(1).
@@ -321,6 +328,9 @@ pinentry-qt
 pinentry-qt4
 pinentry-tty
 pinentry-x2go
+bsdgames
+bsdutils
+bsdmainutils
 ### <:New Entry Placeholder:> ###
 # For external app adding utility, it can sed this exact text with a new entry
 # and add another placeholder.

@@ -163,7 +163,9 @@
 (defvar bookmark-default-file
   (dp-nuke-newline
    (shell-command-to-string
-    "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
+    ;; Currently I'm debugging shit so I'm tossing stderr here:
+    ;VVVVVVVVVV
+    "2>/dev/null mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
 
 ;;; Max height I can see changed for some reason.  I think it was due
 ;;; to amdgpu stopping working.  Mehbe not.  Value when amdgpu runs.

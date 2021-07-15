@@ -1016,8 +1016,9 @@ This can be callable.")
 
   ;; `defvar' so we can set it elsewhere like a spec-macs.
   (defvar bookmark-default-file
-        (dp-nuke-newline (shell-command-to-string
-                          "mk-persistent-dropping-name.sh --use-project-as-a-suffix emacs.bmk")))
+    (dp-nuke-newline
+     (shell-command-to-string
+      "mk-persistent-dropping-name.sh --use-project-as-suffix emacs.bmk")))
 
   (require 'bookmark)
   (setq bookmark-save-flag 1)

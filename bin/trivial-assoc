@@ -4,7 +4,7 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-if vsetp "${eexec_program-}"    # Did the caller provide a program?
+if [[ -z "${eexec_program=}" ]]    # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
 else

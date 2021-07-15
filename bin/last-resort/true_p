@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+DP_TRUTH_VAL=t                  # Preferred
+#echo defining true_p 1>&2
+#add_rc_text 'defining true_p'
+true_p()
+{
+    echo 1>&2 "$0: FIXME! true_p: Ima fake shell script to hack rc issues."
+    case "${1-}" in
+        [tTyY1]|true|yes) return 0;;
+        *) return 1
+    esac
+    return 1
+}

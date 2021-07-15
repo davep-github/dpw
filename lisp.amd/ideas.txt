@@ -1,0 +1,8 @@
+o Add "commenting" ability to my tag stack, and have it store the tag name,
+	too. then, after diving down a rat-hole, the stack trace can be
+	dumped and there is some record of what I just spent time figuring
+	out.
+
+o try to think of a way to keep a full audit trail, not just a single
+	stack trace.  This way, poping out won't loose anything.
+	This may need an n-way tree.

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+dp_rc_logger () {
+	{
+		dp_log_header
+		echo ": $@"
+	} >> $DAVEP_rc_log
+}
+
+dp_rc_loggerE()
+{
+    {
+	dp_log_header
+	echo 1>&2 "$0: AHHHHFIXME! dp_rc_logger: Ima fake shell script to hack rc issues."
+	echo ": $@"
+    } >> $DAVEP_rc_log
+}
+
+dp_rc_logger "$@"

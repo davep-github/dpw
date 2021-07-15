@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/local/bin/python2
 
 import sys
 import getopt
@@ -86,7 +86,7 @@ class FlagOption(Option):
 class ArgOption(Option):
     def __init__(self, ch, field, set, default, help='too lazy(arg)'):
         Option.__init__(self, ch, field, set, default, help)
-        print("ArgOption>{}<".format(Option.__str__(self)))
+        dp_io.cdebug(3, "ArgOption>{}<".format(Option.__str__(self)))
 
     def get_set(self, arg):
         if type(self.set) == FunctionType:
@@ -96,7 +96,8 @@ class ArgOption(Option):
         return v
 
     def get_name(self):
-        ret = str.join(self.ch, ':')
+        dp_io.cdebug(3, "ArgOption.get_name(): self.ch>{}<".format(self.ch))
+        ret = str.join(':', self.ch)
         return ret
 
     def get_arg_str(self):
@@ -114,20 +115,33 @@ class Options:
         import getopt
 
         self._opts = opts
-        print("opts>{}<".format(opts))
-        options = ''
+        dp_io.cdebug(3, "opts>{}<".format(opts))
+        options = []
         # make getopt list from opt lists
-        options = [opt.get_name() for opt in opts]
-        print("options>{}<".format(options))
-        tlist = [ch[0] for ch in options]
-        print("tlist>{}<".format(tlist))
+        for opt in opts:
+            dp_io.cdebug(3, "opt>{}<".format(opt))
+            dp_io.cdebug(3, "opt.get_name>{}<".format(opt.get_name()))
+            options.append(opt.get_name())
+        #options = [opt.get_name() for opt in opts]
+        dp_io.cdebug(3, "options>{}<".format(options))
+        tlist=[]
+        for opt in options:
+            ch = opt[0]
+            dp_io.cdebug(3, "opt>{}<".format(opt))
+            dp_io.cdebug(3, "ch>{}<".format(ch))
+            dp_io.cdebug(3, "ch[0]>{}<".format(ch[0]))
+            tlist.extend(ch[0])
+            dp_io.cdebug(3, "tlist>{}<".format(tlist))
+        #tlist = [ch[0] for ch in options]
+        dp_io.cdebug(3, "2:tlist>{}<".format(tlist))
         for opt in tlist:
-            print("opt>{}<".format(opt))
+            dp_io.cdebug(3, "opt>{}<".format(opt))
             if tlist.count(opt) > 1:
-                print(("%s: Option `%s' is duplicated" % (__name__, opt)))
+                dp_io.cdebug(3, "%s: Option `%s' is duplicated".format(__name__, opt))
                 sys.exit(3)
 
-        options = str.join(options, '')
+        options = str.join('', options)
+        dp_io.cdebug(3, "2: options>{}<".format(options))
 
         # set defaults from lists
         for o in opts:
@@ -143,6 +157,7 @@ class Options:
             setattr(self, o.field, v)
 
         try:
+            # get the options that need arguments.
             options, self.args = getopt.getopt(argv[1:], options)
         except getopt.GetoptError as e:
             dp_io.eprintf('getopt failed: %s\n', e)
@@ -150,8 +165,9 @@ class Options:
                 usage()
             sys.exit(99)
 
+        dp_io.cdebug(3, "3: options>{}<".format(options))
         for opt, arg in options:
-            print("opt>{}<, arg>{}<".format(opt, arg))
+            dp_io.cdebug(3, "opt>{}<, arg>{}<".format(opt, arg))
             for o in opts:
                 if opt[1] in o.ch:
                     v = o.get_set(arg)

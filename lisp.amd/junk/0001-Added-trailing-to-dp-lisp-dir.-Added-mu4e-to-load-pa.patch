@@ -1,0 +1,44 @@
+From 723aa8833d87aeeb24f05bbb3d69e76470b43290 Mon Sep 17 00:00:00 2001
+From: David Panariti <David.Panariti@amd.com>
+Date: Thu, 29 Mar 2018 21:59:51 -0400
+Subject: [PATCH] Added trailing / to dp-lisp-dir. Added mu4e to load-path.
+To: david.panariti@amd.com
+
+Signed-off-by: David Panariti <David.Panariti@amd.com>
+---
+ lisp/init.el | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/lisp/init.el b/lisp/init.el
+index d97215ba..4c430101 100644
+--- a/lisp/init.el
++++ b/lisp/init.el
+@@ -10,8 +10,8 @@
+ 
+ (defvar dp-lisp-dir
+   (if (featurep 'xemacs)
+-      (expand-file-name "~/xlisp")
+-    (expand-file-name "~/flisp")))
++      (expand-file-name "~/xlisp/")
++    (expand-file-name "~/flisp/")))
+ 
+ (add-to-list 'load-path dp-lisp-dir)
+ 
+@@ -34,9 +34,11 @@
+ ;; so we can get to my lisp files
+ ;; we're consing, so last will be first.
+ (defvar dp-init.el-load-path-dirs
+-  (list (dp-lisp-subdir "contrib")
+-        (dp-lisp-subdir "contrib/emacs-jabber")
+-        dp-lisp-dir)
++  (list
++   "/usr/share/emacs/site-lisp/mu4e"
++   (dp-lisp-subdir "contrib")
++   (dp-lisp-subdir "contrib/emacs-jabber")
++   dp-lisp-dir)
+   "Initial dirs to add to load path.")
+ 
+ ;; We're getting dupes:
+-- 
+2.15.0.124.g7668cbc
+

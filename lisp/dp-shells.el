@@ -154,10 +154,16 @@ prompt.  We don't want to stomp on them.")
      ;; user
      ;;;;;???(cons 'dp-shells-prompt-font-locker 'shell-prompt-face)
      (cons dp-shells-prompt-font-lock-regexp
-           (list (list 1 'shell-prompt-face)
+           (list ;RESTORE-ME! (list 1 'shell-prompt-face)
+                 ;RESTORE-ME! (list 2 'dp-journal-medium-attention-face)
+                 ;RESTORE-ME! (list 3 'dp-journal-medium-attention-face)
+                 ;RESTORE-ME! (list 4 'dp-journal-high-problem-face t t)
+		 (list 1 'shell-prompt-face)
                  (list 2 'dp-journal-medium-attention-face)
                  (list 3 'dp-journal-medium-attention-face)
-                 (list 4 'dp-journal-high-problem-face t t)))
+                 (list 4 'dp-journal-high-problem-face t t)
+
+		 ))
      ;; root prompt
      (cons dp-shell-root-prompt-regexp 'dp-shell-root-prompt-face)
      ;; The CWD part of my prompt  dp-journal-high-example-face
@@ -210,8 +216,8 @@ prompt.  We don't want to stomp on them.")
 ;; ephemeral?  Throwing it away without leaving a reference to it seems
 ;; foolish.  This depends heavily on the reason for the change, especially if
 ;; it is not impossible that undoing the change will be needed.  With no
-;; imformation that a previous, *working*, piece of code exists and has been
-;; forgotten or in the case of a new person on the task, that is ever
+;; information that a previous, *working*, piece of code exists and has been
+;; forgotten or in the case of a new person on the task, that it ever
 ;; existed, it will need to be worked on again.  old Emacs incompatible for
 ;; of tracking the cwd to stuff into `default-directory' It used the same
 ;; idea, though.
@@ -223,18 +229,26 @@ prompt.  We don't want to stomp on them.")
 ;; In this case, info is right near where it's needed, and we all know how
 ;; many people read comments.
 (setq dp-dirtrack-regexp
-  (format
-   ;; `concat' makes it easier (for me) to see and doc the components.
-   (concat "^%s@%s:"
-	   "\\([~/][[:graph:]]*\\)"
-	   "\\(.*\\)$"	  ;possible terminators
-	   )
-   (user-login-name) (dp-short-hostname)))
+      (format
+       ;; Switching to zsh caused this to fail.  It looked like it was just
+       ;; sending garbage with no prompt/dir.  However, there was a
+       ;; prompt/dir, it was just not at the beginning of the reply string.
+       ;; So, after [too] much wailing and gnashing of teeth, all it too was
+       ;; the removal of the ^ before <usr>@<host>.  `concat' makes it easier
+       ;; (for me) to see and doc the components.
+       (concat "%s@%s:"
+	       "\\([~/][[:graph:]]*\\)" ; potential funky prompt graphical chars.
+	       "\\(.*\\)$"		;possible terminators
+	       )
+       (user-login-name) (dp-short-hostname)))
 
 (defun dp-setup-dirtrack ()
   (interactive)
   (setq-default dirtrack-list (list dp-dirtrack-regexp 1))
-  (setq dirtrack-list (list dp-dirtrack-regexp 1))
+  (setq dirtrack-list (list
+		       dp-dirtrack-regexp ; What to match.
+		       1		  ; Submatch of interest.
+		       ))
   (dirtrack-mode))
 
 (dp-deflocal dp-dont-ask-to-tack-on-gdb-mode-p nil
@@ -1054,9 +1068,22 @@ Or both.")
   (setq font-lock-defaults nil
         font-lock-keywords nil)
   ;;(dmessage "enter dp-shell-mode-hook, current-buffer: %s" (current-buffer))
-  (setq ;; comint-prompt-regexp "^[^#$%>\n]*[#$%>]+ *"
-	comint-prompt-regexp "^\\(davep@vilya:.*\n([0-9]+:zsh) [0-9]+> *\\)"
-        comint-use-prompt-regexp t)
+  ;; prompt with no error"
+  ;; davep@vilya:~/flisp (zsh-dev)*?????*
+  ;; (6:zsh) 868>
+  ;; --- with error (130, ^C)
+  ;; davep@vilya:~/flisp (zsh-dev)*?????*
+  ;; (6:zsh) 871<130>
+  ;; in all cases, we're only interested in the last line of the prompt.
+  (setq
+   comint-prompt-regexp
+   (concat "^([0-9]+:\\(zsh\\|bash\\)) " ; Shell level (-ish) and shell name.
+	   "+[0-9]+"			 ; History number.
+	   "\\(<[0-9]+\\)?"		 ; Optional errno.
+	   ;; Terminal chars {">" user, "#" root} and as many spaces as your
+	   ;; little heart desires.
+	   "\\(>\\|#\\) *")
+   comint-use-prompt-regexp t)
   (setq show-trailing-whitespace nil)
   (unless (dp-shell-ignored-buffer-p (buffer-name))
     (dp-maybe-add-compilation-minor-mode)

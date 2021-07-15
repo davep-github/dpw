@@ -104,5 +104,22 @@ Usage_error()
 #
 # template end.
 ########################################################################
+# @todo XXX Tell zsh to use pass(1) completion.
+#
+# @todo XXX Deal with multi-line comments.
+# ? Use ^$ as endicator?
+# ? Present all line except comments?  Problem is collision.
+#   Use byte stuffing with ';'?
+#   E.g. https://en.wikipedia.org/wiki/Consistent_Overhead_Byte_Stuffing
+#   Also look at the mail version.  ?SMTP?
+# @todo XXX make a transparent FE to the real pass(1).
+# Use the pass [no command] password file | head -n 1
+# with everything else being a passthrough.
 
+# are we the FE?
+if [[ "$0" = "$PATH/bin/pass" ]]
+then
+    echo 1>&2 "FE support not ready."
+    exit 3
+fi
 exec pass "$@" | head -1

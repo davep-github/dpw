@@ -234,6 +234,231 @@ Inserts `dp-python-new-file-template-file' by default."
 
   (message "`dp-python-mode-hook' finished."))
 
+(defvar dp-py-class-or-def-regexp-format-str
+  (concat
+   "\\(^"                               ; <ms1
+   "\\(\\s-*\\)"                        ;   <ms2>
+   "%s\\s-+"                            ; Keywords we're interested in.
+   "[a-zA-Z_][a-zA-Z_0-9]*\\)"          ; ms1> def or class name
+   ;; look for what's after the def/class name.
+   ;; We're interested in:
+   ;; "(", "(text", "(text)", "()"
+   "\\("                                ; <ms3
+   "\\(?:\\s-*\\)"
+   "\\(?:"                              ; | <shy
+   "(\\(.*?\\))"                        ; | xxx()
+   "\\)"                                ; | shy>
+   "\\|"                                ; |
+   "\\(?:"                              ; | <shy
+;;   "(\\(\\S-*\\)"                       ; | xxx(
+   "(\\(.*?\\)\\s-*\\($\\|\\(#.*$\\)?\\)"
+   "\\)"                                ; | shy>
+   "\\|"                                ; |
+   "\\(?:"                              ; | <shy
+   ")"                                  ; | xxx)  <== ignore
+   "\\)"                                ; | shy>
+   "\\|"                                ; |
+   "\\(?:"                              ; | <shy
+   "[^()].*?"                             ; | ;; Added .* Tuesday June 24 2008
+   "\\)"                                ; | shy>
+   "\\)?"                               ; ms3>
+   "\\(\\s-*\\(#.*\\|$\\)\\)"           ; <ms4 <ms5>>
+
+   )
+  "Get to the parts of a Python def or class:
+ms2: indentation (if in class, and block keyword is def --> method)
+ms3: block keyword
+ms4: existing parens
+ms5 or ms6: params with parens (depends on current state of kw)
+ms9: rest of line after program text -- includes ws and comment
+ms10: comment char to end of line
+")
+
+(defvar dp-py-special-char-fmt-str
+  "[][,~`!@#$%%^&*(%s+={}\:;<>.?|/-/-]")
+
+(defvar dp-py-special-chars
+  (format dp-py-special-char-fmt-str ")")
+  "dp-py-special-chars
+s/-/ /g")
+
+(defvar dp-py-special-chars-sans-close-paren
+  (format dp-py-special-char-fmt-str ""))
+
+(defvar dp-py-class-or-def-kw-regexp "def\\|class")
+
+(defvar dp-py-class-or-def-regexp
+  (format dp-py-class-or-def-regexp-format-str
+          (concat "\\(" dp-py-class-or-def-kw-regexp "\\)")))
+
+(defvar dp-py-block-stmt-split-regexp
+  (format dp-py-class-or-def-regexp-format-str
+          (concat "\\(" dp-py-block-keywords "\\)")))
+
+(defun* dp-py-code-text-ends-with-special-char-p (&key except special-chars
+                                                  new-pos)
+  "Are we on a special character? E.g. one which cannot precede [,:], etc.
+The characters are classified as good or bad by `looking-at' and so EXCEPT
+must be compatible with that function.
+Chars in EXCEPT are *always* OK.
+There is a standard `looking-at' type string which is filled with all kinds
+of naughty characters `dp-py-special-chars'.  This can be overridden by
+passing SPECIAL-CHARS."
+  (save-match-data
+    (dp-with-saved-point nil
+      (when new-pos (goto-char new-pos))
+      ;; Goto the end of the code text on this line, if any.
+      (dp-py-goto-end-of-code)
+      ;; Will we even be here if we're on a comment line?
+      (if (bolp)
+          t
+          ;;(error "In a comment; is this OK???")
+        ;; We're just after the last char, so...
+        (forward-char -1)
+        ;; If I skipped forward, then the character was in the except list
+        ;; and therefor should be considered as non special (I need a better
+        ;; term than special.)
+        (if (and except
+                 (/= 0 (skip-chars-forward except)))
+            nil                         ; Not special.
+          ;; If we skip forward then we were on a spay-shul character.
+          ;; and so should return true
+          (/= 0 (skip-chars-forward
+                 (or special-chars dp-py-special-chars))))))))
+
+(defun* dp-py-open-newline ()
+  (interactive)
+  (let ((case-fold-search nil)
+        (trailing-chars "")
+        (block-kw-p t)
+        replacement
+        (add-here (dp-py-end-of-code-pos))
+        something-special-p
+        kword colon-pos in-class-p class-def-p open-paren-only-p
+        no-colon-etc-p keyword parens parameters indent
+        method-p class-or-def-p no-newline-&-indent-p)
+    ;; parameters is one of ms{6, 5}
+    (beginning-of-line)
+    (cond
+     ;; Punt if we're not in code... we could try moving forward some bounded
+     ;; distance until we enter code space.
+     ((not (dp-in-code-space-p))
+      'pttthhhhhrrrrrrppppttthhhhh!)
+     ((let ((stat (dp-add-comma-or-close-sexp
+		   :beg (python-nav-beginning-of-statement)
+		   :end (python-nav-end-of-statement)
+		   :caller-cmd this-command
+		   :add-here add-here)))
+        (if (not (eq stat 'force-colon))
+            stat
+          (beginning-of-line)
+          (setq something-special-p t
+                colon-pos (dp-mk-marker (dp-py-end-of-code-pos) nil t))
+          nil))
+      ;; In a `cond' , nothing here causes the last return value (ie of
+      ;; predicate) to be propagated.
+      )
+     (t (when (and (setq something-special-p
+                         (dp-re-search-forward
+                          (concat "^\\s-*"
+                                  "\\(\\<\\("
+                                  dp-py-block-keywords
+                                  "\\)\\>"        ; keyword
+                                  "\\(.*?\\)\\)"
+                                  "\\(\\s-*\\($\\|#.*$\\)\\)")
+                          (line-end-position) t))
+                         (not (dp-py-got-colon?
+                               :start (line-beginning-position))))
+          ;; This colon-pos value is used for simple line opening.
+          (setq something-special-p t
+                colon-pos (dp-mk-marker (match-end 1) nil t)
+                kword (match-string 2))
+          ;; We know we're a block type statement.  We can split all of them
+          ;; here and then handle the def and class as needed.
+          (when (dp-looking-back-at dp-py-block-stmt-split-regexp)
+            ;; Pick apart the bits of a class or def line
+            (setq indent (match-string 2)
+                  keyword (match-string 3)
+                  class-or-def-p (save-match-data
+                                   (string-match dp-py-class-or-def-kw-regexp
+                                                 keyword))
+                  block-kw-p (not class-or-def-p)
+                  parens (match-string 4)
+                  parameters (or (dp-non-empty-string (match-string 5))
+                                 (dp-non-empty-string (match-string 6))
+                                 "")
+                  class-def-p (string= "class" keyword)
+                  def-p (string= "def" keyword)
+                  ;; Classes can be inside other classes and so have leading
+                  ;; WS.
+                  method-p (and (string= "def" keyword)
+                                (dp-non-empty-string indent))
+                  open-paren-only-p (string= "(" parens)
+                  rest-of-line (match-string 9)
+                  comment-string (match-string 10))
+            ;; @todo Can this be merged w/the original check for adding a
+            ;; colon? ;; We assume defs are indented in classes.  And I'm
+            ;; sure Python must require it.
+            (unless (dp-non-empty-string parameters)
+              (setq parameters
+                    (cond
+                     (class-def-p "object")
+                     (method-p "self")
+                     (t "")))))             ; Hopefully a def
+          ;; We just want an eol, newline, indent.
+          (when (and class-or-def-p
+                     (not (dp-py-code-text-ends-with-special-char-p
+                           :new-pos colon-pos
+                           :except ")")))
+	    ;; We're interested in the character after the closing ')'
+	    (setq colon-pos (dp-mk-marker (match-end 4) nil t)
+		  )
+
+            ;; replace match mangles strings from files like:
+            ;;      def tail(self, join_with="\n", ofile=sys.stdout)
+            ;; Even with literal set, the "\n" becomes "n"
+            (setq replacement (format "%s(%s)%s%s"
+                                      (or (match-string 1)
+                                          "")
+                                      parameters
+                                      (or (match-string 9)
+                                          "")
+                                      rest-of-line))
+            (delete-region (match-beginning 0) (match-end 0))
+            (insert replacement)
+
+            ;;(replace-match (format "\\1(%s)\\9%s" parameters rest-of-line))
+            ;; set to end of class/def(...)
+            ;; +2 for 2 new parens
+            (goto-char colon-pos))
+          (unless (dp-looking-back-at ":")
+            (when class-def-p
+              (dp-py-cleanup-class))))
+        ;; There are too many legit cases where lines don't end with )
+        ;;!<@todo only do this on def lines?
+        ;;(when (or t (dp-looking-back-at ")"))
+        (if (and something-special-p
+                 (not (dp-py-code-text-ends-with-special-char-p
+                       :new-pos colon-pos
+                       :except "[])]"))
+;;                  (or (not parameters)
+;;                      block-kw-p)
+                 )
+            (progn
+              (undo-boundary)
+              (goto-char colon-pos)
+	      (insert ":"))
+          (dmessage "figure out when to insert a ,"))))
+    ;; Fix regardless since it won't do anything if it's not needed.
+    (dp-py-fix-comment)
+    (unless no-newline-&-indent-p
+      (end-of-line)
+      (if (dp-xemacs-p)
+	  (py-newline-and-indent)
+	(newline-and-indent))
+      ;; Fix any hosed comment spacing.
+      (dp-py-fix-comment))))
+
 ;;CO; (defadvice py-end-of-def-or-class (before dp-py-eodoc activate)
 ;;CO;   "Make `py-end-of-def-or-class' leave the region active."
 ;;CO;   (dp-set-zmacs-region-stays t))

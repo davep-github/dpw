@@ -41,15 +41,17 @@ exit_rc_file()
 
 }
 
+# @todo XXX false when *all* bugs are fixed.
+: ${DP_SOURCE_FORCE_LOG_p:=true}
+
 dp_source()
 {
     local logp=
-    if [[ "$1" == '-l' ]]
+    if [[ "$1" == '-l' ]] || "${DP_SOURCE_FORCE_LOG_p}"
     then
 	logfile=/tmp/dp_source.log
-	shift
+	[[ "$1" == '-l' ]] && shift
     else
-	logfile=/dev/null
 	logfile=/tmp/dp_source.log # REMOVE this
     fi
     local src_file=$1; shift

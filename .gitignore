@@ -1,4 +1,5 @@
 q
+zuzz[0-9_,-]
 history.*
 # For safety, don't use .emacs.
 # Maybe this file should be renamed.
@@ -20,3 +21,5 @@ lisp-*.tar.gz
 /DOTrc/zsh-REN-ME-TO-zsh/
 /DOTrc/oh-my-zsh/
 /lisp/contrib.recovered/
+/DOTrc/IPython3.d/profile_default/db/
+/DOTrc/gnupg.backup.tbz

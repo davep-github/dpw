@@ -1,0 +1,21 @@
++ M-c
++ In minibuffer, M-d + <some-chars-for-abbrev>
+Debugger entered--Lisp error: (cl-assertion-failed ((functionp table) nil))
+  cl--assertion-failed((functionp table))
+  completion--nth-completion(1 "bn" (#("bnrd" 0 2 (face completions-common-part) 2 3 (face (completions-first-difference)))) nil 2 (metadata (category . file) (completion--unquote-requote . t)))
+  completion-try-completion("bn" (#("bnrd" 0 2 (face completions-common-part) 2 3 (face (completions-first-difference)))) nil 2 (metadata (category . file) (completion--unquote-requote . t)))
+  icomplete-completions("bn" ffap-read-file-or-url-internal nil t)
+  icomplete-exhibit()
+  icomplete-post-command-hook()
+  read-from-minibuffer("Find file or URL: " ("~/dpw/dpw.git/bin/" . 19) (keymap (keymap (32)) keymap (7 . minibuffer-keyboard-quit) (menu-bar keymap (minibuf "Minibuf" keymap (tab menu-item "Complete" minibuffer-complete :help "Complete as far as possible") (space menu-item "Complete Word" minibuffer-complete-word :help "Complete at most one word") (63 menu-item "List Completions" minibuffer-completion-help :help "Display all possible completions") "Minibuf")) (27 keymap (118 . switch-to-completions)) (prior . switch-to-completions) (63 . minibuffer-completion-help) (32 . minibuffer-complete-word) (9 . minibuffer-complete) keymap (tab . minibuffer-complete) (14 . next-complete-history-element) (16 . previous-complete-history-element) (C-space . dp-expand-abbrev) (menu-bar keymap (minibuf "Minibuf" keymap (previous menu-item "Previous History Item" previous-history-element :help "Put previous minibuffer history element in the minibuffer") (next menu-item "Next History Item" next-history-element :help "Put next minibuffer history element in the minibuffer") (isearch-backward menu-item "Isearch History Backward" isearch-backward :help "Incrementally search minibuffer history backward") (isearch-forward menu-item "Isearch History Forward" isearch-forward :help "Incrementally search minibuffer history forward") (return menu-item "Enter" exit-minibuffer :key-sequence "" :help "Terminate input and exit minibuffer") (quit menu-item "Quit" abort-recursive-edit :help "Abort input and exit minibuffer") "Minibuf")) (10 . exit-minibuffer) (13 . exit-minibuffer) (7 . minibuffer-keyboard-quit) (C-tab . file-cache-minibuffer-complete) (9 . self-insert-command) (XF86Back . previous-history-element) (up . previous-history-element) (prior . previous-history-element) (XF86Forward . next-history-element) (down . next-history-element) (next . next-history-element) (27 keymap (119 . dp-rsh-cwd-to-minibuffer) (101 . dp-rsh-cwd-to-minibuffer) (111 . dp-kill-ring-save) (57 lambda (&optional arg arg1 arg2 arg3 arg4 arg5) "" (interactive "P") (dp-insert-parentheses nil)) (61 lambda (&optional arg arg1 arg2 arg3 arg4 arg5) "" (interactive "P") (enqueue-eval-event (quote eval) (nth (1- (prefix-numeric-value arg)) command-history)) (top-level)) (39 . dp-copy-char-to-minibuf) (44 . minibuffer-keyboard-quit) (96 . previous-complete-history-element) (45 . minibuffer-keyboard-quit) (114 . previous-matching-history-element) (115 . next-matching-history-element) (112 . dp-parenthesize-region) (110 . next-history-element))) nil file-name-history "~/dpw/dpw.git/bin/ec" nil)
+  completing-read-default("Find file or URL: " ffap-read-file-or-url-internal nil nil ("~/dpw/dpw.git/bin/" . 18) file-name-history "~/dpw/dpw.git/bin/ec" nil)
+  completing-read("Find file or URL: " ffap-read-file-or-url-internal nil nil ("~/dpw/dpw.git/bin/" . 18) file-name-history "~/dpw/dpw.git/bin/ec")
+  ffap-read-file-or-url("Find file or URL: " nil)
+  ffap-prompter()
+  ffap()
+  funcall-interactively(ffap)
+  call-interactively(ffap)
+  ffap-other-window()
+  funcall-interactively(ffap-other-window)
+  call-interactively(ffap-other-window nil nil)
+  command-execute(ffap-other-window)

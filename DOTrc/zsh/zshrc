@@ -4,6 +4,32 @@
 # with PATH!  export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Actually into zsh_path
 
+# Can stuff like this go in a zsh hook?
+# {
+#     echo ">>>>>>>>>>>> $(date)"
+#     env | fgrep -i tmux
+#     echo "<<<<<<<<<<<< $(date)"
+# } 1>> ~/log/zshrc.log 2>&1
+
+if type python && type host-info.py
+then
+    HOST_INFO=host-info.py
+elif [[ $SHELL != zsh ]]
+then
+    HOST_INFO=host_info_func
+    host_info_func()
+    {
+        case "$1" in
+            -n) echo $2;;
+             *) echo "-";;
+        esac
+    }
+    DP_EXPORT_FUNC host_info_func
+else
+    echo "Cannot find a suitable value for HOST_INFO."
+fi > /dev/null 2>&1
+export HOST_INFO
+
 #echo 1>&2 "starting zshrc."
 #dp_zsh_sig_trap ()
 #{
@@ -28,8 +54,6 @@
 
 zmodload zsh/zprof		# @todo XXX part of zshrc. Add back?
 
-echo 1>&2 "************* Starting zshrc ****************"
-
 #echo "B: func.early" 1>&2 
 source ${DP_RC_DIR}/func.early
 ##echo "A: func.early" 1>&2 
@@ -49,7 +73,7 @@ fi
 # Do this part of dp_source(dp) by hand since we don't source/include this
 # file, zsh does.
 enter_rc_file "zshrc"
-
+dp_source ${DP_RC_DIR}/func.root
 dp_source ${DP_ZSH_RC_DIR}/zsh-options
 
 # Set name of the theme to load --- if set to "random", it will
@@ -198,6 +222,7 @@ dp_source ${DP_ZSH_RC_DIR}/zsh-prompt
 # to be the one to do it.
 dp_source ${DP_ZSH_RC_DIR}/zsh-keys
 dp_source ${DP_ZSH_RC_DIR}/zsh-alias
+dp_source ${DP_RC_DIR}/func.completion
 
 # Load up the abbrev env definitions.
 do_go2env
@@ -209,9 +234,8 @@ set +e
 # file, zsh does.
 exit_rc_file "zshrc"
 
-echo 1>&2 "******* zshrc: type DP_EXPORT_FUNC(): $(type DP_EXPORT_FUNC)"
-echo 1>&2 "************* Done zshrc ****************"
-
-#echo 1>&2 "end of zshrc PID: $$.  Remove this.  Waiting for enter> "
-#read
-#echo 1>&2 "exiting zshrc."
+PATH="/home/davep/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/davep/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/davep/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/davep/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/davep/perl5"; export PERL_MM_OPT;

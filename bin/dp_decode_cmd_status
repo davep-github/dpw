@@ -1,29 +1,24 @@
 #!/usr/bin/env bash
 
-# Magic sourced binary->function
-# Can/should be set up thus:
-# alias dp_decode_cmd_status='unalias dp_decode_cmd_status; source dp_decode_cmd_status'
-
-# In case we're called by mistaek.
-# This is utter bullshit.
-[[ "$(type -t dp_decode_cmd_status 1>/dev/null 2>&1)" == function ]] && {
-    echo 1>&2 "dp_decode_cmd_status: already a function :-("
-    dp_decode_cmd_status "$@"
-}
-
+# Decode a program's exit code.
+# E.g. < 128 is a return code.
+#      > 128 is a signal error code.
+#      == 128 looks like 0, no I make it pseudoSIG0, since 128 isn't zero,
+#      but looks like it after mod'ing.
 function dp_decode_cmd_status()
 {
-    echo 1>&2 "enter: function: dp_decode_cmd_status: $(eko $@)"
-    local rc="${1-0}"; shift
+    #echo "===========\$?>$?<=========="
+    local prefix=""
+    [[ "$1" == "--zsh" ]] && {
+	prefix="<"
+	shift
+    }
+    local rc="${1-$?}"; shift
     local signum_min=128
     local signame="SIGNAME_UNSET"
     local signum=$((${rc} - ${signum_min}))
-    # echo 1>&2 "signum>${signum}<"
     local num_sigs=$(/bin/kill -l | wc -w)
-    echo 1>&2 "rc>${rc}<"
-    echo 1>&2 "signum>${signum}<"
-    echo 1>&2 "num_sigs>${num_sigs}<"
-    read -p "Enter plz..."
+    local pstr="pstr UNSET!"
 
     # User return codes should not be >= 128.
     if (("${rc}" <= "${signum_min}"))
@@ -31,50 +26,35 @@ function dp_decode_cmd_status()
 	# Special case to separate 128 from 0 (128 - 128)
 	if [[ "${rc}" == "${signum_min}" ]]
 	then
-	    echo "pseudoSIG0"
+	    # @todo XXX Is this a good idea?
+	    # This is informational only, anyway.
+	    pstr="pseudoSIG0"
 	else
-	    echo "${rc}"
+	    pstr="${rc}"
 	fi
 	rc="${rc}"
     elif ((${signum} > ${num_sigs}))
     then
 	# Is the signum > max signum?
-	echo "$rc:Illegal SIGNUM"
+	pstr="Illegal SIGNUM:$rc"
 	rc=1
     elif  signame=$(/bin/kill -l "${signum}") 2>/dev/null
     then
-	#echo 1>&2 "signame>${signame}<"
 	# Did kill find the signum pleasing?
 	# We already know the code isn't too big.
 	# zsh and bash have builtin kill commands that display
 	# the list of signals differently.
-	echo "SIG${signame}"
+	pstr="SIG${signame}"
 	rc=0
     else
-	echo "${rc}: EINVAL: confuzed"
+	pstr="${rc}: EINVAL: confuzed"
 	# Eat the effing rc, MFer.
 	# rc=$rc
     fi
+    echo "${prefix}${pstr}"
     # Eat the effing rc, MFer.
     return "${rc}"
 }
-DP_EXPORT_FUNC dp_decode_cmd_status
 
-echo "in file: dp_decode_cmd_status +++++++++++++++++"
-echo 1>&2 "dp_decode_cmd_status, \$0>$0<: $(type -t dp_decode_cmd_status)"
-echo "dp_decode_cmd_status, after export: $(eko $@)"
-# OK, I'll do it, but just this once.
-if [[ "${1-}" =~ ^--def(ine-only)?$ ]]
-then
-    # If we ever need more options.
-    shift;
-    echo 1>&2 "Defined only."
-    return 0
-else
-    dp_decode_cmd_status "$@"
-fi
-
-# BUT FOR SOME FUCKING reason using the alias in another script (e.g. func.root:)
-# always does.
-#echo 1>&2 "I shouldn't be here a-fucking-gain."
-echo 1>&2 "exiting file: dp_decode_cmd_status -----------------"
+# Makes it nice if I want to source this like a lib function
+dp_decode_cmd_status "$@"

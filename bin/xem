@@ -248,6 +248,9 @@ niceness="-20"
 nice_cmd="sudo nice -n $niceness"
 renice_cmd="sudo renice -n $niceness"
 cmd='$BIN ${font_arg}  '${FONT_SET_EXPR[@]}' $cmd_args'
+###
+
+###
 if "${just_show_p}"
 then
     # why this ?echo $BIN $font_arg $cmd_args 2>&1 | tee --append $log_file

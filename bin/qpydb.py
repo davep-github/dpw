@@ -24,7 +24,7 @@ def field_printer(database, entry):
         entry.print_fields(options.print_field_pat,
                            options.print_val_pat,
                            sortem=options.print_sorted)
-        
+
 def val_printer(database, entry):
     d = entry.ret_fields(options.print_field_pat, options.print_val_pat)
     for k in list(d.keys()):
@@ -37,7 +37,7 @@ def set_handler(handler_var, handler_func_name, default=None):
         funcp = default
     globals()[handler_var] = funcp
 
-    
+
 def usage():
     print("""Query python databases\noptions:\n""")
     try:
@@ -45,10 +45,10 @@ def usage():
     except NameError:
         # options is not defined yet.
         sys.stderr.write('qopts not defined yet.')
-        
+
     sys.exit(109)
 
-    
+
 qopts = [
     # FlagOptions
     # opt-char, opt-name, if-set-val, default-val, help-string
@@ -96,7 +96,7 @@ dppydb.prep()
 if not options.db_pats:
     pat=None
 else:
-    pat = string.join(options.db_path, '|')
+    pat = "|".join(options.db_path)
 
 if not options.db_wilds:
     wilds=None
@@ -112,7 +112,7 @@ if not options.db_dirs:
 
 d = dppydb.load(dirs=options.db_dirs, pat=pat, wild=wilds,
                 verbose=options.verbose)
-        
+
 #
 # get the matching entries...
 #
@@ -128,7 +128,7 @@ if options.entry_processing_file:
     set_handler('init_handler', 'init', None)
     set_handler('fini_handler', 'fini', None)
     set_handler('eof_handler', 'handle_eof', None)
-        
+
 else:
     if options.print_vals:
         entry_processor = val_printer
@@ -144,13 +144,13 @@ else:
 #
 if init_handler:
     init_handler(d)
-    
+
 # process the selected fields
 for ent in ents:
     entry_processor(d, ent)
-    
+
 if eof_handler:
     eof_handler(d)
-    
+
 if fini_handler:
     fini_handler(d)

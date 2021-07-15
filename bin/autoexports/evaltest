@@ -1,0 +1,28 @@
+set -x
+echo "shell>$SHELL<"
+# works on commandline in shell buf under zsh.
+# WORKS when sourced.  Then what does eval do?
+# can't source or `.' in the script.
+# doc eval: eval [ arg ... ]
+# from ./plugins/bundler/bundler.plugin.zsh
+#eval "function unbundled_$cmd () { \"$cmd\" \"\$@\"; }"
+fname=zz$(basename $0)
+#nuh-uh eval "function ${fname}() {; echo "Am I YAYA?"; true }"
+echo "\$PWD>$PWD<"
+cmd=aa$(basename $0)
+#eval function unbundled_$cmd '\(\)' \{ "$cmd" "\$@" \}
+# works on CL: eval function unbundled_$cmd '\(\)' \{ "$cmd" "\$@" \}
+#eval function unbundled_$cmd '\(\)' \{ "$cmd" "\$@" \}
+cmd=FUUF_$cmd
+eval 'function yaya \(\) { echo wah }'
+"$cmd" () {
+   echo "\$cmd>$cmd<"
+}
+
+type unbundled_$cmd
+# fname=$(basename "$0")
+# eval 'function ${fname} () {
+#     echo "iama func: >$fname<"
+#     true
+# }
+# '

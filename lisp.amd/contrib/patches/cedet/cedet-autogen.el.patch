@@ -1,0 +1,10 @@
+--- cedet-1.0pre4/common-orig/cedet-autogen.el	2007-08-02 15:25:15.000000000 -0400
++++ cedet-1.0pre4/common/cedet-autogen.el	2007-08-02 15:28:16.000000000 -0400
+@@ -192,6 +192,7 @@
+ exists."
+   (interactive "FLoaddefs file: \nDDirectory: ")
+   (let* ((generated-autoload-file (expand-file-name loaddefs))
++         (autoload-file-name generated-autoload-file)
+          (default-directory
+            (file-name-as-directory
+             (expand-file-name (or directory default-directory))))

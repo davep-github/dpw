@@ -577,6 +577,7 @@ Hopefully [space] is mnemonic.")
     (dp-define-key-submap 'dp-yank-prefix dp-Ccd-map
                           [?y]	 ; Key in parent map which accesses this map.
                           [?c] 'dp-insert-cwd
+			  [?d] 'dp-yank-diff
                           [(control ?s)] 'dp-insert-isearch-string)
     ;; <:cdd map yank bindings:>
 
@@ -862,11 +863,15 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
   ;; M-<digit> set bm if unset, goto bm otherwise
   (global-set-key (format "\e%d" digit)
 		  `(lambda ()
-		     (interactive) (dp-set-or-goto-bm ,digit :reset nil))) ; restore "_" functionality--fsf
+		     (interactive)
+		     ;; restore "_" functionality--fsf
+		     (dp-set-or-goto-bm ,digit :resetp nil)))
   ;; unconditionally set bm
   (global-set-key (read-kbd-macro (format "C-M-%d" digit))
 		  `(lambda ()
-		     (interactive) (dp-set-or-goto-bm ,digit :reset t)))) ; restore "_" functionality--fsf
+		     (interactive)
+		     ;; restore "_" functionality--fsf
+		     (dp-set-or-goto-bm ,digit :resetp t))))
 
 (dolist (key '(1 2 3 4 5 6 7 8))
   (dp-def-bm-key key))
@@ -876,7 +881,7 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 ;; we make meta 9 and 0 generate parens.
 ;;(global-set-key [(meta ?9)] (kb-lambda (self-insert-internal ?()))
 ;;(global-set-key [(meta ?0)] (kb-lambda (self-insert-internal ?))))
-;;(global-set-key [(meta ?0)] (kb-lambda (dp-set-or-goto-bm 1 :reset t)))
+;;(global-set-key [(meta ?0)] (kb-lambda (dp-set-or-goto-bm 1 :resetp t)))
 
 (global-set-key [(control ?x) ?b] 'dp-switch-to-buffer)
 (global-set-key [(control ?x) ?4 ?b] 'dp-switch-to-buffer-other-window)

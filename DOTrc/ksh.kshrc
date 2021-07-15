@@ -93,7 +93,7 @@ case "$-" in
                 parent="`ps -ax 2>/dev/null | grep $PPID | grep -v grep`"
                 case "$parent" in
 		*telnet*)
-                  export TERM=xterms;;
+                  export TERM=xterm;;
 		esac
 		;;
 	*)	;;

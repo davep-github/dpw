@@ -6030,3 +6030,1576 @@ Thursday November 19 2020
 comint-prompt-regexp "^\\(davep@vilya:.*\n([0-9]+:zsh) [0-9]+> *\\)"
 First up goes to a few chars from ^ and recalls something.
 C-PgDn then up works.
+
+========================
+Monday June 07 2021
+--
+(defun* dp-nuke-fill-prefix (&optional
+			     (set-to nil set-to-is-specified-p))
+  "If `fill-prefix' gets set, how I know not, it fucks up a lots o' things.
+
+E.g. the ability to fill docstrings and comments properly,
+@todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
+  (interactive "P")
+  (if set-to-is-specified-p
+      (setq fill-prefix set-to)
+    (kill-local-variable 'fill-prefix))
+  fill-prefix)
+
+========================================================================
+
+ (defun dp-nuke-fill-prefix ()
+  "If `fill-prefix' gets set somehow, it fucks up a lot.
+
+E.g. the ability to fill docstrings and comments properly,
+@todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
+  (interactive)
+  (setq fill-prefix nil))
+
+
+ (when t
+   (defun dp-nuke-fill-prefix ()
+     "If `fill-prefix' gets set somehow, it fucks up a lot.
+
+E.g. the ability to fill docstrings and comments properly,
+@todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
+     (interactive)
+     (setq fill-prefix nil))
+   )
+
+========================
+Tuesday June 08 2021
+--
+;; (defun dp-underscore-region-as-title (&optional char)
+;;   (interactive "P")
+;;   (when (Cu--p)
+;;     (setq char
+;; 	  (read-string "Underlining char? " "_" nil "_")))
+;;   (dp-underscore-region 1 :char char :as-title-p 'as-title-p))
+
+(defun* dp-underscore-region-as-title (&optional (char "_"))
+  (interactive "P")
+  (setq char
+	(if (Cu-p)
+	    (read-string "Underlining char? " "_" nil "_")
+	  "_"))
+  (dp-underscore-region 1 :char char :as-title-p 'as-title-p))
+
+
+
+a b c d
+;; WTF is going on!!??
+
+_W_T_F_
+
+||a b ||c
+
+||a b c||
+
+(progn
+  (let ((a 100)
+	(b 200))
+    (setq
+     gotta-be-a-better-way a
+     a b
+     b gotta-be-a-better-way)
+    (cons a b)))
+(200 . 100)
+
+(200 . 100)
+
+(defun dp-swap-a&b-to-cons  (a b)
+  "Swap a and b and return cons of new values."
+  (cons b a))
+dp-swap-a&b-to-cons
+
+(dp-swap-a&b-to-cons 'aye 'bee)
+(bee . aye)
+
+(defun dp-swap-cons-to-cons (c)
+  (dp-swap-a&b-to-cons (car c) (cdr c)))
+dp-swap-cons-to-cons
+
+(dp-swap-cons-to-cons (cons 'first 'second))
+(second . first)
+
+(defun dp-region-boundaries-ordered (&optional beg? end? exchange-pt-and-mark-p
+					       dont-force-to-markers-p)
+  "Return the boundaries of the region ordered in a cons: \(low . hi\)"
+  ;; I never knew about these functions.
+  ;; (cons (region-beginning) (region-end)))
+  ;; But here they're not very useful since beg? and end? may not be ordered.
+  ;; Au contraire, they seem to always return beg as the lower, and end as
+  ;; the higher, position-wise??? They???
+  ;; Both must be provided.
+  (let ((obcons
+	 (if (and beg? end?)
+	     (if (> end? beg?)
+		 (cons beg? end?)
+	       (cons end? beg?))
+	   (when (and exchange-pt-and-mark-p
+		      (< mark (point)))
+	     (exchange-point-and-mark))
+	   ;; @todo XXX These are already markers.  Fix this.
+	   (cons (region-beginning)
+		 (region-end)))))
+    (if dont-force-to-markers-p
+	obcons
+      ;; The markerization isn't needed for region values.  It may not be
+      ;; needed for beg? && end?, but 'tis easier to "Just Do It(tm)"
+      ;; But we wanna markerize in one place.
+      (cons (dp-mk-marker (car obcons))
+	    (dp-mk-marker (cdr obcons))))))
+dp-region-boundaries-ordered
+
+(dp-region-boundaries-ordered 111 2)
+(#<marker at 2 in elisp-devel.vilya.el> . #<marker at 111 in elisp-devel.vilya.el>)
+
+(#<marker at 1 in elisp-devel.vilya.el> . #<marker at 2 in elisp-devel.vilya.el>)
+
+
+
+_a_b_c_
+
+
+_1_2_3_
+
+_meh_
+
+========================
+Thursday June 10 2021
+--
+Sometimes in *Help* bufs, tab you to the end of a link, thus:
+
+blah blah `blabbity' blah
+<TAB>--------------^ 
+Press enter --> "Debugger entered--Lisp error: (user-error "No cross-reference here")"
+I can't recall when it happens.
+But if it's common enough:
+if looking at "'" see if [point +/- 1] has region/text
+props/whatever indicating help. If so move <dir> and try again.
+
+
+;;; --------------- Preserve everything above this line ----------------
+;;; Anything in this file *before* the above line is preserved.
+;;; --------------------- Begin generated section ----------------------
+;;; Everything in this file from the beginning of the previous line to the
+;;; end of file will be deleted.
+;;; !!!!!!!!! I have no idea why I said that. !!!!!!!!!!
+;;; !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;;;
+;;; File: /home/dapanarx/lisp/dp-common-abbrevs.el
+;;; Last saved: 2012-08-22T18:02:02
+;;;
+;;; `manual' abbrevs are more common than global since they are only expanded
+;;; upon request.  Automatic expansion in the wrong place is *very* amnoying!
+;;; These used to be called `common.' Manual abbrevs can be more ambiguous
+;;; and `error prone' because they are only expanded where the human has
+;;; deemed correct. So something like `a' is acceptable as manual but insane
+;;; as automatic.
+;;;
+;;; `auto' abbrevs are put into the *macs standard `global-abbrev-table' and
+;;; so are expanded automatically.  These are called `global.' Global derives
+;;; from `global-abbrev-table' but auto is more descriptive.
+;;;
+;;; 'global abbrevs are for automatic expansion, e.g. speling erors.
+;;; 'global becomes global-abbrev-table and abbrevs in that table are
+;;; auto expanded.  I currently have too many things in there that are
+;;; expanded annoyingly often, so I need to revisit the table
+;;; ASSIGNMENTS.
+;;; 'manual abbrevs are expected to be expanded by hand.
+;;; @ todo... add mode to `properties' and then add to table for that mode.
+;;; Stems of abbrev tables.  If just a symbol then construct a table name of
+;;; @ todo... add 'tmp property to indicate table is not to be saved.
+;;;  <sym>-abbrev-table
+;;; Abbrev entry format:
+;;; ABBREV-ENTRY ::= (ABBREVS/EXPANSIONS TABLE-INFO)
+;;; ABBREVS/EXPANSIONS ::= (ABBREV-NAMES EXPANSIONS)
+;;; ABBREV-NAMES ::= "abbrev-name" | ("abbrev-name0"...)
+;;; EXPANSIONS ::= "expansion0"...
+;;; TABLE-INFO ::= TABLE-NAME | TABLE-INFO-PLIST
+;;; TABLE-NAME ::= 'table-name-sym | "table-name"  ; it's `format'd w/%s
+;;; TABLE-INFO-PLIST ::= (PROP/VAL PROP/VAL ...)
+;;; PROP/VAL ::= 'table-name TABLE-NAME
+;;;
+;;; we define abbrevs: {ABBREV-NAMES} X {EXPANSIONS} X {TABLES}
+;;; for each name
+;;;     for each table
+;;;         define abbrev name expansion[-list]
+;;;         ;; expansion[-list] is saved as a string `format'd with %S the
+;;;         ;; list can be `read' to recreate the list.  The expansion list
+;;;         ;; can be iterated over by successive invocations of
+;;;         ;; `dp-expand-abbrev'
+;;;         [put props on table variable]
+;;;
+;;; Come on!  There needs to be the need/ability to use eval'able forms
+;;; somewhere!
+;;;
+;;; !<@todo ??? Modify data structures to allow a way to add suffixes
+;;; programmatically. Eg t for a space? 's for pluralization?
+;;; !<@todo Automatically generate "logical" case mixtures.
+;;; Convenience binding in this file:
+;;; C-c C-c (dp-save-and-redefine-abbrevs)
+;;;
+;;; This information is common between the abbrev file and dp-abbrev.el
+
+(defconst dp-common-abbrevs
+  '(((("dev" "development" "develop" "device")
+      'circular)
+     dp-manual)
+    (("teh" "the" "duh" "D'OH!")
+     dp-manual global)
+    (("plisttest" "a test of the plist type table.")
+     (table-name dp-manual tmp t)
+     (table-name dp-plists))
+    (("cs" "c_str()" "char* ")
+     (table-name dp-c++-mode))
+    (("nn" "non-nil")
+     dp-manual)
+    (("wrt" "WRT" "with respect to")
+     dp-manual)
+    ((("dtrt" "DTRT")
+      "do the right thing" "DTRT" "dtrt")
+     dp-manual)
+    (("st" "such that ")
+     dp-manual)
+    ((("wether" "wheter")
+      "whether")
+     dp-manual global)
+    ((("wether" "wheter")
+      "whether")
+     dp-manual global)
+    (("thru" "through")
+     dp-manual global)
+    (("thot" "thought")
+     dp-manual global)
+    (("provate" "private")
+     dp-manual global)
+    (("tho" "though" "although")
+     dp-manual global)
+    ((("dap" "dp" "DAP" "DP" "davep")
+      "David A. Panariti")
+     dp-manual)
+    (("stl" "STL")
+     dp-manual)
+    (("ds" "data structures")
+     dp-manual)
+    (("mobo" "motherboard")
+     dp-manual)
+    (("num" "number" "numbers")
+     dp-manual)
+    (("altho" "although")
+     dp-manual global)
+    (("provate" "private")
+     dp-manual global)
+    (("kb" "keyboard" "KB")
+     dp-manual)
+    (("eg" "e.g.")
+     dp-manual)
+    (("qv" "q.v.")
+     dp-manual)
+    (("ie" "i.e.")
+     dp-manual)
+    (("nb" "N.B.")
+     dp-manual)
+    (("plz" "please")
+     dp-manual)
+    (("sthg" "something")
+     dp-manual global)
+    ((("iir" "IIR" "Iir")
+      "if I recall" "IIR")
+     dp-manual)
+    ((("appt" "appts")
+      "appointments" "appointment")
+     dp-manual)
+    ((("p2p")
+      "peer-to-peer" "point-to-point")
+     dp-manual)
+    ((("ptp")
+      "point-to-point" "peer-to-peer")
+     dp-manual)
+    ((("concat" "cat")
+      "concatenate")
+     dp-manual)
+    (("ok" "OK")
+     dp-manual global)
+    (("wtf" "WTF")
+     dp-manual global)
+    (("fo" "of")
+     dp-manual global)
+    ((("decl" "decls")
+      "declaration" "declarations")
+     dp-manual)
+    (("pred" "predicate" "predicates")
+     dp-manual)
+    (("def" "definition" "define")
+     dp-manual)
+    (("defs" "definitions" "defines")
+     dp-manual)
+    (("prob" "problem" "problems")
+     dp-manual)
+    (("probs" "problems")
+     dp-manual)
+    (("gui" "GUI")
+     dp-manual)
+    (("bup" "backup" "backups")
+     dp-manual)
+    (("bups" "backups")
+     dp-manual)
+    (("khz" "KHz")
+     dp-manual global)
+    (("mhz" "MHz")
+     dp-manual global)
+    (("ghz" "GHz")
+     dp-manual global)
+    (("kbps" "Kbps")
+     dp-manual global)
+    (("gbps" "Gbps")
+     dp-manual global)
+    (("ns" "nS")
+     dp-manual global)
+    (("ms" "mS" global)
+     dp-manual)
+    (("linux" "Linux" "LINUX" "LiGNUx")
+     dp-manual)
+    (("thier" "their")
+     dp-manual global)
+    (("beleive" "believe")
+     dp-manual global)
+    ((("yop" "yopp")
+      "YOPP!")
+     dp-manual global)
+    ((("repos" "repo")
+      "repository")
+     dp-manual)
+    (("e2ei" "RSVP-E2E-IGNORE")
+     dp-manual)
+    ((("LARTC" "lartc")
+      "Linux Advanced Routing & Traffic Control HOWTO")
+     dp-manual)
+    (("pkt" "packet")
+     dp-manual)
+    (("lenght" "length")
+     dp-manual global)
+    ((("recieve" "rx" "RX")
+      "receive")
+     dp-manual global)
+    (("reciever" "receiver")
+     dp-manual global)
+    ((("rxer" "rxor" "rxr")
+      "receiver")
+     dp-manual)
+    (("nic" "NIC" "network interface card")
+     dp-manual)
+    (("tcp/ip" "TCP/IP")
+     dp-manual)
+    (("udp" "UDP")
+     dp-manual)
+    (("q" "queue" "enqueue")
+     dp-manual)
+    ((("enq" "nq")
+      "enqueue")
+     dp-manual)
+    ((("deq" "dq")
+      "dequeue")
+     dp-manual)
+    ((("xlation" "xlat")
+      "translation" "translate")
+     dp-manual)
+    ((("xmission" "xmit" "tx")
+      "transmission" "transmit")
+     dp-manual)
+    ((("seq" "seqs")
+      "sequences" "sequence")
+     dp-manual)
+    (("foriegn" "foreign")
+     dp-manual global)
+    (("yeild" "yield")
+     global)
+    (("peice" "piece")
+     global)
+    ((("govt" "gov")
+      "government")
+     dp-manual)
+    (("wadr" "with all due respect")
+     dp-manual)
+    (("att" "at this time")
+     dp-manual)
+    (("atow" "at time of writing")
+     dp-manual)
+    ((("FHR" "fhr")
+      "for historical reasons")
+     dp-manual)
+    (("provate" "private")
+     dp-manual global)
+    (("yko" "echo")
+     dp-manual global)
+    (("strenght" "strength")
+     dp-manual global)
+    (("gameplay" "game play")
+     dp-manual global)
+    (("WH" "White House")
+     dp-manual)
+    (("admin" "administration")
+     dp-manual)
+    (("christian" "xian")
+     dp-manual)
+    (("xian" "christian")
+     dp-manual)
+    ((("xemacs" "xem")
+      "XEmacs")
+     dp-manual)
+    (("python" "Python")
+     dp-manual)
+    (("tcp" "TCP")
+     dp-manual)
+    (("ip" "IP")
+     dp-manual)
+    ((("filesystem" "fs" "FS")
+      "file system" "file-system")
+     dp-manual)
+    (("Filesystem" "File system" "File-system")
+     dp-manual)
+    ((("filename" "fname")
+      "file name" "File name")
+     dp-manual)
+    ((("fd" "fdesc")
+      "file descriptor" "File descriptor")
+     dp-manual)
+    (("symlink" "symbolic link")
+     dp-manual)
+    (("Symlink" "Symbolic link")
+     dp-manual)
+    (("autosave" "auto save")
+     dp-manual)
+    (("Autosave" "Auto save")
+     dp-manual)
+    ((("keymap" "key maps")
+      "key map" "key maps")
+     dp-manual)
+    (("beg" "begin")
+     dp-manual)
+    (("begin" "beg")
+     dp-manual)
+    (("ws" "white space")
+     dp-manual)
+    (("whitespace" "white space")
+     dp-manual)
+    (("qs" "questions")
+     dp-manual)
+    (("var" "variable")
+     dp-manual)
+    (("vars" "variables")
+     dp-manual)
+    (("env" "environment")
+     dp-manual)
+    ((("envv" "envvar" "evar" "envar" "ev")
+      "environment variable" "environment variables")
+     dp-manual)
+    (("info" "information")
+     dp-manual)
+    ((("init" "ini")
+      "initial" "initialize" "initializer" "initiator" "initialization")
+     dp-manual)
+    ((("nvidia" "NVIDIA")
+      "nVIDIA")
+     dp-manual)
+    (("exe" "executable")
+     dp-manual)
+    ((("bin" "bina" "b2" "base2")
+      "binary")
+     dp-manual)
+    (("ISTR" "I seem to recall")
+     dp-manual)
+     (("bi" "built-in" "builtin")
+     dp-manual)
+    (("subshell" "sub-shell")
+     dp-manual)
+    (("ding" "ba DooM!")
+     dp-manual)
+    ((("STFU" "stfu")
+      "please be quiet" "hush" "hushup" "shhhh")
+     dp-manual)
+    (("goto" "go to")
+     dp-manual)
+    (("ww" "wall wart")
+     dp-manual)
+    (("flsit" "flist")
+     dp-manual)
+    (("dpdx" "DP_DASH_X=t")
+     dp-manual)
+    (("devs" "developers" "devices")
+     dp-manual)
+    (("devel" "development" "develop")
+     dp-manual)
+    (("memf" "member function" "member field")
+     dp-manual)
+    (("mfunc" "member function" "member field")
+     dp-manual)
+    ((("dir" "dirs")
+      "directory" "directories")
+     dp-manual)
+    ((("subdir" "subdirs")
+      "subdirectory" "subdirectories" "sub-directory" "sub-directories")
+     dp-manual)
+    ((("cwd" "current working directory" "working directory"
+       "default directory" "pwd")
+      'circular)
+     dp-manual)
+    ((("paren" "parens")
+      "parenthesis" "parentheses" "parenthesize")
+     dp-manual)
+    (("orig" "original")
+     dp-manual)
+    ((("tmp" "temp")
+      "temporary")
+     dp-manual)
+    ((("eof" "EOF")
+      "EOF" "end of file")
+     dp-manual)
+    ((("hud" "Hud")
+      "HUD" "head's up display")
+     dp-manual global)
+    ((("npc" "Npc")
+      "NPC" "non-player character")
+     dp-manual global)
+    (("lang" "language")
+     dp-manual global)
+    (("vv" "virtual void " "virtual ")
+     dp-manual global)
+    (("vb" "virtual bool " "virtual ")
+     dp-manual global)
+    (("v" "virtual ")
+     dp-manual global)
+    (("src" "source" "sources")
+     dp-manual)
+    ((("dest" "dst")
+      "destination" "destinations")
+     dp-manual)
+    ((("conf" "config" "cfg")
+      "configuration" "configurations" "Configuration" "Configurations")
+     dp-manual)
+    ((("cap" "caps")
+      "capability" "capabilities" "Capability" "Capabilities")
+     dp-manual)
+    ((("hie" "hier")
+      "hierarchy")
+     dp-manual)
+    ((("bcbs" "BCBS")
+      "Blue Cross Blue Shield")
+     dp-manual)
+    (("pvt" "priv" "private" "private:" "private")
+     dp-manual)
+    (("prot" "protected:" "protect" "protected")
+     dp-manual)
+    ((("dep" "deps")
+      "dependency" "dependencies")
+     dp-manual)
+    (("foriegn" "foreign")
+     dp-manual global)
+    ((("lib" "libs")
+      "library" "libraries"))
+    ;; sc to be "current SCM specific?"
+    ((("sc" "gc" "scmconf" "gitconf")	; scm conflict/git conflict
+      "^<<<<<<< HEAD$" "^=======$" "^>>>>>>>\\.$"))
+    ((("oaoo" "OaOO" "OAOO")
+      "OaOO" "Once and Only Once" "Once and only once" "once and only once"))
+    (("buncha" "bunch of")
+     dp-manual)
+    (("TMMW" "to make matters worse")
+     dp-manual global)
+    (("cla" "command line argument" "command line arguments")
+     dp-manual global)
+    (("envv" "environment variable" "environment variables")
+     dp-manual global)
+    (("med" "medication" "medications")
+     dp-manual)
+    ((("imo" "IMO")
+      "in my opinion" "In my opinion" "im my humble opinion" "In my humble opinion"))
+    ((("imho" "IMHO")
+      "im my humble opinion" "In my humble opinion" "in my opinion" "In my opinion")
+     dp-manual)
+    (("PPT" "power of positive thinking")
+     dp-manual)
+    (("acet" "acetaminophen")
+     dp-manual global)
+    (("inv" "inventory")
+     dp-manual)
+    (("req" "request" "require" "requisition")
+     dp-manual)
+    (("ooi" "out of inventory")
+     dp-manual)
+    (("ooo" "out of order")
+     dp-manual)
+    (("compat" "compatible")
+     dp-manual)
+    (("lgtm" "looks good to me")
+     dp-manual)
+    (("combo" "combination")
+     dp-manual)
+    (("mks" "makeshift" "make-shift" "make shift")
+     dp-manual)
+    ((("cons" "constructable" "construct") 'circular) dp-manual)
+    ((("fa" "forall")
+      "\\-/")
+     dp-manual)
+    (("babs" "buildables")
+     dp-manual)
+    ((("sand" "land")
+      "set and" "logical and" "intersection")
+     dp-manual)
+    ((("ch" "sf" "srcs" "chc")
+      "*.[ch]" "*.[ch]*" "*.h" "*.cpp" "*.c" "*.h" "*.cpp")
+     dp-manual)
+    ((("obj" "objs" "doto")
+      "*.ko *.o *.a" "*.o" "*.ko" "*.a")
+     dp-manual)
+    ((("ech" "esf" "esrcs" "echc")
+      "\\.[ch]")
+     dp-manual)
+    ((("chre" "sfre" "srcre" "chcre")
+      ".*\\.[ch]\\(pp\\)?$")
+     dp-manual)
+
+    ;; >> Wish I was smart
+    ((("arg" "argument" "arguments")
+      'circular)
+     dp-manual)
+    ((("args" "arguments" "arg" "argument")
+      'circular)
+     ;; << enough to handle plurals with elisp.
+     dp-manual)
+
+    ;; Homer's a roll modle.
+    ((("smart" "S-M-R-T" "s-m-r-t" "SMRT" "smrt"
+       "`I am so smart, S-M-R-T'")
+      'circular)
+     dp-manual)
+
+     ;; Homer's a roll modle.
+     ((("we" "whatever" "what ever" "WE")
+	"`I am so smart, S-M-R-T'")
+       'circular)
+     dp-manual)
+        
+    ((("P" "Python" "py")
+      'circular)
+     dp-manual)
+    (("te" "TE" "there exists" "-]")
+     dp-manual)
+    ((("te" "TE" "t.e." "T.E." "there exists") 'circular) dp-manual)
+    (("hp" "hit points")
+     dp-manual)
+    ((("ntms" "note to myself" "fmi" "for my info" "for my information")
+      'circular)
+     dp-manual)
+    (("pita" "pain in the ass")
+     dp-manual)
+    (("vp" "virtual Property_t")
+     dp-manual)
+    (("vaddr" "virtual address")
+     dp-manual)
+    (("paddr" "physical address")
+     dp-manual)
+    (("mem" "memory")
+     dp-manual)
+    (("sb" "*scratch*")
+     dp-manual)
+    (("shmem" "shared memory")
+     dp-manual)
+    (("proc" "process" "processor")
+     dp-manual)
+    (("FCFS" "first come first served")
+     dp-manual)
+    (("con" "concierge" "concierges" "Concierge" "Concierges")
+     dp-manual)
+    (("metadata" "meta-data" "meta data")
+     dp-manual)
+    (("md" "metadata" "meta-data" "meta data")
+     dp-manual)
+    (("ccs" "const char* " "const std::string& ")
+     dp-manual)
+    (("cus" "const unsigned char* ")
+     dp-manual)
+    ((("08x" "x80" "x8" "8x") "0x%08x")
+     dp-manual)
+    (("vccs" "virtual const char* " "virtual const std::string & ")
+     dp-manual)
+    (("css" "const std::string& " "std::string& " "const char* "
+      "const std::string " "std::string ")
+     dp-manual)
+    (("less" "std::less")
+     dp-manual)
+    ((("osr" "os")
+      "std::ostream& os" "std::ostream& " "ostream& ")
+     dp-manual)
+    ((("fgrep" "egrep" "grep") 'circular) dp-manual)
+    (("vvs" "const void* ")
+     dp-manual)
+    (("bg" "background")
+     dp-manual)
+    (("cha" "challenge")
+     dp-manual)
+    (("ascii" "ASCII")
+     dp-manual)
+    (("phr" "Prop_handler_ret_t")
+     dp-manual)
+    ((("xargsr0" "xargs") "xargs -r0 ")
+     dp-manual)
+    ((("pxargs" "xargsp") "| xargs -r0 ")
+     dp-manual)
+    ;; We ignore grep in favor of egrep.
+    (("faf" "find . -type f -print0 | xargs -r0 "
+      "find . -type f -print0 | xargs -r0 egrep ")
+     dp-manual)
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -ni "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 egrep -n ")
+     dp-manual)
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -ni "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 egrep -n ")
+     dp-manual)
+    (("fafe" "find . -type f -print0 | xargs -r0 egrep -ni "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 fgrep -ni ")
+     dp-manual)
+    (("fasf" "find . -type f \\( -name '*.cpp' -o -name '*.h' \\)  -print0 | xargs -r0 fgrep -ni "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 egrep -ni ")
+     dp-manual)
+    ((("tr" "tra" "tramp" "remfile" "remf" "rf") "/ssh:dpanarit@")
+     dp-manual)
+    (("cz" "cz-fp4-bdc")
+     dp-manual)
+    (("xer" "xerxes")
+     dp-manual)
+    ;; Make "/ssh:dpanarit@" a vary-able.
+    ((("rcz" "rz") "/ssh:dpanarit@cz-fp4-bdc:")
+     dp-manual)
+    (("rxer" "/ssh:dpanarit@xerxes:")
+     dp-manual)
+    (("cttoi" "come to think of it")
+     dp-manual)
+    (("br" "bug report")
+     dp-manual)
+    (("fasb" "for sb in sb1 sb2 sb3 sb4 sb5; do echo_id sb; cd $sb; ")
+     dp-manual)
+    (("style" "/home/dpanariti/work/doc/code-style.txt")
+     dp-manual)
+    (("psse" "print >>sys.stderr, ")
+     dp-manual)
+    (("hc" "hard coded" "hard-coded")
+     dp-manual)
+    (("janine" "someone with your qualifications would have no trouble finding a top-flight job in either the food service or housekeeping industries.")
+     dp-manual)
+    ;; Extra quote is really used.
+    ((("ctor" "constructor" "construct")
+      'circular)
+     dp-manual)
+    ((("alt" "alternative" "alternate")
+      'circular)
+     dp-manual)
+    ((("emacs" "xemacs" "XEmacs" "Emacs")
+      'circular)
+     dp-manual)
+    ((("acc" "accurate" "accuracy")
+      'circular)
+     dp-manual)
+    ((("res" "resource")
+      'circular)
+     dp-manual)
+    ((("sch" "schematics" "schematic" "scheme" "schedule" )
+      'circular)
+     dp-manual)
+    ((("ftci" "FTCI" "ftca" "FTCA")
+      'circular)
+     dp-manual)
+    ((("dos" "DOS" "DoS" "denial of service")
+      'circular)
+     dp-manual)
+    ((("ob1" "obo" "OBO" "OB1" "off-by-one" "off by one")
+      'circular)
+     dp-manual)
+    ((("re" "regexp" "regex" "regular expression")
+      'circular)
+     dp-manual)
+     ((("fe" "front end" "Front end")
+       'circular)
+      dp-manual)
+     ((("sagi" "sudo apt install " "sudo apt-get install ")
+       'circular)
+      dp-manual)
+     ((("sagi" "sudo apt install " "sudo apt-get install ")
+       'circular)
+      dp-manual)
+     ((("endis" "(en|dis)able " "enable/disable " "enable or disable")
+       'circular)
+      dp-manual)
+     ((("got" "git") 'circular) dp-manual)
+     ((("get" "git") 'circular) dp-manual)
+     ((("fh" "FETCH_HEAD") 'circular) dp-manual)
+     ;; Plurals seem to make sense as they are.
+     ((("iter" "iteration" "iterations" "iters" "iterations")
+       'circular) dp-manual)
+     ((("dup" "dupe" "duplicate") 'circular) dp-manual)
+     ((("dups" "dupes" "duplicates") 'circular) dp-manual)
+     ((("stderr" "/proc/self/fd/2" "1>&2") 'circular) dp-manual)
+     ((("stdout" "/proc/self/fd/1") 'circular) dp-manual)
+     ((("stdin" "/proc/self/fd/0") 'circular) dp-manual)
+
+     ;; Some mu4e mailbox names.
+     ;; Expansion no work.
+     ;; Need to hack the function mu4e uses to read MB names
+     (("amba" "/Amd/Archive") dp-manual)
+     (("ambC" "/Amd/Calendar") dp-manual)
+     (("ambk" "/Amd/Clutter") dp-manual)
+     (("ambc" "/Amd/Contacts") dp-manual)
+     (("ambch" "/Amd/Conversation History") dp-manual)
+     (("ambdi" "/Amd/Deleted Items") dp-manual)
+     (("ambd" "/Amd/Drafts") dp-manual)
+     (("ambi" "/Amd/Inbox") dp-manual)
+     (("ambj" "/Amd/Journal") dp-manual)
+     (("ambJ" "/Amd/Junk Email") dp-manual)
+     (("ambn" "/Amd/Notes") dp-manual)
+     (("ambo" "/Amd/Outbox") dp-manual)
+     (("ambr" "/Amd/RSS Subscriptions") dp-manual)
+     (("ambs" "/Amd/Sent") dp-manual)
+     (("ambsi" "/Amd/Sent Items") dp-manual)
+     (("ambS" "/Amd/Sync Issues") dp-manual)
+     (("ambt" "/Amd/Tasks") dp-manual)
+     (("amb" "/Amd/") dp-manual)
+    ))
+;; We could just use the non-void-ness of dp-common-abbrevs, but I
+;; like suspenders with my belt.
+(put 'dp-common-abbrevs 'dp-I-am-a-dp-style-abbrev-file t)
+
+
+========================
+Saturday June 26 2021
+--
+
+(format "%%s")
+"%s"
+(format "\%s")
+[ at this time 2021-06-26T09:27:17 ]
+2021-06-26T09:27:22 
+[ at this time 2021-06-26T09:28:19 ]
+
+========================
+2021-06-26T11:06:27
+--
+
+<207709>color-me<207725>
+(defun dp-set-colorized-extent-priority (arg &optional pos extents)
+  (interactive "Npriority: \nXpos: ")
+  (dp-set-extent-priority arg pos 'dp-colorized-region-p extents))
+
+(defun* dp-colorized-region-boundaries (&key
+					(pos (point))
+					(prop 'dp-colorized-region-p))
+  (interactive)
+  (dp-extents-at-with-prop prop nil (or pos (point))))
+dp-colorized-region-boundaries
+
+
+(let ((pos 207709))
+  (dp-extents-at-with-prop 'dp-colorized-region nil (or pos (point))))
+nil
+
+
+
+========================
+Tuesday June 29 2021
+--
+(cl-pp
+    (list
+     ;; Prompts:
+     ;; user
+     ;;;;;???(cons 'dp-shells-prompt-font-locker 'shell-prompt-face)
+     (cons dp-shells-prompt-font-lock-regexp
+           (list (list 1 'shell-prompt-face)
+                 (list 2 'dp-journal-medium-attention-face)
+                 (list 3 'dp-journal-medium-attention-face)
+                 (list 4 'dp-journal-high-problem-face t t)))
+)
+(("^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" (1 shell-prompt-face) (2 dp-journal-medium-attention-face) (3 dp-journal-medium-attention-face) (4 dp-journal-high-problem-face t t)))
+
+(cl-pp dp-shell-mode-font-lock-keywords)
+
+(("^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" (1 shell-prompt-face)
+(2 dp-journal-medium-attention-face)
+(3 dp-journal-medium-attention-face)
+(4 dp-journal-high-problem-face t t))
+("^[0-9]+## " . dp-shell-root-prompt-face)
+("^\\(^davep@vilya:\\)\\(.*$\\)$" (1 dp-shells-prompt-id-face)
+(2 dp-shells-prompt-path-face))
+("^[^
+]*~:[0-9]+:.*$" . shell-uninteresting-face)
+("^[-_.\"A-Za-z0-9/+]+\\(:\\|, line \\)[0-9]+: \\([wW]arning:\\).*$" .
+font-lock-keyword-face)
+("^[-_.\"A-Za-z0-9/+]+\\(: *\\|, line \\)[0-9]+:.*$" .
+font-lock-function-name-face)
+("\\(^[-_.\"A-Za-z0-9/+]+\\)\\(: *\\|, line \\)[0-9]+" 1
+shell-output-2-face
+t)
+("^[-_.\"A-Za-z0-9/+]+\\(: *[0-9]+\\|, line [0-9]+\\)" 1 bold t)
+("^[^
+]+.*$" . shell-output-face))nil
+
+(cl-pp
+    (list
+     ;; Prompts:
+     ;; user
+     ;;;;;???(cons 'dp-shells-prompt-font-locker 'shell-prompt-face)
+     (cons dp-shells-prompt-font-lock-regexp
+           (list (list 1 'shell-prompt-face)
+                 (list 2 'dp-journal-medium-attention-face)
+                 (list 3 'dp-journal-medium-attention-face)
+                 (list 4 'dp-journal-high-problem-face t t)))
+)
+(("^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" (1 shell-prompt-face) (2 dp-journal-medium-attention-face) (3 dp-journal-medium-attention-face) (4 dp-journal-high-problem-face t t)))
+
+(cl-pp dp-shell-mode-font-lock-keywords)
+
+(("^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" (1 shell-prompt-face)
+(2 dp-journal-medium-attention-face)
+(3 dp-journal-medium-attention-face)
+(4 dp-journal-high-problem-face t t))
+("^[0-9]+## " . dp-shell-root-prompt-face)
+("^\\(^davep@vilya:\\)\\(.*$\\)$" (1 dp-shells-prompt-id-face)
+(2 dp-shells-prompt-path-face))
+("^[^
+]*~:[0-9]+:.*$" . shell-uninteresting-face)
+("^[-_.\"A-Za-z0-9/+]+\\(:\\|, line \\)[0-9]+: \\([wW]arning:\\).*$" .
+font-lock-keyword-face)
+("^[-_.\"A-Za-z0-9/+]+\\(: *\\|, line \\)[0-9]+:.*$" .
+font-lock-function-name-face)
+("\\(^[-_.\"A-Za-z0-9/+]+\\)\\(: *\\|, line \\)[0-9]+" 1
+shell-output-2-face
+t)
+("^[-_.\"A-Za-z0-9/+]+\\(: *[0-9]+\\|, line [0-9]+\\)" 1 bold t)
+("^[^
+]+.*$" . shell-output-face))nil
+
+ 
+========================
+Wednesday June 30 2021
+--
+(format-kbd-macro 'encircle)
+
+;; Simple way to make these:
+;; 1) Record kbd macro
+;; 2) M-x name-last-kbd-macro
+;; 3) (format-kbd-macro 'name) on name from step 2 in temp buffer.
+;; 4) Add a `defalias' like below using the string from step 3.
+;;template (defalias '<name>
+;;template   (read-kbd-macro
+;;template    (concat "keys..."
+;;template            " more keys.")))
+
+(message "wtf")
+"wtf"
+
+
+(format-kbd-macro 'encircle)
+
+
+
+
+C-s			;; isearch-forward
+)			;; self-insert-command
+RET			;; newline
+DEL			;; backward-delete-char-untabify
+SPC			;; self-insert-command
+M-j			;; join-line
+C-e			;; dp-brief-end
+RET			;; newline
+'cu			;; self-insert-command * 3
+DEL			;; backward-delete-char-untabify
+ircular)		;; self-insert-command * 8
+2*<down>		;; dp-next-line
+
+(kmacro-display 'dfdf)
+"Macro: C-s ) RET DEL SPC M-j C-e RET 'circular) 2*<down>"
+
+"Macro: C-s ) RET DEL SPC M-j C-e RET 'circular) 2*<down>"
+
+(format-kbd-macro 'bubba)
+"C-s ) RET DEL SPC M-j C-e RET 'circular) 2*<down>"
+
+(format-kbd-macro 'bubba)
+"C-s ) RET DEL SPC M-j C-e RET 'circular) 2*<down>"
+(format-kbd-macro 'encirclex)
+"C-s ) RET DEL SPC M-j C-e RET 'circular) 2*<down>"
+(format-kbd-macro 'encircle)
+
+(kmacro-display 'encircle)
+
+
+!!!! @@@@@ !!!! @@@@@ !!!! @@@@@ !!!! @@@@@ !!!! @@@@@ !!!! @@@@@
+??????????? why does
+dpj-topic-list is a variable defined in ‘dp-journal.el’.
+Its value is shown below.
+
+Documentation:
+Global topic list.
+
+Value:
+(("emacs.elisp" last-update: "2021-06-30T07:59:11")
+ ("todo.tools" last-update: "2021-06-30T06:49:48")
+ ("screeds.english.internet" last-update: "2021-06-28T12:47:01")
+ ("emacs.elisp.dpj")
+ ("utils")
+ ("todo")
+ ("toys.bluetooth.mifa-x17.review")
+ ("politics")
+ ("nordvpn")
+ ("games")
+ ("work")
+ ("emacs.elisp.dp-sel2")
+ ("utils.bugs.index-code")
+ ("work.amd.tom")
+ ("tmux")
+ ("medical.pain")
+ ("todo.openbox")
+ ("medical.psychiatric")
+ ("not-work")
+ ("games.health")
+ ("games.falcon-age.ui")
+ ("doggo.speak")
+ ("physics.simulation-hypothesis")
+ ("zsh")
+ ("security.passwords")
+ ("mvsik.solos")
+ ("ui.suckage.stackexchange.level:")
+ ("ui.suckage.stackexchange.level:heavenly")
+ ("stackexchange.e.g.suckassexchange.emacs")
+ ("humor.emacs.You-know-you're-an-Emacs-geek-when")
+ ("net.usb.usb.tethering")
+ ("net.usb.tethering")
+ ("security.passwords.google-drive")
+ ("politics.yt")
+ ("python.mode")
+ ("bash.utils")
+ ("todo.zsh")
+ ("todo.vilya")
+ ("avast-scams" last-update: "2021-06-15T00:46:50")
+ ("cx")
+ ("games.console")
+ ("insults")
+ ("games.controls")
+ ("faux-clevernesses")
+ ("yt.misc")
+ ("yt.chris-squre")
+ ("mvsik")
+ ("security")
+ ("python")
+ ("games.crafting")
+ ("posting.yt")
+ ("mvisk.yt")
+ ("mvisk.prog")
+ ("screeds.programming.OAOO")
+ ("mvisk")
+ ("games.ui")
+ ("politics.money")
+ ("amd.management" last-update: "2020-10-21T10:43:47")
+ ("amd.vpn" last-update: "2021-05-20T14:26:36")
+ ("amd.work.python")
+ ("amd.work.umrsh" last-update: "2020-09-24T20:20:00")
+ ("amd.work.umrsh.zsh" last-update: "2020-11-04T10:39:00")
+ ("assholiness" last-update: "2020-11-22T14:22:59")
+ ("avast" last-update: "2021-06-13T07:40:10")
+ ("bash" last-update: "2020-09-17T08:43:46")
+ ("bash.completion" last-update: "2020-10-01T15:55:46")
+ \.\.\.)
+
+Get formatted and written as:
+(setq dpj-topic-list
+      '(("amd.management" last-update: "2020-10-21T10:43:47")
+	("amd.vpn" last-update: "2021-05-20T14:26:36")
+	("amd.work.python")
+	("amd.work.umrsh" last-update: "2020-09-24T20:20:00")
+	("amd.work.umrsh.zsh" last-update: "2020-11-04T10:39:00")
+	("assholiness" last-update: "2020-11-22T14:22:59")
+	("avast" last-update: "2021-06-13T07:40:10")
+	("avast-scams" last-update: "2021-06-15T00:46:50")
+	("bash" last-update: "2020-09-17T08:43:46")
+	("bash.completion" last-update: "2020-10-01T15:55:46")
+	...))
+??????????????????????????????????????????????????????
+
+
+========================
+2021-06-30T22:57:21
+--
+PROMPT=$'%{$purple%}%n%{$reset_color%} in %{$limegreen%}%~%{$reset_color%}$(ruby_prompt_info " with%{$fg[red]%} " v g "%{$reset_color%}")$vcs_info_msg_0_%{$orange%} λ%{$reset_color%} '
+
+
+PROMPT=$'$(ruby_prompt_info " with%{$fg[red]%} " v g "%{$reset_color%}")
+
+PROMPT+='$(dp_decode_cmd_status --zsh '"%?"')>%f '
+
+
+
+
+========================
+Thursday July 01 2021
+--
+(cl-pp dpj-topic-list)
+
+(("emacs.elisp" last-update: "2021-06-30T22:05:20")
+("yt.mvsik" last-update: "2021-06-30T11:52:00")
+(#("todo.tools" 0 10 (fontified t face dp-journal-topic-face)) last-update:
+"2021-06-30T11:19:05")
+(#("emacs.elisp.journal-mode" 0 24 (fontified t face dp-journal-topic-face)) last-update:
+"2021-06-30T08:45:15")
+(#("tmux" 0 4 (fontified t face dp-journal-topic-face)) last-update:
+"2021-06-30T08:20:07")
+(#("ponderables" 0 11 (fontified t)))
+(#("screeds.english.internet" 0 24 (fontified nil)) last-update:
+"2021-06-28T12:47:01")
+(#("emacs.elisp.dpj" 0 15 (fontified nil)))
+(#("utils" 0 5 (fontified nil)))
+(#("todo" 0 4 (fontified nil)))
+(#("toys.bluetooth.mifa-x17.review" 0 30 (fontified nil)))
+(#("politics" 0 8 (fontified nil)))
+(#("nordvpn" 0 7 (fontified nil)))
+(#("games" 0 5 (fontified nil)))
+(#("work" 0 4 (fontified nil)))
+(#("emacs.elisp.dp-sel2" 0 19 (fontified nil)))
+(#("utils.bugs.index-code" 0 21 (fontified nil)))
+(#("work.amd.tom" 0 12 (fontified nil)))
+(#("medical.pain" 0 12 (fontified nil)))
+(#("todo.openbox" 0 12 (fontified nil)))
+(#("medical.psychiatric" 0 19 (fontified nil)))
+(#("not-work" 0 8 (fontified nil)))
+(#("games.health" 0 12 (fontified nil)))
+(#("games.falcon-age.ui" 0 19 (fontified nil)))
+(#("doggo.speak" 0 11 (fontified nil)))
+(#("physics.simulation-hypothesis" 0 29 (fontified nil)))
+(#("zsh" 0 3 (fontified nil)))
+(#("security.passwords" 0 18 (fontified nil)))
+(#("mvsik.solos" 0 11 (fontified nil)))
+(#("ui.suckage.stackexchange.level:" 0 31 (fontified nil)))
+(#("ui.suckage.stackexchange.level:heavenly" 0 39 (fontified nil)))
+(#("stackexchange.e.g.suckassexchange.emacs" 0 39 (fontified nil)))
+(#("humor.emacs.You-know-you're-an-Emacs-geek-when" 0 46 (fontified nil)))
+(#("net.usb.usb.tethering" 0 21 (fontified nil)))
+(#("net.usb.tethering" 0 17 (fontified nil)))
+(#("security.passwords.google-drive" 0 31 (fontified nil)))
+(#("politics.yt" 0 11 (fontified nil)))
+(#("python.mode" 0 11 (fontified nil)))
+(#("bash.utils" 0 10 (fontified nil)))
+(#("todo.zsh" 0 8 (fontified nil)))
+(#("todo.vilya" 0 10 (fontified nil)))
+(#("avast-scams" 0 11 (fontified nil)) last-update: "2021-06-15T00:46:50")
+(#("cx" 0 2 (fontified nil)))
+(#("games.console" 0 13 (fontified nil)))
+(#("insults" 0 7 (fontified nil)))
+(#("games.controls" 0 14 (fontified nil)))
+(#("faux-clevernesses" 0 17 (fontified nil)))
+(#("yt.misc" 0 7 (fontified nil)))
+(#("yt.chris-squre" 0 14 (fontified nil)))
+(#("mvsik" 0 5 (fontified nil)))
+(#("security" 0 8 (fontified nil)))
+(#("python" 0 6 (fontified nil)))
+(#("games.crafting" 0 14 (fontified nil)))
+(#("posting.yt" 0 10 (fontified nil)))
+(#("mvisk.yt" 0 8 (fontified nil)))
+(#("mvisk.prog" 0 10 (fontified nil)))
+(#("screeds.programming.OAOO" 0 24 (fontified nil)))
+(#("mvisk" 0 5 (fontified nil)))
+(#("games.ui" 0 8 (fontified nil)))
+(#("politics.money" 0 14 (fontified t face dp-journal-topic-face)))
+("amd.management" last-update: "2020-10-21T10:43:47")
+("amd.vpn" last-update: "2021-05-20T14:26:36")
+("amd.work.python")
+("amd.work.umrsh" last-update: "2020-09-24T20:20:00")
+("amd.work.umrsh.zsh" last-update: "2020-11-04T10:39:00")
+("assholiness" last-update: "2020-11-22T14:22:59")
+("avast" last-update: "2021-06-13T07:40:10")
+("bash" last-update: "2020-09-17T08:43:46")
+("bash.completion" last-update: "2020-10-01T15:55:46")
+\.\.\.)nil
+
+
+(setq dpj-topic-list
+      '(("emacs.elisp" last-update: "2021-06-30T22:05:20")
+	("yt.mvsik" last-update: "2021-06-30T11:52:00")
+	(#("todo.tools" 0 10 (fontified t face dp-journal-topic-face)) last-update:
+	 "2021-06-30T11:19:05")
+	(#("emacs.elisp.journal-mode" 0 24 (fontified t face dp-journal-topic-face)) last-update:
+	 "2021-06-30T08:45:15")
+	(#("tmux" 0 4 (fontified t face dp-journal-topic-face)) last-update:
+	 "2021-06-30T08:20:07")
+	(#("ponderables" 0 11 (fontified t)))
+	(#("screeds.english.internet" 0 24 (fontified nil)) last-update:
+	 "2021-06-28T12:47:01")
+	(#("emacs.elisp.dpj" 0 15 (fontified nil)))
+	(#("utils" 0 5 (fontified nil)))
+	(#("todo" 0 4 (fontified nil)))
+	(#("toys.bluetooth.mifa-x17.review" 0 30 (fontified nil)))
+	(#("politics" 0 8 (fontified nil)))
+	(#("nordvpn" 0 7 (fontified nil)))
+	(#("games" 0 5 (fontified nil)))
+	(#("work" 0 4 (fontified nil)))
+	(#("emacs.elisp.dp-sel2" 0 19 (fontified nil)))
+	(#("utils.bugs.index-code" 0 21 (fontified nil)))
+	(#("work.amd.tom" 0 12 (fontified nil)))
+	(#("medical.pain" 0 12 (fontified nil)))
+	(#("todo.openbox" 0 12 (fontified nil)))
+	(#("medical.psychiatric" 0 19 (fontified nil)))
+	(#("not-work" 0 8 (fontified nil)))
+	(#("games.health" 0 12 (fontified nil)))
+	(#("games.falcon-age.ui" 0 19 (fontified nil)))
+	(#("doggo.speak" 0 11 (fontified nil)))
+	(#("physics.simulation-hypothesis" 0 29 (fontified nil)))
+	(#("zsh" 0 3 (fontified nil)))
+	(#("security.passwords" 0 18 (fontified nil)))
+	(#("mvsik.solos" 0 11 (fontified nil)))
+	(#("ui.suckage.stackexchange.level:" 0 31 (fontified nil)))
+	(#("ui.suckage.stackexchange.level:heavenly" 0 39 (fontified nil)))
+	(#("stackexchange.e.g.suckassexchange.emacs" 0 39 (fontified nil)))
+	(#("humor.emacs.You-know-you're-an-Emacs-geek-when" 0 46 (fontified nil)))
+	(#("net.usb.usb.tethering" 0 21 (fontified nil)))
+	(#("net.usb.tethering" 0 17 (fontified nil)))
+	(#("security.passwords.google-drive" 0 31 (fontified nil)))
+	(#("politics.yt" 0 11 (fontified nil)))
+	(#("python.mode" 0 11 (fontified nil)))
+	(#("bash.utils" 0 10 (fontified nil)))
+	(#("todo.zsh" 0 8 (fontified nil)))
+	(#("todo.vilya" 0 10 (fontified nil)))
+	(#("avast-scams" 0 11 (fontified nil)) last-update: "2021-06-15T00:46:50")
+	(#("cx" 0 2 (fontified nil)))
+	(#("games.console" 0 13 (fontified nil)))
+	(#("insults" 0 7 (fontified nil)))
+	(#("games.controls" 0 14 (fontified nil)))
+	(#("faux-clevernesses" 0 17 (fontified nil)))
+	(#("yt.misc" 0 7 (fontified nil)))
+	(#("yt.chris-squre" 0 14 (fontified nil)))
+	(#("mvsik" 0 5 (fontified nil)))
+	(#("security" 0 8 (fontified nil)))
+	(#("python" 0 6 (fontified nil)))
+	(#("games.crafting" 0 14 (fontified nil)))
+	(#("posting.yt" 0 10 (fontified nil)))
+	(#("mvisk.yt" 0 8 (fontified nil)))
+	(#("mvisk.prog" 0 10 (fontified nil)))
+	(#("screeds.programming.OAOO" 0 24 (fontified nil)))
+	(#("mvisk" 0 5 (fontified nil)))
+	(#("games.ui" 0 8 (fontified nil)))
+	(#("politics.money" 0 14 (fontified t face dp-journal-topic-face)))
+	("amd.management" last-update: "2020-10-21T10:43:47")
+	("amd.vpn" last-update: "2021-05-20T14:26:36")
+	("amd.work.python")
+	("amd.work.umrsh" last-update: "2020-09-24T20:20:00")
+	("amd.work.umrsh.zsh" last-update: "2020-11-04T10:39:00")
+	("assholiness" last-update: "2020-11-22T14:22:59")
+	("avast" last-update: "2021-06-13T07:40:10")
+	("bash" last-update: "2020-09-17T08:43:46")
+	("bash.completion" last-update: "2020-10-01T15:55:46"))
+
+      (cl-pp dpj-topic-list)
+
+(("emacs.elisp" last-update: "2021-06-30T22:05:20")
+ ("yt.mvsik" last-update: "2021-06-30T11:52:00")
+ (#("todo.tools" 0 10 (fontified t face dp-journal-topic-face)) last-update:
+  "2021-06-30T11:19:05")
+ (#("emacs.elisp.journal-mode" 0 24 (fontified t face dp-journal-topic-face)) last-update:
+  "2021-06-30T08:45:15")
+ (#("tmux" 0 4 (fontified t face dp-journal-topic-face)) last-update:
+  "2021-06-30T08:20:07")
+ (#("ponderables" 0 11 (fontified t)))
+ (#("screeds.english.internet" 0 24 (fontified nil)) last-update:
+  "2021-06-28T12:47:01")
+ (#("emacs.elisp.dpj" 0 15 (fontified nil)))
+ (#("utils" 0 5 (fontified nil)))
+ (#("todo" 0 4 (fontified nil)))
+ (#("toys.bluetooth.mifa-x17.review" 0 30 (fontified nil)))
+ (#("politics" 0 8 (fontified nil)))
+ (#("nordvpn" 0 7 (fontified nil)))
+ (#("games" 0 5 (fontified nil)))
+ (#("work" 0 4 (fontified nil)))
+ (#("emacs.elisp.dp-sel2" 0 19 (fontified nil)))
+ (#("utils.bugs.index-code" 0 21 (fontified nil)))
+ (#("work.amd.tom" 0 12 (fontified nil)))
+ (#("medical.pain" 0 12 (fontified nil)))
+ (#("todo.openbox" 0 12 (fontified nil)))
+ (#("medical.psychiatric" 0 19 (fontified nil)))
+ (#("not-work" 0 8 (fontified nil)))
+ (#("games.health" 0 12 (fontified nil)))
+ (#("games.falcon-age.ui" 0 19 (fontified nil)))
+ (#("doggo.speak" 0 11 (fontified nil)))
+ (#("physics.simulation-hypothesis" 0 29 (fontified nil)))
+ (#("zsh" 0 3 (fontified nil)))
+ (#("security.passwords" 0 18 (fontified nil)))
+ (#("mvsik.solos" 0 11 (fontified nil)))
+ (#("ui.suckage.stackexchange.level:" 0 31 (fontified nil)))
+ (#("ui.suckage.stackexchange.level:heavenly" 0 39 (fontified nil)))
+ (#("stackexchange.e.g.suckassexchange.emacs" 0 39 (fontified nil)))
+ (#("humor.emacs.You-know-you're-an-Emacs-geek-when" 0 46 (fontified nil)))
+ (#("net.usb.usb.tethering" 0 21 (fontified nil)))
+ (#("net.usb.tethering" 0 17 (fontified nil)))
+ (#("security.passwords.google-drive" 0 31 (fontified nil)))
+ (#("politics.yt" 0 11 (fontified nil)))
+ (#("python.mode" 0 11 (fontified nil)))
+ (#("bash.utils" 0 10 (fontified nil)))
+ (#("todo.zsh" 0 8 (fontified nil)))
+ (#("todo.vilya" 0 10 (fontified nil)))
+ (#("avast-scams" 0 11 (fontified nil)) last-update: "2021-06-15T00:46:50")
+ (#("cx" 0 2 (fontified nil)))
+ (#("games.console" 0 13 (fontified nil)))
+ (#("insults" 0 7 (fontified nil)))
+ (#("games.controls" 0 14 (fontified nil)))
+ (#("faux-clevernesses" 0 17 (fontified nil)))
+ (#("yt.misc" 0 7 (fontified nil)))
+ (#("yt.chris-squre" 0 14 (fontified nil)))
+ (#("mvsik" 0 5 (fontified nil)))
+ (#("security" 0 8 (fontified nil)))
+ (#("python" 0 6 (fontified nil)))
+ (#("games.crafting" 0 14 (fontified nil)))
+ (#("posting.yt" 0 10 (fontified nil)))
+ (#("mvisk.yt" 0 8 (fontified nil)))
+ (#("mvisk.prog" 0 10 (fontified nil)))
+ (#("screeds.programming.OAOO" 0 24 (fontified nil)))
+ (#("mvisk" 0 5 (fontified nil)))
+ (#("games.ui" 0 8 (fontified nil)))
+ (#("politics.money" 0 14 (fontified t face dp-journal-topic-face)))
+ ("amd.management" last-update: "2020-10-21T10:43:47")
+ ("amd.vpn" last-update: "2021-05-20T14:26:36")
+ ("amd.work.python")
+ ("amd.work.umrsh" last-update: "2020-09-24T20:20:00")
+ ("amd.work.umrsh.zsh" last-update: "2020-11-04T10:39:00")
+ ("assholiness" last-update: "2020-11-22T14:22:59")
+ ("avast" last-update: "2021-06-13T07:40:10")
+ ("bash" last-update: "2020-09-17T08:43:46")
+ ("bash.completion" last-update: "2020-10-01T15:55:46")
+ \.\.\.)nil
+
+
+
+ (setq dpj-topic-list
+      '(("emacs.elisp" last-update: "2021-06-30T22:05:20")
+	("yt.mvsik" last-update: "2021-06-30T11:52:00")
+	(#("todo.tools" 0 10 (fontified t face dp-journal-topic-face)) last-update:
+	 "2021-06-30T11:19:05")
+	(#("emacs.elisp.journal-mode" 0 24 (fontified t face dp-journal-topic-face)) last-update:
+	 "2021-06-30T08:45:15")
+	(#("tmux" 0 4 (fontified t face dp-journal-topic-face)) last-update:
+	 "2021-06-30T08:20:07")
+	(#("ponderables" 0 11 (fontified t)))
+	(#("screeds.english.internet" 0 24 (fontified nil)) last-update:
+	 "2021-06-28T12:47:01")
+	(#("emacs.elisp.dpj" 0 15 (fontified nil)))
+	(#("utils" 0 5 (fontified nil)))
+	(#("todo" 0 4 (fontified nil)))
+	(#("toys.bluetooth.mifa-x17.review" 0 30 (fontified nil)))
+	(#("politics" 0 8 (fontified nil)))
+	(#("nordvpn" 0 7 (fontified nil)))
+	(#("games" 0 5 (fontified nil)))
+	(#("work" 0 4 (fontified nil)))
+	(#("emacs.elisp.dp-sel2" 0 19 (fontified nil)))
+	(#("utils.bugs.index-code" 0 21 (fontified nil)))
+	(#("work.amd.tom" 0 12 (fontified nil)))
+	(#("medical.pain" 0 12 (fontified nil)))
+	(#("todo.openbox" 0 12 (fontified nil)))
+	(#("medical.psychiatric" 0 19 (fontified nil)))
+	(#("not-work" 0 8 (fontified nil)))
+	(#("games.health" 0 12 (fontified nil)))
+	(#("games.falcon-age.ui" 0 19 (fontified nil)))
+	(#("doggo.speak" 0 11 (fontified nil)))
+	(#("physics.simulation-hypothesis" 0 29 (fontified nil)))
+	(#("zsh" 0 3 (fontified nil)))
+	(#("security.passwords" 0 18 (fontified nil)))
+	(#("mvsik.solos" 0 11 (fontified nil))))
+	(#("ui.suckage.stackexchange.level:" 0 31 (fontified nil)))
+	(#("ui.suckage.stackexchange.level:heavenly" 0 39 (fontified nil)))
+	(#("stackexchange.e.g.suckassexchange.emacs" 0 39 (fontified nil)))
+	(#("humor.emacs.You-know-you're-an-Emacs-geek-when" 0 46 (fontified nil)))
+	(#("net.usb.usb.tethering" 0 21 (fontified nil)))
+	(#("net.usb.tethering" 0 17 (fontified nil)))
+	(#("security.passwords.google-drive" 0 31 (fontified nil)))
+	(#("politics.yt" 0 11 (fontified nil)))
+	(#("python.mode" 0 11 (fontified nil)))
+	(#("bash.utils" 0 10 (fontified nil)))
+	(#("todo.zsh" 0 8 (fontified nil)))
+	(#("todo.vilya" 0 10 (fontified nil)))
+	(#("avast-scams" 0 11 (fontified nil)) last-update: "2021-06-15T00:46:50")
+	(#("cx" 0 2 (fontified nil)))
+	(#("games.console" 0 13 (fontified nil)))
+	(#("insults" 0 7 (fontified nil)))
+	(#("games.controls" 0 14 (fontified nil)))
+	(#("faux-clevernesses" 0 17 (fontified nil)))
+	(#("yt.misc" 0 7 (fontified nil)))
+	(#("yt.chris-squre" 0 14 (fontified nil)))
+	(#("mvsik" 0 5 (fontified nil)))
+	(#("security" 0 8 (fontified nil)))
+	(#("python" 0 6 (fontified nil)))
+	(#("games.crafting" 0 14 (fontified nil)))
+	(#("posting.yt" 0 10 (fontified nil)))
+	(#("mvisk.yt" 0 8 (fontified nil)))
+	(#("mvisk.prog" 0 10 (fontified nil)))
+	(#("screeds.programming.OAOO" 0 24 (fontified nil)))
+	(#("mvisk" 0 5 (fontified nil)))
+	(#("games.ui" 0 8 (fontified nil)))
+	(#("politics.money" 0 14 (fontified t face dp-journal-topic-face)))
+	("amd.management" last-update: "2020-10-21T10:43:47")
+	("amd.vpn" last-update: "2021-05-20T14:26:36")
+	("amd.work.python")
+	("amd.work.umrsh" last-update: "2020-09-24T20:20:00")
+	("amd.work.umrsh.zsh" last-update: "2020-11-04T10:39:00")
+	("assholiness" last-update: "2020-11-22T14:22:59")
+	("avast" last-update: "2021-06-13T07:40:10")
+	("bash" last-update: "2020-09-17T08:43:46")
+	("bash.completion" last-update: "2020-10-01T15:55:46"))
+
+
+      (cl-pp dpj-topic-list)
+
+========================
+2021-07-01T09:13:32
+--
+
+========================
+Saturday July 03 2021
+--
+(symbol-plist 'mingus)
+
+(autoload ("mingus-stays-home" nil t nil)
+custom-group ((mingus-faces custom-group) (mingus-timer-interval
+custom-variable) (mingus-use-caching
+custom-variable) (mingus-mpd-config-file
+custom-variable) (mingus-mpd-playlist-dir
+custom-variable) (mingus-fold-case
+custom-variable) (mingus-mode-line
+custom-group) (mingus-mode-line-separator
+custom-variable) (mingus-use-ido-mode-p
+custom-variable) (mingus-use-mouse-p
+custom-variable) (mingus-mpd-env-set-p
+custom-variable) (mingus-mpd-host
+custom-variable) (mingus-mpd-port
+custom-variable) (mingus-mpd-root
+custom-variable) (mingus-playlist-directory
+custom-variable) (mingus-seek-amount
+custom-variable) (mingus-format-song-function
+custom-variable) (mingus-stream-alist
+custom-variable) (mingus-podcast-alist
+custom-variable) (mingus-wait-for-update-interval
+custom-variable) (mingus-dired-add-keys
+custom-variable) (mingus-bookmarks
+custom-variable) (mingus-stays-home custom-group) (mingus-burns
+custom-group)) group-documentation "Group customization for
+mingus mpd interface" event-symbol-element-mask (mingus 0)
+event-symbol-elements (mingus) modifier-cache ((0 . mingus))
+defalias-fset-function #[128 "\300\301\302#\207" [apply
+advice--defalias-fset #[128 "\300\301\302#\207" [apply
+ad--defalias-fset nil nil] 5 nil] nil] 5 nil]
+ad-advice-info ((active . t) (advicefunname
+. ad-Advice-mingus) (after (mingus-dnd-injection nil t (advice
+lambda nil (mingus-inject-dnd-action 'mingus-add-url)))) (cache
+#[(ad--addoit-function &optional set-variables) "\303
+!\304\305!\210)\207" [ad-return-value ad--addoit-function
+set-variables nil mingus-inject-dnd-action mingus-add-url] 2] nil
+nil (mingus-dnd-injection) fun2 (&optional set-variables) nil))
+function-documentation (advice--make-docstring 'mingus))
+
+
+(global-unset-key [(control meta ?m)])
+nil
+
+(global-unset-key [(control meta ?p)])
+nil
+
+(global-set-key [(control meta ?m)] 'mingus)
+(global-set-key [(control meta ?p)] 'dp-mingus-random-album)
+
+========================
+2021-07-03T12:57:20
+--
+
+Global Bindings Starting With C-x v:
+key             binding
+---             -------
+
+C-x v +		vc-update
+C-x v =		vc-diff
+C-x v D		vc-root-diff
+C-x v G		vc-ignore
+C-x v I		vc-log-incoming
+C-x v L		vc-print-root-log
+C-x v M		Prefix Command
+C-x v O		vc-log-outgoing
+C-x v P		vc-push
+C-x v a		vc-update-change-log
+C-x v b		vc-switch-backend
+C-x v d		vc-dir
+C-x v g		vc-annotate
+C-x v h		vc-region-history
+C-x v i		vc-register
+C-x v l		vc-print-log
+C-x v m		vc-merge
+C-x v r		vc-retrieve-tag
+C-x v s		vc-create-tag
+C-x v u		vc-revert
+C-x v v		vc-next-action
+C-x v x		vc-delete-file
+C-x v ~		vc-revision-other-window
+
+C-x v M D	vc-diff-mergebase
+C-x v M L	vc-log-mergebase
+
+[back]
+
+========================
+Tuesday July 06 2021
+--
+
+(dp-setup-bookmarks)
+
+(dp-nuke-newline
+ (shell-command-to-string
+  "mk-persistent-dropping-name.sh --use-project-as-suffix emacs.bmk"))
+"EExec_parse: enter$@>--use-project-as-suffix emacs.bmk<
+EExec_parse:$1>--use-project-as-suffix<
+EExec_parse: exit$@>--use-project-as-suffix emacs.bmk<
+/home/davep/droppings/persist/emacs.bmk/vilya.-"
+
+"/home/davep/droppings/persist/emacs.bmk/vilya.-"
+
+
+
+
+========================
+Tuesday July 13 2021
+--
+(defvar zuzz 'i-am-zuzz2)
+zuzz
+i-am-zuzz2
+
+i-am-zuzz2
+
+i-am-zuzz2
+
+(makunbound 'zuzz)
+zuzz
+zuzz
+new-zuzz
+
+variable-history
+
+("variable-history" "zuzz")
+
+(makunbound 'variable-history)
+variable-history
+
+
+
+(defun zuzzf (&optional zuzz-val)
+  (interactive "Ssym? ")
+  (defvar zuzz zuzz-val))
+
+

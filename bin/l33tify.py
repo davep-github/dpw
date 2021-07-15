@@ -3,6 +3,7 @@
 #
 # davep's standard Python file template.
 # /home/davep/bin/templates/python-template.py
+# See initial commit message.  A bug in vc?
 #
 
 import os, sys, errno
@@ -17,20 +18,13 @@ warning_file = sys.stderr
 BROKEN_PIPE_RC = 1
 IOERROR_RC = 1
 
-class Replacer_base(object):
+class Replacement_list(object):
     """ Want to be able to replace things like l with [1,i,I].
     special_replacements are based on the idea of shell meta-characters.
     Some sites may get grumpy if they are fed these things.
     Are concatenated with replacements unless disable by a flag.
     at this time, index is unused but may be used by a looker-upper.
 """
-    def __init__(self):
-
-    def replacement(self):
-        raise NotImplemented error
-
-class Replacer_rand_list(Replacer_base):
-    ### @todo XXX I think this isn't the correct use of super, even if it works.
     def __init__(self,
                  replacements,
                  special_replacements = [],
@@ -45,8 +39,20 @@ class Replacer_rand_list(Replacer_base):
         self.index = index
         self.local_random = random.Random.randrange
 
+    # 99% of the way primmies like me use rand.
+    def rand(self, high=None, low=0):
+        """You do the math for high. I refuse to assume high - 1.
+        But high == None --> high = num_replacements - 1"""
+        if high is None:
+            high = self.num_replacements - 1
+        dp_io.cdebug(1, "low: %s, high: %s\n", low, high)
+        ## Gotta figure out how to make using local_random
+        ## work like this
+        ###return self.local_random(low, high)
+        return random.Random().randrange(low, high)
+
     def replacement(self):
-        raise NotImplemented error
+        return self.all_replacements[self.rand()]
 
 
 
@@ -60,20 +66,20 @@ class Replacer_rand_list(Replacer_base):
 
 Replacement_map = {
     ## Make the key a set/tuple/list if needed.
-    "l": Replacer(["1", "i", "I"], ["|"]),
-    "L": Replacer(["1", "i", "I", "!"], ["|", "!_"]),
-    "1": Replacer(["l", "i", "I", "!"], ["|", "!_"]),
-    "S": Replacer(["5",], ["-Ess-",]),
-    "s": Replacer(["5",], ["-Ess-",]),
-    "N": Replacer([], ["-en-", "-EN-", "|\|"]),
-    "n": Replacer([], ["-en-", "-EN-", "|\|"]),
-    "E": Replacer(['3'], ['-ee']),
-    "e": Replacer(['3'], ['-ee']),
+    "l": Replacement_list(["1", "i", "I"], ["|"]),
+    "L": Replacement_list(["1", "i", "I", "!"], ["|", "!_"]),
+    "1": Replacement_list(["l", "i", "I", "!"], ["|", "!_"]),
+    "S": Replacement_list(["5",], ["-Ess-",]),
+    "s": Replacement_list(["5",], ["-Ess-",]),
+    "N": Replacement_list([], ["-en-", "-EN-", "|\|"]),
+    "n": Replacement_list([], ["-en-", "-EN-", "|\|"]),
+    "E": Replacement_list(['3'], ['-ee']),
+    "e": Replacement_list(['3'], ['-ee']),
     ## @todo XXX have some way of adding the set of upper & lower case
     ## letters.  Like the hand-coded 'o', 'O'.  1 hr of coding to save some
     ## number of *milliseconds* in the years to come.
-    "O": Replacer(['0', 'o', 'O'], ['-oh-']),
-    "o": Replacer(['0', 'o', 'O'], ['-oh-']),
+    "O": Replacement_list(['0', 'o', 'O'], ['-oh-']),
+    "o": Replacement_list(['0', 'o', 'O'], ['-oh-']),
 }
 
 

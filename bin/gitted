@@ -33,7 +33,7 @@ gitted_p_debug()
     gitted_p "$file"
 }
 
-gitted_p_normal()
+gitted_p_verbose()
 {
     local file="$1"
     local git_msg
@@ -72,7 +72,7 @@ gitted_p_file()
     fi
 }
 
-: ${git_fun="gitted_p_normal"}
+: ${git_fun="gitted_p_quiet"}
 : ${quiet_p=}
 
 
@@ -96,16 +96,28 @@ Exit:
 "
 
 # The real meat...
-option_str="fdq"
+option_str="fdqV"
+declare -a long_options
+#Each element is a long option name sans '--'
+long_options=(
+    "vv" "vv" "verbose"		# --v, --vv since EExec usurps -v
+    "quiet"			# -a, anti vv
+    "debug"			# -d
+    "file"			# -f
+)
+
 source dp-getopt+.sh            # Runs when sourced.
+
 # Loop over your options.
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "1:@>$@<"
 for i in "$@"; do
     case "$1" in
-        -f) git_fun="gitted_p_file";;
-        -d) git_fun="gitted_p_debug";;
-        -q) git_fun="gitted_p_quiet"
-            quiet_p=t;;
+        -f|--file) git_fun="gitted_p_file";;
+        -d|--debug) git_fun="gitted_p_debug";;
+        -q|--quiet) git_fun="gitted_p_quiet"
+		    quiet_p=t;;
+	-V|--vv|--verbose) git_fun="gitted_p_verbose"
+			   quiet_p=;;
         --) shift; break;;
     esac
     shift
@@ -116,6 +128,8 @@ for f in "$@"
 do
   [ -e "$f" ] || {
       at_least_one_fail=1
+      ## I'd be nice to know if I'm called from the command line and be
+      ## verbose by default.
       [ -z "${quiet_p}" ] && {
 	  # print the fail prefix for bad programs using this.
           echo "-- $progname: $f does not exist."

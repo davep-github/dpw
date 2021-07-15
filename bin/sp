@@ -13,8 +13,17 @@ $files_only_p = 1;
 $quiet_p = 0;                   # Just return status.
 $debug_level = 0;
 
+## Rewrite this in a grownup language.
+
+## Reexamine the details of X vs x.
+## Evolve -C handle a complete pipeline, with replacement cmd and args,
+## something like this: (just an illustration)
+## -C "%c %f| sed 's/([^[:space:]])(.*)/\2/p'
+## "%c" command name
+## "%f" filename
+## @todo XXX Add a way to pipe all names to a single command, a'la' xargs?
 sub usage {
-    printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-S] [-X cmd [args]] [-x cmd] file...\n");
+    printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-S] [-X cmd [args]] [-x cmd] [-C cmdline] file...\n");
     exit(0);
 }
 
@@ -27,8 +36,20 @@ if (! @ARGV) {
 }
 
 while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
-    #printf("opt>$opt<, opt_arg>$opt_arg<\n");
-    if ($opt eq "n" || $opt =~ /^\d+/) {
+    printf("top of loop: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	if ($debug_level);
+    # Do this first so we can see as much debugging as possible.
+    if ($opt eq "D") {
+	printf("before, opt>$opt<, opt_arg>$opt_arg<\n") if ($debug_level);
+	if (! ($opt_arg eq "")) {
+	    $debug_level = $opt_arg;
+	} else {
+	    $debug_level = $ARGV[1];
+	    shift(@ARGV);
+	}
+	printf("after, opt>$opt<, opt_arg>$opt_arg<\n") if ($debug_level);
+    } elsif ($opt eq "n" || $opt =~ /^\d+/) {
+	printf("opt>$opt<, opt_arg>$opt_arg<\n") if ($debug_level);
 	if ($opt =~ /^[0-9]+/) {
 	    $num_to_print = $opt;
 	} elsif ($opt_arg) {
@@ -46,19 +67,14 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
 	    shift(@ARGV);
 	}
 	$num_to_print = 1 if ($opt eq "N");
-    } elsif ($opt eq "D") {
-	if (! ($opt_arg eq "")) {
-	    $debug_level = $opt_arg;
-	} else {
-	    $debug_level = $ARGV[1];
-	    shift(@ARGV);
-	}
     } elsif ($opt eq "l") {
 	$cmd = "ls";
 	$cmd_args = "-l " if ($opt_arg eq "l");
     } elsif ($opt eq "r") {
 	$cmd = "realpath";
     } elsif ($opt =~ /([X])([^ ]*)/) {
+	printf("B: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	    if ($debug_level);
 	#printf("0, X: opt>$opt<, cmd_args>$cmd_args<\n");
 	if ($opt_arg) {
 	    $cmd_args = $opt_arg;
@@ -68,13 +84,30 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
 	    shift(@ARGV);
 	}
 	$cmd_args = "$cmd_args";
+	printf("A: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	    if ($debug_level);
     } elsif ($opt eq "x") {
+	printf("B: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	    if ($debug_level);
 	if ($opt_arg) {
 	    $cmd = $opt_arg;
 	} else {
 	    $cmd=$ARGV[1];
 	    shift(@ARGV);
 	}
+	printf("A: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	    if ($debug_level)
+    } elsif ($opt eq "C") {
+	printf("B: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	    if ($debug_level);
+	if ($opt_arg) {
+	    $cmd = $opt_arg;
+	} else {
+	    $cmd=$ARGV[1];
+	    shift(@ARGV);
+	}
+	printf("A: opt>$opt<, opt_arg>$opt_arg<, cmd_args>$cmd_args<\n")
+	    if ($debug_level)
     } elsif ($opt eq "f") {
 	if ($opt_arg) {
 	    $func_name = $opt_arg;
@@ -127,7 +160,8 @@ printf("func_name>$func_name<, cmd_args>$cmd_args<\n") if ($debug_level);
 printf("num_to_skip>$num_to_skip<\n") if ($debug_level);
 printf("num_to_print>$num_to_print<\n") if ($debug_level);
 
-die "cmd_args given without a cmd or func-name.\n" if ($cmd_args && !$cmd && !$func_name);
+die "cmd_args >$cmd_args< given without a cmd or func-name.\n"
+    if ($cmd_args && !$cmd && !$func_name);
 
 $path = $ENV{'SP_PATH'} ? $ENV{'SP_PATH'} : $ENV{'PATH'};
 foreach $pathEl (split(/:/, $path)) {
@@ -148,6 +182,8 @@ foreach $arg (@ARGV) {
 	    next if ($files_only_p && -d $targ);
 	    if ($func_name) {
 		#&echo($cmd_args);
+		printf("func: func_name>$func_name<, cmd_args>$cmd_args<\n")
+		    if ($debug_level);
 		eval("&$func_name(\"real: \", \$cmd_args);");
 	    } elsif (-x $targ) {
 		exit(0) if $quiet_p;
@@ -157,6 +193,8 @@ foreach $arg (@ARGV) {
 		}
 		++$num_printed if $num_to_print >= 0;
 		if ($cmd) {
+		    printf("cmd: cmd>$cmd<, cmd_args>$cmd_args<\n")
+			if ($debug_level);
 		    $qmd = sprintf("%s %s %s%s%s", $sudo, $cmd,
 				   $cmd_args, ($cmd_args) ? " " : "", $targ);
 		    #printf("qmd>$qmd<\n");

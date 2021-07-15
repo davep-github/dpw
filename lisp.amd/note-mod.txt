@@ -1,0 +1,256 @@
+type: type1 type2 type3
+type: type4
+note: text
+goes until
+another header
+:
+type: note
+note: an empty header-terminator is the end of file.
+the start of a note is the 1st char of the file or
+the first char after ^:$
+The end of a note is the first char before ^:$ or (point-max)
+:
+notes are assumed to be of a default type and contain a default field,
+if the first word of the note is not of the form xxx:
+
+
+--or--
+old note-mode style stuff.
+use thet ol' ASCII magic:
+00: NUL
+01: SOH start of heading	
+02: STX start of text		
+03: ETX end of text		
+04: EOT end of transmission?	
+05: ENQ				
+ACK				
+BEL				
+BS				
+HT
+LF
+VT				
+FF				
+CR				
+SO		
+SI
+
+10: DLE
+DC1
+DC2
+DC3
+DC4
+NAK
+SYN
+ETB
+18: CAN
+EM
+SUB
+ECS
+FS    field sep
+GS    group sep
+RS    record sep
+US    ??
+
+header:
+Wrap header in newlines so we can hide text.
+\n<SOH>{<FS>header info}*<EOT>\n
+del-char and <bs> should refuse to delete <SOH><FS> in general.
+and refuse to delete \n inside of a header.  And we cannot
+insert \n in a header.
+note-head-start-re "\n<SOH>"
+note-head-end-re   "<EOT>\n"
+
+note-body-start
+   find head-start, find head-end, goto end of head-end-re
+
+Or:
+
+\n<SOH>
+Subject: blah\n
+Xref: blergh blop argle\n
+<EOT>\n
+text for this note...
+
+
+
+\n<SOH>
+Subject: 
+Type:
+<EOT>\n
+
+
+Bad thing about this is the screen real estate it consumes.
+The FS stuff takes up a single line (if trunc is on).
+Can have a header edit mode which expands fields onto separate lines
+and then puts 'em back when done.
+
+Or can have headers hidden alla time, except when we edit them.
+
+todo: can have a parameter to indicate state.  this way we can cycle thru
+states.
+
+field-end == [<FS>|<EOT>]
+
+\n<SOH><FS>note<EOT>\n
+
+the above is created by note-new-note.  The <SOH> should be hardish to get
+in by accident.  All new notes are added at EOF by default.
+
+every new-note will check the day vs the "current" day (eg remember it from
+a last scan or scan backwards for a date stamp:
+
+\n<SOH><FS>date 12-Mar-1996<FS>time 12:12am<EOT>\n
+
+If it is a new day, a new date stamp is inserted before the next note.
+
+have command note-add-header-field...
+   goto end of header (before the \n) insert a <FS><FS> and position point
+   between the FS's.
+
+note-delete-header-field
+   backup to <FS>; mark; forward to <FS>; del (mark)(point) inclusive 
+   both FS's.
+
+
+(defun note-start-re (type hidden)
+   "Build re to find start of a note based on the requested type and
+the value of hidden. type == nil or "" or 'any --> any type.
+Hidden can be:
+'hidden --> only hidden notes,
+'visible --> only visible notes or
+'any --> hidden or visible"
+
+   ;; concat hidden and/or visible prefix (^M is hidden, \n is visible)
+   ;; with [^<EOT>]*<FS>type TYPE[<EOT><FS>]
+   ;; <EOT> should be a var w/name head-end-sequence
+   ;; <SOH> should be a var w/name head-beg-sequence
+   ;; <FS>  should be a var w/name head-FS-sequence
+   (let ((prefix (cond (eq hidden 'hidden) both-re
+;; end-of-note should be start of next note - 1 or (point-max)
+;; start-of-current-note:
+;;	(if (looking-at start-pattern)
+;;	    (point)
+;;	  (search-backwards-for-note-start))
+
+(defun next-note (type hidden body)
+   (let ((start-re (note-head-start-re type hidden)))
+      (if (looking-at start-re)
+         (forward-char 1))
+      (if (null (re-search-forward start-re))
+          nil
+        (if (eq body 'body)
+             (find-body 'throw-on-error))
+        (point))))
+
+(defun prev-note (type hidden body)
+   (let ((start-re (note-head-start-re type hidden))
+         rc t)
+      (if (looking-at start-re)
+          (if (bobp)
+               (setq rc nil)
+             (backward-char 1)))
+      (if rc
+         (setq rc
+            (if (null (re-search-backward start-re))
+                  nil
+               (if (eq body 'body)
+                  (find-body 'throw-on-error)))))
+      (rc)))
+      
+(defun cur-note ()
+   (let ((start-re (note-head-start-re 'any 'any)))
+      (if (not (and (looking-at start-re)
+               (not (bobp))))
+         (if (null (re-search-backward start-re))
+             nil
+           (if (eq body 'body)
+                (find-body 'throw-on-error))))
+      (point)))
+   
+
+want to find
+   {current|prev|next}-{head|body}-{start|end}-{hidden|visible|any}
+(defun  note-find-note (which part start-or-end visibility)
+   ""
+   (interactive)
+   (let ((loc (where-am-i)) ;; ({'head|'body} {'start|'end|'middle})
+         
+
+           _____________________________________________________
+  ________|                                                     |________
+  \       |                  FILTERING MAIL FAQ                 |       /
+   \      |  Copyright (c) 1994, 1995 Nancy McGough and others  |      /
+   /      |_____________________________________________________|      \
+  /___________)                                              (__________\
+
+
+
+    +--+                 +---+                    +###+    
+    |  |                 |   |    	          #   #    
+  +-| +--+            +--|  +---+  	       +###  +###+ 
+  | +-|  |.           |  +--|   |# 	       #  +###   #
+  |  |-+ |.           |   |--+  |# 	       #   ###+  #
+  +--+ |-+.           +---+  |--+#  	       +###+  ###+
+    |  |,..              |   |####	          #   #
+    +--+.                +---+#   	          +###+
+     ....                 #####    	           
+
+     +---+    
+     |   |    
+  +--|  +---+ 
+  |  +==|   |
+  |   |--+  |
+  +===+  |==+
+     |   |
+     +===+   
+
+
+    o--o
+  o-| o--o
+  | o-|  | 
+  |  |-o |  
+  o--o |-o 
+    o--o 
+
+          
+      _/
+    / //\  
+    \//_/      
+     /
+
+        /
+      _/
+    / //\  
+    \//_/      
+     /
+    /
+         
+        /\
+      _/_/anariti
+    / /
+    \/avid
+      
+        
+
+
+
+
+      /()
+   / /
+ /() 
+   
+   *
+    *   
+     *   *
+    * * * *
+     *   *
+          *
+           *
+
+         *
+        *
+     * *  * 
+    * *  * *
+     *  * *
+       *  
+      *    

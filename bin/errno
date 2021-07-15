@@ -2,6 +2,7 @@
 
 set -u
 
+eko "inital args" "$@"
 progname=$(basename "$0")
 
 errno_dat=("$@")	    # Pristine args.
@@ -12,12 +13,15 @@ source eexec
 [ -z "${eexec_program-}" ] && {
     eexec_program=$(EExec_parse "$@")
 }
+eko "eexec_program" "${eexec_program}"
 for op in $eexec_program
 do
   $op
   shift
 done
 unset eexec_program
+eko "@" "$@"
+exit 99
 
 errno_dat_tarnished0=("$@")
 
@@ -61,22 +65,37 @@ emit()
     echo $newline_opt "$@"
 }
 
-errno_emit_name()
+function extract_errno_name()
 {
-    terse "name: "
+    echo 1>&2 "errno_extract_name"
+    #terse "name: "
     # Gets errno's name
     # I am SOOOOO glad this works.
     local newline_opt=""
-    emit $(echo "$@" | sed -rn 's/(.*#define[^A-Z]*)([A-Z]*)(.*)/\2/p')
+    # sed -rn 's/(.*#define[^A-Z]*)([A-Z]*)(.*)/\2/p')
+    # ^^ this broke, and I don't know why.
+    # *THIS* why one copies and pastes a canonical example.
+
+    ## /usr/include/asm-generic/errno-base.h:#define	EIO		 5	/* I/O error */
+    echo 1>&2 "$@"
+    echo $(echo "$@" | sed -rn 's/(^.*#define[[:space:]]+)([A-Z]+)(.*)$/\2/p')
+}
+
+errno_emit_name()
+{
+    echo 1>&2 "errno_emit_name"
+    echo 1>&2 ""
+    terse "name: "
+    local newline_opt=""
+    emit $(errno_extract_name "$@")
 }
 
 errno_emit_name_no_newline()
 {
-    local newline_opt="-n"
+    echo 1>&2 "errno_emit_name_no_newline"
     terse "name: "
-    # Gets errno's name
-    # I am SOOOOO glad this works.
-    emit $(echo "$@" | sed -rn 's/(.*#define[^A-Z]*)([A-Z]*)(.*)/\2/p')
+    local newline_opt="-n"
+    emit $(errno_extract_name "$@")
 }
 
 errno_emit_desc()
@@ -173,6 +192,7 @@ source dp-getopt+.sh            # Runs when sourced.
 #echo "1:DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT>$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT<"
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "1:@>$@<"
 for i in "$@"; do
+    echo "\$1>$1<" 1>&2
     case "$1" in
         -n|-s) errno_emitter=errno_emit_name;;
         -N) errno_emitter=errno_emit_name_no_newline;;
@@ -206,6 +226,7 @@ done
     exit 1
 }
 
+echo_id errno_emitter
 set_exit_code()
 {
     if vunsetp $return_exit_code_p; then
@@ -219,7 +240,7 @@ set_exit_code()
     local arg_array=("$@")
     echo "${arg_array[index]}"
 }
-    
+
 exit_code=$(set_exit_code "$@")
 
 for eno in "$@"; do
@@ -235,7 +256,6 @@ for eno in "$@"; do
 
 #    errno_line=$(egrep "${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)" \
 #        $ERRNO_FILES)
-
 
     rc=$?
     [ "$rc" != 0 ] && {

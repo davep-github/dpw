@@ -461,7 +461,8 @@ VILYA_XEM_GEOMETRY = '--geometry 81x63-1+0'
 e(
     kef='host',
     dat={
-        'host': 'vilya',
+        'host-pattern': '^(vilya)$',
+#        'host': 'vilya',
         'DTE': 'kde',                       # or none
         'comment': 'My main box at home.',
         'nick': 'home',

@@ -4,7 +4,8 @@
 
 # This is needed for the new idiom of using the Python idiom of
 # __name__ == __main__ to allow scripts to be used as libs, too.
-# Setting this here means that the default for command line 
+# Setting this here means that the default for proggies is to run.
+# This needs to be explicitly set by the sourcer.
 export DP__name__=__main__
 # the Name of the home machine's address variable.
 export DP_HOME_MACHINE=VILYA
@@ -195,27 +196,8 @@ screendata_hardcopy_dir()
 DP_EXPORT_FUNC screendata_hardcopy_dir
 
 export SCREENDATA_HARDCOPY_DIR="$(screendata_hardcopy_dir)"
-
 export SCREEN_DEFSCROLLBACK=10240
-
-# don't escape colons when tab-completing
-COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
-
-export MANPAGER=$PAGER
-
-export GNU_SECURE="$HOME/.gnuserv-hosts"
-
-# Fucking A! Finally back to real case sensitive ls and globbing.
-export LC_COLLATE=C
-
-
-# Make sure we're defined but don't change anything.
-: ${DP_GNU_EDITING_SERVER=""}
-
-export DP_CODE_INDEX_FINDER_FILE=cscope.files
-export DP_CODE_INDEX_FINDER_WORK_FILE=${DP_CODE_INDEX_FINDER_FILE}.work
-
-export PASSWORD_STORE_ENABLE_EXTENSIONS=true
+export SCREENDATA_HARDCOPY_DIR="$(screendata_hardcopy_dir)"
 
 # Unconditionally add these.  verify path will hack them out if they're not
 # there.

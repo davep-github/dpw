@@ -370,6 +370,12 @@ alias zshman="evince ~/doc/zshman"
 # 99% of time, including plain wc.
 alias wcl='wc -l'
 alias tmux='dp-tmux'
+alias amscreen='[[ -n "${IMASCREENINSTANCE-}" ]]'
+alias no2='2>/dev/null'
+alias to2='1>&2'
+alias petc="press-enter-to-continue"
+alias resh='exec "${SHELL}" -l'
+alias zshman=zshmanuALL
 # <:new aliases should be added above.:>
 #
 # HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK! HACK!
@@ -378,8 +384,11 @@ alias tmux='dp-tmux'
 #
 if [[ -n "${DP_ZSH_ENVIRONMENT_FUCKED-}" ]] && "${DP_ZSH_FIX_FUCKED_ENVIRONMENT}"
 then
-    alias dpxx='run_under_bash dpxx'
-    alias xem='run_under_bash xem'
+    # These have each worked once w/o the alias.
+    # Let's see what happens between now and the end.
+    true
+    ###alias dpxx='run_under_bash dpxx'
+    ###alias xem='run_under_bash xem'
 fi 1>&2
 
 DP_ALIAS_RC="done as of $(date)"

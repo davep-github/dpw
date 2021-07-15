@@ -41,8 +41,8 @@ EExec_verbose_msg $(echo_id eexec_program)
 : ${DEF_PS_ARGS="${PS_SHORT_ARGS}"}
 PS_ARGS="${DEF_PS_ARGS}"
 
-
 : ${GREPPER:='egrep'}
+
 ##: ${GREP_CMD_FILTER_PAT:=[ef]?grep(( -.)+)?}
 : ${GREP_CMD_FILTER_PAT:="[0-9]+:[0-9]+ /bin/sh /bin/${GREPPER}"}
 : ${PGREP:=$0}
@@ -112,6 +112,7 @@ long_options=(
     "PSA:"
 )
 source dp-getopt+.sh
+echo "\$@>$@<"
 for i in "$@"
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
@@ -178,6 +179,10 @@ got_one=""
 EExec_verbose_echo_id PS_ARGS
 EExec_verbose_echo_id GREP_CMD_FILTER_PAT
 
+#echo EExec $PS $PS_ARGS '|' \
+#	EExec $GREPPER ${GREP_ARGS} "$@" '|' \
+#	 sort '|' uniq '|' egrep -v "[[:space:]]+${GREP_CMD_FILTER_PAT} | $PGREP"
+
 EExec $PS $PS_ARGS | EExec $GREPPER ${GREP_ARGS} "$@" | sort | uniq | egrep -v "[[:space:]]+${GREP_CMD_FILTER_PAT} | $PGREP" | \
   while :; do
     # eof
@@ -189,9 +194,9 @@ EExec $PS $PS_ARGS | EExec $GREPPER ${GREP_ARGS} "$@" | sort | uniq | egrep -v "
         fi
     }
 
-    #echo_id2 REPLY
+    EExec_verbose_echo_id REPLY
     # REPLY preserves whitespace, etc.
-    [ -n "$hdr" ] && {
+    [[ -n "$hdr" ]] && {
         echo "$hdr"
         hdr=
     }

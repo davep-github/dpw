@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # $Id: dp_io.py,v 1.13 2005/06/15 22:45:16 davep Exp $
 #
 import re, types, os, sys, types, string, select, io
@@ -228,7 +229,7 @@ def eprintf(fmt, *args):
 ###############################################################
 def printf(fmt, *args):
     """Why doesn't this use fprintf using stdio?"""
-    if type(fmt) == int:
+    if type(fmt) == types.IntType:
         if lint:
             warning = 'HEY, you left a level in a printf/PRINTF\n'
             sys.stderr.write(warning)
@@ -676,7 +677,6 @@ def set_print_leader(s):
 ###############################################################
 def print_vars(*namelist, **kargs):
     print(dump_vars(*namelist, **kargs))
-
 
 ###############################################################
 # Sigh. Compatibility.

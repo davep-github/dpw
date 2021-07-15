@@ -17,15 +17,19 @@ _dp_gnu_global_complete()
 }
 complete -F _dp_gnu_global_complete global
 
+#
+# use completions of "${1}" as sudo does.
+# See `_dp_sp_complete' for more sophisticated usage.
+#
 _dp_commands_complete()
 {
         local cur
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(compgen -c $cur))
 }
-complete -F _dp_commands_complete sp run-iff xit lessit
+complete -F _dp_commands_complete sp run-iff xit lessit no2
 
-# Ripped off from /bfd/sundry/davep/RCS/RCS.sam/home.davep/.rc/bash_completion,v
+# Ripped from /bfd/sundry/davep/RCS/RCS.sam/home.davep/.rc/bash_completion,v
 # I know not from whence it originally came.
 # @(...) is an extended glob (extglob)
 _dp_sp_complete()

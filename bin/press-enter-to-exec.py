@@ -173,7 +173,7 @@ def main(argv):
             dp_io.cdebug("input_line>{}<\n", input_line)
         if quit_p:
             break
-        
+
 if __name__ == "__main__":
     main(sys.argv)
 

@@ -7,7 +7,10 @@ set -u
 #echo "@>$@<"
 #exit 99
 
-: ${skip_tagged_dirs=""} # tree walker cannot handle >1 -X params. "-X ${DP_CODE_INDEX_FINDER_FILE}"}
+echo "extagtree: DP_CODE_INDEX_FINDER_FILE>$DP_CODE_INDEX_FINDER_FILE<"
+: ${skip_tagged_dirs=""}
+# Very nice, bishop, but what am I looking at?
+# tree walker cannot handle >1 -X params. "-X ${DP_CODE_INDEX_FINDER_FILE}"}
 
 progname="$(basename $0)"
 source eexec
@@ -104,6 +107,8 @@ meister_indexing_rc="${DP_RC_DIR}/index-code.rc"
 : ${FPAT='.*'}
 : ${v:=''}
 EExec_verbose_echo_id DP_CODE_INDEX_FINDER_WORK_FILE
+: ${DP_CODE_INDEX_FINDER_WORK_FILE:=bogosity}
+# :=DP_CODE_INDEX_FINDER_FILE} # << restore this.
 : ${WORK_FILES_FILE:=${DP_CODE_INDEX_FINDER_WORK_FILE}}
 : ${FILES_FILE:=${DP_CODE_INDEX_FINDER_FILE}}
 : ${ETAGFILE:=TAGS}

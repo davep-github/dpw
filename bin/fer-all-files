@@ -2,11 +2,37 @@
 # $Id: fer-all-files,v 1.12 2004/12/03 09:20:04 davep Exp $
 #set -x
 
+# TOG/s Linus may not like dates, but a born on date is nice for finding out
+# when something was started, not when it was finally git'd.  Not everyone's
+# anal about using git every time a character is changed, but doing it years
+# apart is pretty fucking stupid.  It's nice to see when a newer, better tool
+# is available.  This is a [the only] huge problem with OAOO.  Propagating the newer, better code.  However, by realizing that not doing something because it is "premature abstraction" is one of the stupidest fucking "ideas" I've ever encountered.  At some point, a person's experience makes this unnecessary and a bane to good coding.
 source script-x
+# WHy did I not do this in eexec?  It's sourced, so all should be
+# executed in the proper environment.
+# I recall thinking about it and deciding it was necessary to do it in
+# the calling program, but not why.
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
 
-#eko 1111 "$@"
-. script-x
-#eko 2222 "$@"
+for op in $eexec_program
+do
+    $op
+    ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+# We can export the program we got from eexec so that called programs
+# will get the same options.  Or we unset it and any called program
+# never sees the options since they're consumed in EExec_parse().
+#unset eexec_program
+export eexec_program
 
 # @todo make -m add mvsik dir to dirs ???
 # @todo share code w/fer-all-dirs ??
@@ -54,7 +80,7 @@ do
     #echo "i>$i<"
     #echo "1>$1<"
     case $1 in
-	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
+	# -v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
 	-q) ECHO=":" ;;
 	-d) dirs_a+=("$2"); shift;; # Save off dirs.
 	-g) PATS_a+=("$2"); shift;; # Save off globs.
@@ -63,7 +89,8 @@ do
         -P) FIND_POST_ARGS_a+=("$2"); shift;;
         -s) FINDER=find;;
         -f) FINDER=$2; shift;;
-        -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
+	## Change to use EExec.
+##        -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
 	--) shift ; break ;;
 	*) 
 	    echo 1>&2 "Unsupported option>$1<";
@@ -131,6 +158,10 @@ crappy_dash_n2()
 # NB!!! Any output to stdout after the pipe is set up will
 # screw up the input to xargs.
 echo "dirs_a>"${dirs_a[@]}"<"
+echo "\$PWD>$PWD<"
+echo "\$@>$@<"
+
+echo "=========================="
 $RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type $name_arg \
     $FIND_PRINT0_OPT $FIND_POST_ARGS \
     | \

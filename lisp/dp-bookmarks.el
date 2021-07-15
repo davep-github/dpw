@@ -156,7 +156,7 @@ Add each bookmark-name to the list of bookmarks."
           (dp-set-or-goto-bm
            (buffer-substring (line-beginning-position)
                              (line-end-position))
-           :reset t
+           :resetp t
            :plist '(embedded-p t)
            :bm-kind "embedded-line"
            :bm-marker (dp-mk-marker
@@ -165,7 +165,7 @@ Add each bookmark-name to the list of bookmarks."
                          (split-string (match-string 2) "|"))
           do
           (dp-set-or-goto-bm match-string
-                             :reset t
+                             :resetp t
                              :plist '(embedded-p t)
                              :bm-kind "embedded-text"
                              :quiet-p (not verbose-p)
@@ -269,7 +269,7 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
 (defun dp-get-bm-interactive-for-get-or-set (&rest rest)
   (let ((ret (apply 'dp-get-bm-interactive rest)))
     (list (car ret)
-          :reset (cadr ret))))
+          :resetp (cadr ret))))
 (defun dp-pos-str (pos)
     (format "Line=%d, point=%d" (line-number pos) pos))
 
@@ -287,33 +287,33 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
     nil))                               ; Returns nil if no update was done.
 
 (defun* dp-set-or-goto-bm (bm-name
-                           &key reset action-if-non-existent
+                           &key resetp action-if-non-existent
                            (plist nil)
                            (colorize-p t)
                            (verbose-p t)
                            bm-kind
                            quiet-p
-                           (highlight-line-p nil)
+                           (highlight-line-p 'dp-highlight-dp-style-bookmark)
                            (bm-marker nil bm-marker-passed-p))
   "Set or goto a bookmark.
 If the BM-NAME is in the list, goto it, otherwise,
 set the bookmark to point.
-If RESET is t, then set the bookmark location to point.
-If RESET is nil, then use existence of prefix arg as truth value of reset.
-If RESET is other, then use (not existence of prefix arg) as truth value
-of reset."
+If RESETP is t, then set the bookmark location to point.
+If RESETP is nil, then use existence of prefix arg as truth value of resetp.
+If RESETP is other, then use (not existence of prefix arg) as truth value
+of resetp."
   (interactive (dp-get-bm-interactive-for-get-or-set "_bm name: "))
   ;;(dp-add-to-bm-history bm-name)
 
-  ;;(message (format "bm-name>%s<, reset>%s<, cpa>%s<" bm-name reset
+  ;;(message (format "bm-name>%s<, resetp>%s<, cpa>%s<" bm-name resetp
   ;;		   current-prefix-arg))
 
-  (if (not reset)
-      (setq reset current-prefix-arg)
-    (unless (equal reset t)
-      (setq reset (not current-prefix-arg))))
+  (if (not resetp)
+      (setq resetp current-prefix-arg)
+    (unless (equal resetp t)
+      (setq resetp (not current-prefix-arg))))
 
-  ;;(message (format "bm-name>%s<, reset>%s<, cpa>%s<" bm-name reset
+  ;;(message (format "bm-name>%s<, resetp>%s<, cpa>%s<" bm-name resetp
   ;;		   current-prefix-arg))
 
   ;; stringify name
@@ -347,8 +347,8 @@ of reset."
 
     (setq this-command 'dp-set-or-goto-bm)
 
-    (if (and bm (not reset))
-	;; existing bm and no reset requested, go to it.
+    (if (and bm (not resetp))
+	;; existing bm and no resetp requested, go to it.
 	(let ((pos (dp-bm-pos bm))
               old-bm)
 	  ;; (message (format "going to %d" pos))
@@ -367,7 +367,7 @@ of reset."
 	  (goto-char pos)
 	  (dp-set-zmacs-region-stays t))
 
-      ;; non-existent bm or reset is requested.
+      ;; non-existent bm or resetp is requested.
       ;; either way, set the bm to point
       ;; Unless the bm is currently ro
       (when bm-ro-p
@@ -430,7 +430,7 @@ of reset."
                 "Highlighted bm: "
                 :completions (dp-bm-rebuild-completion-list)))
   (dp-set-or-goto-bm name
-                     :reset nil
+                     :resetp nil
                      :action-if-non-existent 'set
                      :highlight-line-p (or color t)))
 

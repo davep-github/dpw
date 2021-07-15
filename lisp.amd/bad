@@ -1,0 +1,4 @@
+git co 2df2808 <<<<<< Can't type in shell buffer.  spaces in shell #.
+git co 16d9af1 <<<<<< ^M
+git co 1c6963c <<<<< canna type
+git co 808f506 <<<< ^M

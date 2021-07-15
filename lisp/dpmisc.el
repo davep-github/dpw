@@ -28,6 +28,7 @@
 ;;template   (read-kbd-macro
 ;;template    (concat "keys..."
 ;;template            " more keys.")))
+;; !!!!!!! Future me is so GDMF glad I documented how to do these!
 
 (defalias 'dp-protoize
   (read-kbd-macro
@@ -54,6 +55,9 @@
 ;; e.g.
 ;; before EXTRA_LIBS += -L $(ADDITIONAL_PACKAGE_DIR)/lib
 ;; after @echo "EXTRA_LIBS>$(EXTRA_LIBS)<"
+;; WHAT THE FUCK does ^that^ mean.
+;;
+
 (defalias 'mak-=-to-echo
   (read-kbd-macro
    (concat "C-a SPC C-a <M-backspace> TAB @echo SPC \" M-a ESC C-s "
@@ -188,7 +192,9 @@ This has a well known prefix so the error code can easily identify it."
 (defun dp-cons-to-list (cons)
   "Make a list from a cons: \(list (car CONS) (cdr CONS)). nil begets nil.
 I return many things as conses, especially match and regions
-beginnings and ends."
+beginnings and ends.
+@todo XXX Look at the deconstructing assignments.
+"
   (when cons
     (list (car cons) (cdr cons))))
 
@@ -1162,10 +1168,10 @@ first and last non-white space on the line."
     (rest-or-all-of-line-p . (dp-rest-or-all-of-line))
     (text-of-line-p        . (dp-mark-line-if-no-mark t t))
     (first-extent          . (dp-first-extent-boundaries))
-    (symbol-at-point      . (dp-symbol-at-point-boundaries))
+    (symbol-at-point       . (dp-symbol-at-point-boundaries))
     (zero-len-p            . ((lambda (&rest unused)
 				(cons (point) (point)))))
-    (rest-of-buffer-p     . (dp-rest-of-buffer-cons)))
+    (rest-of-buffer-p      . (dp-rest-of-buffer-cons)))
   "Map of convenience symbolic args to `dp-region-or...' to functions.
 Format is an alist of: \(symbol . \(function [args...]))  I know, it's the
 same as \(symbol function [args...]), but the . emphasizes the key
@@ -1530,8 +1536,11 @@ matching operation and only if we are on a ?< or ?>."
          (point))))
 
 (defun dp-true (&rest r)
-  "Return t. Nice for predicate functions.
-Better than (or (eq pred t) (funcall pred))."
+  "Return t. Nice for predicate functions w/o checking for var vs func.
+Better than (or (eq pred t) (funcall pred)).
+Or much worse
+(if (
+"
   t)
 (dp-defaliases 'dpt 'dp-t 'dp-non-nil 'dp-true)
 
@@ -3548,8 +3557,16 @@ lisp-interaction mode."
   "Go to *Backtrace* buffer."
   (interactive "P")
   (dp-display-sys-buffer "*Backtrace*" same-window-p tallest-window-p))
+(dp-defaliases 'btb 'btb2 'btb-other
+	       ;; Some remaining brain cells contain traceback.
+	       'dp-display-traceback-buffer
+	       'tbb 'tbb2 'tbb-other
+	       'dp-display-backtrace-buffer)
 
-(dp-defaliases 'btb 'btb2 'btb-other 'dp-display-backtrace-buffer)
+(defun dp-kill-backtrace ()
+  (interactive)
+  (dp-ding-and-message "dp-kill-backtrace: Mother fucking write me!"))
+
 
 (defsubst dp-backtrace-buffer-same-window ()
   "Go to *Backtrace* buffer in this window."
@@ -4122,7 +4139,7 @@ AYEAR is like amon, except for the year."
       (format "%s/%s-%02d-%s%s" note-base-dir name-base month
 	      year (or extension ".text")))))
 
-(defun dp-insert-timestamp (&rest args)
+(defun dp-insert-timestamp-string (&rest args)
   "Insert a timestamp formatted thus: 2009-09-27T18:28:32
 ARGS are passed thru to `dp-timestamp-string'."
   (interactive)
@@ -4149,9 +4166,15 @@ ARGS are passed thru to `dp-timestamp-string'."
 (dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof
                'dp-insert-for-comment-as-of)
 
-(defun dp-insert-for-comment-at-this-time ()
-  (interactive)
-  (dp-insert-for-comment-as-of0 "[ at this time: %s ]"))
+(defun dp-insert-for-comment-at-this-time (simple-p)
+  (interactive "P")
+  (let ((prefix "[ at this time ")
+	(suffix " ]"))
+    (when simple-p
+      (setq
+       prefix ""
+       suffix ""))
+    (dp-insert-for-comment-as-of0 (format "%s%%s%s" prefix suffix))))
 
 (dp-defaliases 'dp-at-this-time 'dp-att 'att
                'dp-insert-for-comment-at-this-time)
@@ -4229,7 +4252,8 @@ E.g.: 2002-02-26T00:56:42 --> Feb 26, 2002 00:56:42"
   (if (not extra)
       (setq extra "")
     (setq extra (concat "\n" extra)))
-  (concat (or pre (if v2-leader-p dp-stamp-leader2 dp-stamp-leader))
+  (concat (or pre (if v2-leader-p
+		      dp-stamp-leader2 dp-stamp-leader))
 	  stamp extra
 	  (or suf dp-stamp-trailer) "\n")) ; newline is part of stamp
 
@@ -4263,12 +4287,14 @@ FORCE-P forces a new datestamp, regardless."
   (goto-char (point-min))
   (let* ((date-stamp (dp-mk-datestamp pre suf))
 	 (found (dp-re-search-forward date-stamp nil t)))
-    (goto-char (point-max))
-    (when (or current-prefix-arg
+    (if (or current-prefix-arg
               force-p
               (not found))
-      (insert (concat "\n" date-stamp "\n"))
-      (backward-char))))
+	(progn
+	  (goto-char (point-max))
+	  (insert (concat "\n" date-stamp "\n"))
+	  (backward-char))
+      (dp-timestamp))))
 
 (defalias 'ds 'dp-tf)			;<d>ate<s>tamp
 
@@ -5533,7 +5559,10 @@ you've added enough info for set-auto-mode to figure it out.."
 E.g. the ability to fill docstrings and comments properly,
 @todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
   (interactive)
-  (setq fill-prefix nil))
+  (when fill-prefix
+    (let (fp fill-prefix)
+      (setq fill-prefix nil)
+      fp)))
 
 (defun dp-current-pmark-pos (&optional buffer)
   "Return buffer pos of current process mark."
@@ -6682,12 +6711,14 @@ matching ones."
 
 ;; @todo XXX merge wp-region and wp-buffer-or-region using
 ;; dp-region-or... using 'buffer-p
+;; @todo XXX 
 (defun dp-write-protect-region (beg end)
   (interactive "r")
   (dp-make-extent beg end 'dp-write-protected-region 'read-only "HANDS OFF!"
 		  'face 'dp-wp-face 'dp-extent-p t
                   'dp-write-protected-region t 'priority 1))
-(dp-defaliases 'dp-wp 'dp-wp-region 'dp-ro-region 'dp-write-protect-region)
+(dp-defaliases 'dp-wp 'dp-wp-region 'dp-ro-region 'wppr
+	       'dp-write-protect-region)
 
 (defun dp-wp-buffer-or-region ()
   (interactive)
@@ -7316,14 +7347,17 @@ Remove any other copies of the name."
 (defvar dp-recently-killed-files (dp-init-recently-killed-files)
   "File names of most recently killed buffers.")
 
+
 (defun* dp-revisit-killed-file (&optional just-remove-p (pred ".*") pred-args)
-  "Revisit a killed file.  With PREFIX-ARG, just remove the entry."
+  "Revisit a killed file.  With PREFIX-ARG, just remove the entry.
+@todo XXX Make most recent the default."
   (interactive "P")
   (let* ((tmp (dp-get-recently-killed-file-list))
 	 (table (dp-mk-completion-list tmp))
 	 ;; Use numeric prefix arg to select nth file to operate on.
+	 ;; As if we could remember that,
 	 (dead-file (completing-read (if just-remove-p
-					 "Remove file from list: "
+					 "Exhume: "
 				       "Resurrect file: ")
 				     table
 				     nil nil nil
@@ -7337,7 +7371,8 @@ Remove any other copies of the name."
       ;; correct fashion.
       (dp-set-recently-killed-file-list (delete dead-file tmp)))))
 
-(dp-defaliases 'dp-resurrect 'dprd 'raise-dead 'resurrect
+(dp-defaliases 'dp-resurrect 'dprd
+	       'dp-raise-dead 'dp-resurrect
                'dp-revisit-killed-file)
 
 (defun dp-kill-buffer-hook ()
@@ -7677,21 +7712,35 @@ FRAME - frame to use, `selected-frame' if nil."
   (let ((fill-prefix fill-prefix))
     (call-interactively 'fill-paragraph-or-region)))
 
-(defun dp-region-boundaries-ordered (&optional beg? end? exchange-pt-and-mark-p)
+  (defun dp-region-boundaries-ordered (&optional beg? end? exchange-pt-and-mark-p
+					       dont-force-to-markers-p)
   "Return the boundaries of the region ordered in a cons: \(low . hi\)"
   ;; I never knew about these functions.
   ;; (cons (region-beginning) (region-end)))
   ;; But here they're not very useful since beg? and end? may not be ordered.
   ;; Au contraire, they seem to always return beg as the lower, and end as
-  ;; the higher, position-wise.
-  (if (and beg? end?)
-      (if (> end? beg?)
-          (cons beg? end?)
-        (cons end? beg?))
-    (when (and exchange-pt-and-mark-p
-               (< mark (point)))
-      (exchange-point-and-mark))
-    (cons (region-beginning) (region-end))))
+  ;; the higher, position-wise??? They???
+  (let ((obcons
+	 ;; Both must be provided.
+	 ;; @todo XXX Could have the nil one(s) default to (mark) and (point)?
+	 (if (and beg? end?)
+	     (if (> end? beg?)
+		 (cons beg? end?)
+	       (cons end? beg?))
+	   (when (and exchange-pt-and-mark-p
+		      (< mark (point)))
+	     (exchange-point-and-mark))
+	   ;; @todo XXX These are already markers.  Fix this.
+	   (cons (region-beginning)
+		 (region-end)))))
+    (if dont-force-to-markers-p
+	obcons
+      ;; The markerization isn't needed for region values.  It may not be
+      ;; needed for beg? && end?, but 'tis easier to "Just Do It(tm)"
+      ;; But we wanna markerize in one place.
+      (cons (dp-mk-marker (car obcons))
+	    (dp-mk-marker (cdr obcons))))))
+
 
 (defsubst dp-region-boundaries-ordered-list (&rest args-to-passthru)
   (dp-cons-to-list (apply 'dp-region-boundaries-ordered args-to-passthru)))
@@ -8469,25 +8518,27 @@ This is meant to be used thus:
   :type 'string)
 
 (defun* dp-underscore-region (&optional n &key (char nil defaulted-p)
-                              as-title-p)
+					as-title-p
+					keep-newline-p
+					text-only-p)
   "Convert spaces to `dp-underscore-region-char'."
   (interactive "P")
   (setq char
         (if (and (not char)
-                 (not defaulted-p))     ; nil on purpose doesn't counc.
+                 (not defaulted-p))     ; nil on purpose doesn't count.
             dp-underscore-region-char
           (if char
               char
-            (read-string "Underline char: "))))
-  (dp-mark-line-if-no-mark)
+            (read-string "Underline region with char: "))))
+  (dp-mark-line-if-no-mark text-only-p (not keep-newline-p))
   (let* ((reg (dp-region-boundaries-ordered))
-	 (start (car reg))
-	 (end (cdr reg)))
+	 (start (dp-mk-marker(car reg)))
+	 (end (dp-mk-marker (cdr reg))))
     (when as-title-p
       (save-excursion
         (goto-char start)
         (insert char)
-        (goto-char (1+ end))
+        (goto-char end)
         (insert char)))
     (untabify start end)
     (goto-char start)
@@ -8524,9 +8575,21 @@ This is meant to be used thus:
     (while (search-forward " " end t)
       (replace-match dp-underscore-region-char nil t))))
 
-(defun dp-underscore-region-as-title (&optional char)
-  (interactive)
+(defun* dp-underscore-region-as-title (&optional (char "_"))
+  (interactive "P")
+  (setq char
+	(if (Cu-p)
+	    (read-string "Underlining char? " "_" nil "_")
+	  "_"))
   (dp-underscore-region 1 :char char :as-title-p 'as-title-p))
+;; In increasing order of collision.
+;; Laziness now vs possible problems later.
+(dp-defaliases 'dp-underline-title
+	       ;; Don't uses these names in elisp.
+	       'dp-ult
+	       'dpult
+	       'ult
+	       'dp-underscore-region-as-title)
 
 (defun dp-hyphenate-region (&optional num-pairs)
   (interactive "p")
@@ -10549,6 +10612,7 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
                     a)))))
 
 (defsubst Cu-p (&optional prefix-arg)
+  "Just one C-u specified?"
   (nCu-p 1 prefix-arg))
 
 (defun nCu-p> (num &optional prefix-arg)
@@ -10565,7 +10629,7 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
 
 (defun Cu0p (&optional prefix-arg n)
   "Check to see if the numeric value of the prefix arg is N.
-Most used to check for C-0 as a command flag."
+Most often used to check for C-0 as a command flag."
   (eq (prefix-numeric-value (or prefix-arg
                                 current-prefix-arg))
       (or n 0)))
@@ -10576,6 +10640,8 @@ Most used to check for C-0 as a command flag."
   (equal (or arg '-)
 	 ;; Not needed because of setq-ifnil.
          (or prefix-arg current-prefix-arg)))
+(dp-defaliases 'cpa--p
+ 'Cu--p ) ; cpa for current-prefix-arg in addition to Control-u.
 
 (defun Cu-numeric-val (&optional prefix-arg)
   (prefix-numeric-value (or prefix-arg current-prefix-arg)))
@@ -10958,6 +11024,14 @@ when the command was issued?")
 	      nil
 	    (intern val)))))
 
+(defvar variable-history '()
+  "Make a variable history variable.
+Fucking FSF Emacs doesn't use very many histories, but I like one
+for these variables.  XEmacs uses this name where applicable.
+`defvar' leaves any existing values intact on the nigh on zero
+chance of going back to XEmacs.  Not being able to compile it at
+all on newer distributions was a deal breaker.")
+
 (defun dp-show-variable-value (var-sym &optional confirm-name-p
                                copy-as-kill-p no-history-p)
   "Show the value of VAR-SYM in the echo area."
@@ -11254,232 +11328,6 @@ I'm not sure what modes are affected."
     (when (dp-line-has-comment-p)
       (indent-for-comment))
     (goto-char pt)))
-
-(defvar dp-py-class-or-def-regexp-format-str
-  (concat
-   "\\(^"                               ; <ms1
-   "\\(\\s-*\\)"                        ;   <ms2>
-   "%s\\s-+"                            ; Keywords we're interested in.
-   "[a-zA-Z_][a-zA-Z_0-9]*\\)"          ; ms1> def or class name
-   ;; look for what's after the def/class name.
-   ;; We're interested in:
-   ;; "(", "(text", "(text)", "()"
-   "\\("                                ; <ms3
-   "\\(?:\\s-*\\)"
-   "\\(?:"                              ; | <shy
-   "(\\(.*?\\))"                        ; | xxx()
-   "\\)"                                ; | shy>
-   "\\|"                                ; |
-   "\\(?:"                              ; | <shy
-;;   "(\\(\\S-*\\)"                       ; | xxx(
-   "(\\(.*?\\)\\s-*\\($\\|\\(#.*$\\)?\\)"
-   "\\)"                                ; | shy>
-   "\\|"                                ; |
-   "\\(?:"                              ; | <shy
-   ")"                                  ; | xxx)  <== ignore
-   "\\)"                                ; | shy>
-   "\\|"                                ; |
-   "\\(?:"                              ; | <shy
-   "[^()].*?"                             ; | ;; Added .* Tuesday June 24 2008
-   "\\)"                                ; | shy>
-   "\\)?"                               ; ms3>
-   "\\(\\s-*\\(#.*\\|$\\)\\)"           ; <ms4 <ms5>>
-
-   )
-  "Get to the parts of a Python def or class:
-ms2: indentation (if in class, and block keyword is def --> method)
-ms3: block keyword
-ms4: existing parens
-ms5 or ms6: params with parens (depends on current state of kw)
-ms9: rest of line after program text -- includes ws and comment
-ms10: comment char to end of line
-")
-
-(defvar dp-py-special-char-fmt-str
-  "[][,~`!@#$%%^&*(%s+={}\:;<>.?|/-/-]")
-
-(defvar dp-py-special-chars
-  (format dp-py-special-char-fmt-str ")")
-  "dp-py-special-chars
-s/-/ /g")
-
-(defvar dp-py-special-chars-sans-close-paren
-  (format dp-py-special-char-fmt-str ""))
-
-(defvar dp-py-class-or-def-kw-regexp "def\\|class")
-
-(defvar dp-py-class-or-def-regexp
-  (format dp-py-class-or-def-regexp-format-str
-          (concat "\\(" dp-py-class-or-def-kw-regexp "\\)")))
-
-(defvar dp-py-block-stmt-split-regexp
-  (format dp-py-class-or-def-regexp-format-str
-          (concat "\\(" dp-py-block-keywords "\\)")))
-
-(defun* dp-py-code-text-ends-with-special-char-p (&key except special-chars
-                                                  new-pos)
-  "Are we on a special character? E.g. one which cannot precede [,:], etc.
-The characters are classified as good or bad by `looking-at' and so EXCEPT
-must be compatible with that function.
-Chars in EXCEPT are *always* OK.
-There is a standard `looking-at' type string which is filled with all kinds
-of naughty characters `dp-py-special-chars'.  This can be overridden by
-passing SPECIAL-CHARS."
-  (save-match-data
-    (dp-with-saved-point nil
-      (when new-pos (goto-char new-pos))
-      ;; Goto the end of the code text on this line, if any.
-      (dp-py-goto-end-of-code)
-      ;; Will we even be here if we're on a comment line?
-      (if (bolp)
-          t
-          ;;(error "In a comment; is this OK???")
-        ;; We're just after the last char, so...
-        (forward-char -1)
-        ;; If I skipped forward, then the character was in the except list
-        ;; and therefor should be considered as non special (I need a better
-        ;; term than special.)
-        (if (and except
-                 (/= 0 (skip-chars-forward except)))
-            nil                         ; Not special.
-          ;; If we skip forward then we were on a spay-shul character.
-          ;; and so should return true
-          (/= 0 (skip-chars-forward
-                 (or special-chars dp-py-special-chars))))))))
-
-(defun* dp-py-open-newline ()
-  (interactive)
-  (let ((case-fold-search nil)
-        (trailing-chars "")
-        (block-kw-p t)
-        replacement
-        (add-here (dp-py-end-of-code-pos))
-        something-special-p
-        kword colon-pos in-class-p class-def-p open-paren-only-p
-        no-colon-etc-p keyword parens parameters indent
-        method-p class-or-def-p no-newline-&-indent-p)
-    ;; parameters is one of ms{6, 5}
-    (beginning-of-line)
-    (cond
-     ;; Punt if we're not in code... we could try moving forward some bounded
-     ;; distance until we enter code space.
-     ((not (dp-in-code-space-p))
-      'pttthhhhhrrrrrrppppttthhhhh!)
-     ((let ((stat (dp-add-comma-or-close-sexp
-		   :beg (python-nav-beginning-of-statement)
-		   :end (python-nav-end-of-statement)
-		   :caller-cmd this-command
-		   :add-here add-here)))
-        (if (not (eq stat 'force-colon))
-            stat
-          (beginning-of-line)
-          (setq something-special-p t
-                colon-pos (dp-mk-marker (dp-py-end-of-code-pos) nil t))
-          nil))
-      ;; In a `cond' , nothing here causes the last return value (ie of
-      ;; predicate) to be propagated.
-      )
-     (t (when (and (setq something-special-p
-                         (dp-re-search-forward
-                          (concat "^\\s-*"
-                                  "\\(\\<\\("
-                                  dp-py-block-keywords
-                                  "\\)\\>"        ; keyword
-                                  "\\(.*?\\)\\)"
-                                  "\\(\\s-*\\($\\|#.*$\\)\\)")
-                          (line-end-position) t))
-                         (not (dp-py-got-colon?
-                               :start (line-beginning-position))))
-          ;; This colon-pos value is used for simple line opening.
-          (setq something-special-p t
-                colon-pos (dp-mk-marker (match-end 1) nil t)
-                kword (match-string 2))
-          ;; We know we're a block type statement.  We can split all of them
-          ;; here and then handle the def and class as needed.
-          (when (dp-looking-back-at dp-py-block-stmt-split-regexp)
-            ;; Pick apart the bits of a class or def line
-            (setq indent (match-string 2)
-                  keyword (match-string 3)
-                  class-or-def-p (save-match-data
-                                   (string-match dp-py-class-or-def-kw-regexp
-                                                 keyword))
-                  block-kw-p (not class-or-def-p)
-                  parens (match-string 4)
-                  parameters (or (dp-non-empty-string (match-string 5))
-                                 (dp-non-empty-string (match-string 6))
-                                 "")
-                  class-def-p (string= "class" keyword)
-                  def-p (string= "def" keyword)
-                  ;; Classes can be inside other classes and so have leading
-                  ;; WS.
-                  method-p (and (string= "def" keyword)
-                                (dp-non-empty-string indent))
-                  open-paren-only-p (string= "(" parens)
-                  rest-of-line (match-string 9)
-                  comment-string (match-string 10))
-            ;; @todo Can this be merged w/the original check for adding a
-            ;; colon? ;; We assume defs are indented in classes.  And I'm
-            ;; sure Python must require it.
-            (unless (dp-non-empty-string parameters)
-              (setq parameters
-                    (cond
-                     (class-def-p "object")
-                     (method-p "self")
-                     (t "")))))             ; Hopefully a def
-          ;; We just want an eol, newline, indent.
-          (when (and class-or-def-p
-                     (not (dp-py-code-text-ends-with-special-char-p
-                           :new-pos colon-pos
-                           :except ")")))
-	    ;; We're interested in the character after the closing ')'
-	    (setq colon-pos (dp-mk-marker (match-end 4) nil t)
-		  )
-
-            ;; replace match mangles strings from files like:
-            ;;      def tail(self, join_with="\n", ofile=sys.stdout)
-            ;; Even with literal set, the "\n" becomes "n"
-            (setq replacement (format "%s(%s)%s%s"
-                                      (or (match-string 1)
-                                          "")
-                                      parameters
-                                      (or (match-string 9)
-                                          "")
-                                      rest-of-line))
-            (delete-region (match-beginning 0) (match-end 0))
-            (insert replacement)
-
-            ;;(replace-match (format "\\1(%s)\\9%s" parameters rest-of-line))
-            ;; set to end of class/def(...)
-            ;; +2 for 2 new parens
-            (goto-char colon-pos))
-          (unless (dp-looking-back-at ":")
-            (when class-def-p
-              (dp-py-cleanup-class))))
-        ;; There are too many legit cases where lines don't end with )
-        ;;!<@todo only do this on def lines?
-        ;;(when (or t (dp-looking-back-at ")"))
-        (if (and something-special-p
-                 (not (dp-py-code-text-ends-with-special-char-p
-                       :new-pos colon-pos
-                       :except "[])]"))
-;;                  (or (not parameters)
-;;                      block-kw-p)
-                 )
-            (progn
-              (undo-boundary)
-              (goto-char colon-pos)
-	      (insert ":"))
-          (dmessage "figure out when to insert a ,"))))
-    ;; Fix regardless since it won't do anything if it's not needed.
-    (dp-py-fix-comment)
-    (unless no-newline-&-indent-p
-      (end-of-line)
-      (if (dp-xemacs-p)
-	  (py-newline-and-indent)
-	(newline-and-indent))
-      ;; Fix any hosed comment spacing.
-      (dp-py-fix-comment))))
-
 
 (defun* dp-func-then-exec-key-binding (func keys &optional func-args)
   (interactive)
@@ -14472,7 +14320,44 @@ qualifies for whitespace eradication.")
 	       'dp-delete-diff-markup 'dpddm
 	       'dp-kill-diff-markup 'dpkdm
 	       'dp-clean-diff-markup 'dpcdm
+	       'dp-fixup-diff 'dfuf
 	       'dp-dediff-region)
+
+(defun dp-yank-diff (&optional preserve-active-region-p)
+  (interactive "P")
+  (unless preserve-active-region-p
+    (when (dp-region-active-p)
+      ;; How quaint, using an Emacs elisp
+      ;; function directly.
+      (delete-region (point) (mark))))
+  (dp-yank)
+  ;; @todo XXX Is there a better way to do this than counting on a
+  ;; side-effect from this function?  Let's find out...
+  ;; Nope.  It's all done inline.  Yay!  Let's not use functions in a
+  ;; functional language.  Is that even why they [are|were] called functional
+  ;; languages?
+  (exchange-point-and-mark)
+  (dp-dediff-region) ;@todo XXX STOP using aliases for anything besides M-x usage.
+  )
+
+(defun dp-nuke-fill-prefix (&optional keep-as-buffer-local-p)
+  "If `fill-prefix' gets set somehow, it fucks up a lot.
+
+E.g. the ability to fill docstrings and comments properly,
+@todo XXX Allow the new value to be specified by callers and as a command.
+@todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
+  (interactive)
+  (if keep-as-buffer-local-p
+      (setq fill-prefix nil)
+    (kill-local-variable 'fill-prefix)))
+
+(defun dp-nuke-fill-prefix ()
+  "If `fill-prefix' gets set somehow, it fucks up a lot.
+
+E.g. the ability to fill docstrings and comments properly,
+@todo XXX How does it get set, and stuck?  Fix the problem, not the symptoms."
+  (interactive)
+  (setq fill-prefix nil))
 
 (defun dp-git-manual-entry (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
@@ -14485,7 +14370,6 @@ qualifies for whitespace eradication.")
   (dp-git-manual-entry topic (not other-window-p)))
 (dp-defaliases 'gith2 'githelp2 'gitman2
                'dp-git-manual-entry-other-window)
-
 
 (defun dp-duplicate-window-horizontally ()
   "Display the current buffer in 2 horizontal (side-by-side) windows.
@@ -15166,6 +15050,10 @@ Of course, I'll forget the name of this function and its aliases, too."
 					 (dp-pluralize-num time-component)))
 		  sep ", ")))
     pretty))
+
+(defun dp-swap-a&b-to-cons  (a b)
+  "Swap a and b and return cons of new values."
+  (cons b a))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here

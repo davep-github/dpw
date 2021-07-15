@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #set -x
+
 source script-x
 progname="$(basename $0)"
 source eexec
@@ -36,7 +37,6 @@ unset eexec_program
 #mutually exclusive with real EExec#     echo "{+} $@"
 #mutually exclusive with real EExec#     "$@"
 #mutually exclusive with real EExec# }
-
 trap_exit_msg=
 DP_TEMP_FILES=
 
@@ -216,7 +216,9 @@ EExec_verbose_echo_id stdout_file
 DP_TEMP_FILES="${stderr_file} ${stdout_file}"
 EExec_verbose_echo_id DP_TEMP_FILES
 
-EExec -k $GREPPER -n "$@" $rc_list /dev/null >"${stdout_file}" 2>"${stderr_file}" || {
+echo  $GREPPER -n "$@" $rc_list 2>/dev/null
+exit 99
+EExec -y $GREPPER -n "$@" $rc_list /dev/null >"${stdout_file}" 2>"${stderr_file}" || {
     cat "${stderr_file}"
     #cleanup error
     exit 1

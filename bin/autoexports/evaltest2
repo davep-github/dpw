@@ -1,0 +1,18 @@
+#!/bin/zsh
+set -x
+bname="$(basename $0)" # filename of the script itself
+
+someprefix_${bname}() { # function's name created from $bname variable
+    echo test
+}
+
+type -f someprefix_${bname}
+type -f someprefix_evaltest2
+
+autoload someprefix_${bname}
+
+myfunc() {
+    autoload -X
+    echo ususus: "$@".
+}
+myfunc yaya

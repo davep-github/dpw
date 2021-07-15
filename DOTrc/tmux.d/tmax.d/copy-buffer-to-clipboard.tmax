@@ -1,0 +1,1 @@
+run-shell -b "tmux show-buffer | xclip -sel clip -i \; display-message 'Copied tmux buffer to system clipboard'"

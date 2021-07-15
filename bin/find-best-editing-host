@@ -1,17 +1,18 @@
 #!/bin/bash
 # source me.
+# Or ask it nicely to run itself with --run-me
 
 #
-# We only define this function.
-# We don't call it.
+# We define this function, but may not call it here.
+# E.g A library type function.
 #
-find_best_editing_host()
+function find_best_editing_host()
 {
     (($# == 0)) && set -- "host-name"
-    vsetp "${DP_GNU_EDITING_SERVER-}" && {
-        echo "${DP_GNU_EDITING_SERVER}"
+    [[ -z "${DP_GNU_EDITING_SERVER-}" ]] || {
+	echo ${DP_GNU_EDITING_SERVER-"There is no \$DP_GNU_EDITING_SERVER only '""'"}
         return 0
-    }
+    } 1>&2
     [ -e "${DP_EDITING_SERVER_FILE}" ] && {
         # No need to install guile for this ;->
         trivial-assoc "${DP_EDITING_SERVER_FILE}" "$@"
@@ -20,4 +21,9 @@ find_best_editing_host()
     return 1
 }
 
-(($# == 1)) && [ "${1-}" = "--run-me" ] && find_best_editing_host
+# @todo XXX Make a src-r-run inclusional <cha-ching> that does this.
+# @todo XXX Add to bash template.
+(($# >= 1)) && [[ "${1-}" == "--run-me" ]] && {
+    shift
+    find_best_editing_host "@"
+}

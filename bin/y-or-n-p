@@ -4,11 +4,11 @@
 # template begin.
 
 # davep specific code -------------8><------------------
-source script-x.amd
+source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-if vsetp "${eexec_program-}"    # Did the caller provide a program?
+if vsetp "${eexec_program=}"    # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
 else
@@ -50,20 +50,21 @@ on_error()
 }
 # trap 'on_error' ERR
 
+: ${sig_exit_exit_code:=130}
 sig_exit ()
   {
     {
         local sig_num=$1; shift
         echo
         echo "sig_exit, sig_num: $sig_num"
-        exit 1
+        exit "${sig_exit_exit_code}"
     } 1>&2
 }
 
-# for sig in 2 3 4 5 6 7 8 15
-# do
-#     trap "sig_exit $sig" $sig
-# done
+for sig in 2 3 4 5 6 7 8 15
+do
+    trap "sig_exit $sig" $sig
+done
 
 display_stderr()
 {
@@ -91,23 +92,108 @@ Usage_error()
 #
 # template end.
 ########################################################################
-echo "1>${1-}<"
-: ${prompt:=${1:-"Continue? "}}
-echo_id prompt
+# $HOME/bin/dp-getopt+.eg.sh
+# Set variable_defaults.
+# The = means the variable gets the default if it unset, but not null.
+# The := unset OR null.  Use this if "" is a bad value.
+# Use true and false for binary ops.  These are builtins so there's no extra
+# overhead.
+# this
+# if $binary_var; then echo woo hoo; else echo I has the sadz; fi
+# if [[ "$binary_var" ~= t|true|1 ]]
+# : ${flag_o:=false}
+# : ${option_with_arg=default}
+# Using this style of assigning variable args allows the variables to be used
+# on the command line.
+# e.g. $ flag_o=true option_with_arg="" program
+: ${title=}
+: ${prompt="Yes or no? "}
+: ${default_rc=0}
+# Usage variable usage:
+Usage_args_info=' You should really set "$Usage_args_info", you lazy bastard'
+Usage_synopsis='You should really set "$Usage_synopsis", you lazy bastard'
+# Idiom:
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+# Who the FUCK is ever going to read this?  Besides me?
+# Anyone else, please send an email to davep.i-read-a-comment@meduseld.net
+# [ as of: 2021-06-17T01:28:39 ] this is a working domain name email address.
+# But domains expire, dunnaye?
+Usage_details="${EExec_parse_usage}
+-t|--title) set the title [${title}]
+-p|--prompt) set the prompt [${prompt}]
+-r|--default-rc) Return if, e.g. RET is used.
+"
+# Example of arg parsing.
+option_str="t:p:r:"
+# declare -a long_options
+# Each element is a long option name sans '--'
+long_options=(
+    "title:" 			# -t
+    "prompt:"			# -p
+    "default-rc:"		# -r
+    ...)
+
+source dp-getopt+.sh || exit 1
+
+EExec_verbose_msg "Remaining arguments>$@<"
+#read -p "Well? "
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc.
+      # Is done inside EExec_parse and friends.
+      # q.v. ~/bin/eexec
+
+      # Program parameters
+      # -f|--flag-o) flag_o=true;;
+      # -f|--no-flag-o) flag_o=false;;
+      ## shift consumes option name.
+      # -o|--option-with-arg) shift; arg="${1}";
+      -t|--title) shift; title="${1}";;
+      -p|--prompt) shift; prompt="${1}";;
+      -r|--default-rc|--rc-default) shift; default_rc="${1}";;
+      # "Let's do get help."  This option is added inside dp-getopt+.sh
+      --help) Usage_help; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when args are required.
+# [ "$*" = "" ] && {
+#     Usage2 "FATAL: Args required, but noooo.  None provided."
+#     exit 1
+# }
 
 y_or_n_p()
 {
+    [[ -n "${title}" ]] && {
+	echo "${title}"
+    }
+
+    shopt -s nocasematch
     while true
     do
-	echo -n "$prompt"
-	read line
-	echo_id line
-	case "$line" in
-	    1|[yY]|[Yy][Ee][Ss]|[tT]|[Oo][Kk]) return 0;;
-	    0|[Nn]|[Yy][oO][nN][iI][lL]) return 1;;
-	    *) echo 1>&2 "Unrecognized response >$line<"; continue;;
-	esac
-    done
+	echo -n "${prompt}"
+	# C-c (^C) returns 130.
+	read || return 3
+	EExec_verbose_echo_id REPLY
+	[[ "${REPLY}" =~ [1-9][0-9]*|yes|t|true|y|ok ]] && return 0
+	[[ "${REPLY}" =~ no|nil|n|0|x ]] && return 1
+	[[ "${REPLY}" =~ q|quit|x|exit|bye ]] && return 2
+	[[ "${REPLY}" == "" ]] \
+	    && [[ "${default_rc}" =~ [0-9]+ ]] \
+	    && exit "${default_rc}"
+
+	echo 1>&2 "Unrecognized response >$REPLY<, try again"
+	continue
+    done 1>&2
+    echo 1>&2 "You are not supposed to get here!"
 }
 
 y_or_n_p "$@"
