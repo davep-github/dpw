@@ -240,8 +240,11 @@ class Entry:
                     if not val_rex or val_rex.search(self.fields[key]):
                         return self
                 except TypeError:
-                    dp_io.eprintf('*******keys: {}', list(self.fields.keys()))
-                    #print 'Not a string: f>%s< or v>%s<' % (key, self.fields[key])
+                    dp_io.eprintf("TypeError: key>{}<, type>{}<, " \
+                                  "self.fields>{}<, type>{}<\n" \
+                                  "Continuing.\n",
+                                  key, type(key), self.fields[key],
+                                  type(self.fields[key]))
                     continue
 
         for ref in self.references:
