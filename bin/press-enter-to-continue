@@ -3,6 +3,14 @@
 function press_enter_to_continue()
 {
     local prompt=
+    if (($# > 1))
+    then
+	verbose=true
+	shift
+    else
+	verbose=false
+    fi
+
     if (($# > 0))
     then
 	prompt="$1"; shift
@@ -14,9 +22,12 @@ function press_enter_to_continue()
     if dp_zsh_p
     then
 	read "?$prompt" "$@"
+
     else
 	read -p "$prompt" "$@"
     fi
+    $verbose && echo "REPLY>${REPLY}<"
 }
+
 
 dp_runme && press_enter_to_continue "$@"
