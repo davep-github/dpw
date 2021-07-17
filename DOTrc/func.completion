@@ -9,13 +9,13 @@
 #     "$@"
 # }
 
-_dp_gnu_global_complete()
+_dp_gnu_gnu_global_command_complete()
 {
         local cur
         cur=${COMP_WORDS[COMP_CWORD]}
         COMPREPLY=($(global -c $cur))
 }
-complete -F _dp_gnu_global_complete global
+complete -F _dp_gnu_global_command global
 
 #
 # use completions of "${1}" as sudo does.

@@ -20,7 +20,7 @@ true ${envDTE=}
 # ':' Means there was no arg specifically passed to verbosity_check and
 # there is nothing to consume.
 # Use this after a call.
-# [[ "${verbose}" == ":" ]] || shift
+# [[ "${verbose}" == "true" ]] || shift
 # Sorry.  Maybe I could do the shift here and return the new $@.
 # But too many evaluations, I am fearing.
 function verbosity_check() {
@@ -30,7 +30,7 @@ function verbosity_check() {
 	-v) verbose="eval echo 1>&2";;
 	-l) verbose=dp_rc_logger;;
 	-x) set -x; verbose=dp_rc_logger;;
-	*) verbose=":";;
+	*) verbose="true";;
     esac
     # echo 1>&2 "A:verbosity_check(): verbose>${verbose}<, @>$@<"
     # set -- $verbose "$@"
@@ -47,7 +47,7 @@ function dp_source_rc()
 #    echo 1>&2 "dp_source_rc():Enter, @:" "$@"
     local verbose=$(verbosity_check "$@")
 #    echo 1>&2 "dp_source_rc: verbose>$verbose<"
-    [[ "${verbose}" == ":" ]] || shift
+    [[ "${verbose}" == "true" ]] || shift
 #    echo 1>&2 "dp_source_rc: 1: after verbose:" "\$@>$@<"
 #    echo 1>&2 "dp_source_rc(): verbose>${verbose}<"
     # eko 1>&2 "dp_source_rc(): @>" "$@"
@@ -339,7 +339,7 @@ function source_list()
 #    echo 1>&2 "source_list():Enter, \$@:" "$@"
     local verbose=$(verbosity_check "$@")
 #    echo 1>&2 "source_list: verbose>$verbose<"
-    [[ "${verbose}" == ":" ]] || shift
+    [[ "${verbose}" == "true" ]] || shift
     # echo 1>&2 "source_list: verbose>${verbose}<"
 #    echo 1>&2 "source_list: \$@" "$@"
     # $verbose echo 1>&2 "source_list: 1:source_list(): verbose>${verbose}<"
