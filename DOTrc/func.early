@@ -23,6 +23,15 @@ dp_rc_logger()
 DP_EXPORT_FUNC dp_rc_logger
 dp_rc_logger "================= $(date): begin $0 ================="
 
+function dp_LOGGER()
+{
+    local logname="$1"
+    shift
+    local prefix="$1[$(~/bin/dp-std-timestamp):func.early]"
+    shift
+    echo "$prefix: $0: $@" >> "$logname"
+}
+
 vsetp()
 {
     [ -n "$*" ]

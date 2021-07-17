@@ -217,16 +217,8 @@ then
     return 0
 fi
 
-dp_LOGGER()
-{
-    local logname="$1"
-    shift
-    local prefix="$1[$(~/bin/dp-std-timestamp)]"
-    shift
-    echo "$prefix: $0: $@" >> "$logname"
-}
-dp_bitch() { dp_LOGGER "$DP_BITCH_LOG" bitch "$@"; }
-dp_suggest() { dp_LOGGER "$DP_SUGGESTION_BOX" "why not:"; }
+dp_bitch() { dp_LOGGER "$DP_BITCH_LOG" "bitch:" "$@"; }
+dp_suggest() { dp_LOGGER "$DP_SUGGESTION_BOX" "suggestion:" "$@"; }
 # &>> isn't in all bash versions# dp_BITCH() { echo &>> "$@"; dp_bitch "$@"; }
 dp_BITCH() { dp_bitch "$@"; }
 DP_EXPORT_FUNC dp_bitch dp_suggest dp_BITCH

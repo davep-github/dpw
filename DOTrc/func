@@ -78,15 +78,6 @@ function dp_source_rc()
 
 dp_source_rc $HOME/.rc/func.root
 
-function dp_LOGGER()
-{
-    local logname="$1"
-    shift
-    local prefix="$1[$(~/bin/dp-std-timestamp)]"
-    shift
-    echo "$prefix: $0: $@" >> "$logname"
-}
-
 function dp_DEPRECATED()
 {
     # Try to capture info about the program using the deprecated thing.
