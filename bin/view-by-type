@@ -21,50 +21,27 @@
 # xsb is an alias for exchange_sandboxes
 # No filename.  Need to grep for it, but at least I know where/what to grep.
 #
+
+# davep specific code begin -------------8><------------------
+source script-x
 set -u
 progname="$(basename $0)"
+source eexec
+if [[ -n "${eexec_program-}" ]] # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
 
-true "${no_exec_p:=false}"
-true "${exec_verbose_p=false}"
-Non_EExecer()
-{
-    {
-	echo "{-} $@"
-    } 1>&2
-}
-
-Verbose_EExecer()
-{
-    {
-	echo "{+} $@"
-	"$@"
-    } 1>&2
-}
-
-function EExecer()
-{
-    "$@"
-}
-
-function EExec()
-{
-    if "${no_exec_p}"
-    then
-	Non_EExecer "$@"
-    elif "${exec_verbose_p}"
-    then
-	Verbose_EExecer "$@"
-    else
-	"$@"
-    fi
-}
-
-function EExec_verbose_msg()
-{
-    {
-	"${exec_verbose_p}" && echo "{v}: $@"
-    } 1>&2
-}
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 
 function with_saved_rc()
 {
@@ -76,20 +53,22 @@ function with_saved_rc()
 # WTF are you?
 function xxx_recognizer()
 {
-    EExec_verbose_msg "$0: \$#>$#<"
-    "$exec_verbose_p" && eko "in xxx_recognizer()" "$@" 1>&2
+    EExecVerbose_p && eko "in xxx_recognizer() \$#: $#" "$@"
     local sed_regexp="${1-}"; shift
     local type_command_results="${1-}"; shift
     EExec_verbose_msg "$0: echo \"${type_command_results}\" | sed -rn \"${sed_regexp}\""
     local sed_response=$(echo "${type_command_results}" | sed -rn "${sed_regexp}")
-    with_saved_rc echo "sed_response>${sed_response}<" 1>&2
+    local rc="$?"
+    EExecVerbose_p && with_saved_rc echo "sed_response>${sed_response}<"
     with_saved_rc echo "${sed_response}"
+    return $rc
 }
 
 # function:
 # running_as_script is a shell function from /home/davep/.rc/func
 function func_recognizer()
 {
+    EExecVerbose_p && eko "in func_recognizer()" "$@"
     local typee_base="${1}"; shift
     local xxx_regexp="s/(${typee_base}"' is a shell function from )(.*$)/\2/p'
 
@@ -100,6 +79,8 @@ function func_recognizer()
 # (ec-type-zsh is )(/home/davep/bin/ec-type-zsh<)
 function file_recognizer()
 {
+    press-enter-to-continue "File recognizer: "
+    EExecVerbose_p && eko "in file_recognizer()" "$@"
     local typee_base="${1}"; shift
     local xxx_regexp="s/(${typee_base}"' is )(.*$)/\2/p'
 
@@ -110,16 +91,24 @@ function file_recognizer()
 # xsb is an alias for exchange_sandboxes
 function alias_recognizer()
 {
-    local typee_base="${1}"; shift
-    local alias_regexp="s/(${typee_base}"' is an alias for )(.*$)/\2/p'
-    # We can't (lazily)  know an alias's defining file.
-    local file_says=$(EExec xxx_recognizer "${alias_regexp}" "$@")
-    if [[ -n "${file_says}" ]]
-    then
-	echo "$@: is an alias. Not looking for it's file yet."
-	# "A successful failure."
-	exit 2
-    fi
+    local cmd="${3}"
+    EExecVerbose_p && eko "in alias_recognizer()" "$@"
+    for f in ${locale_rcs}
+    do
+	local lf=$(normpath "${DP_RC_DIR}/alias${f}")
+	[[ -e "${lf}" ]] || continue
+	EExec -q fgrep -n "alias=${cmd}" "$lf"
+    done
+    # local typee_base="${1}"; shift
+    # local alias_regexp="s/(${typee_base}"' is an alias for )(.*$)/\2/p'
+    # # We can't (lazily)  know an alias's defining file.
+    # local file_says=$(EExec xxx_recognizer "${alias_regexp}" "$@")
+    # if [[ -n "${file_says}" ]]
+    # then
+    # 	echo "$@: is an alias. Not looking for it's file yet."
+    # 	# "A successful failure."
+    # 	exit 2
+    # fi
 }
 
 recognizers=(
@@ -131,7 +120,7 @@ recognizers=(
 function ec-type-zsh()
 {
     typee=${1-}; shift
-    true "${opt:=ec}"
+    true "${op:=ec}"
     [[ -z "${typee}" ]] && {
 	echo "$progname: wants a runnable thing's name."
 	exit 1
@@ -140,28 +129,41 @@ function ec-type-zsh()
     local typee_base=$(basename "${typee}")
     local file_to_edit=''
 
+    # zsh doesn't see our aliases.
+    exe_type=$(zsh -c "type ${typee}")
+    EExec_verbose_msg "typee_base>${typee_base}<
+    	exe_type>${exe_type}<"
+
     for recognizer in "${recognizers[@]}"
     do
-	exe_type=$(zsh -c "type ${typee}")
-	EExec_verbose_msg "exe_type>${exe_type}<"
-	EExec_verbose_msg "recognizer>${recognizer}<, typee_base>${typee_base} 
-exe_type>${exe_type}<"
+	echo "${recognizer} <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
 
 	EExec_verbose_msg "recognizer>${recognizer}<"
-	file_to_edit=$("${recognizer}" "${typee_base}" "${exe_type}")
+
+	file_to_edit=$("${recognizer}" "${typee_base}" "${exe_type}" "${typee}")
+
 	local rc="$?"
-	echo 1>&2 "1:file_to_edit>${file_to_edit}<"
+	##EExec_verbose_msg "1:file_to_edit>${file_to_edit}<"
 	# read "bubba?3:Press enter> "
-	[[ "$rc" == 0 ]] || {
-    	    echo "func_recognizer ${exe_type} failed: $rc"
+	(( "$rc" == 0 ))  || {
+    	    EExec_verbose_msg "func_recognizer ${exe_type} failed: $rc"
     	    exit $rc
 	} 1>&2
-	echo 1>&2 "2:file_to_edit>${file_to_edit}<"
+
+	EExec_verbose_msg "
+
+2:file_to_edit>${file_to_edit}<
+
+"
+	continue
 	if [[ -n "${file_to_edit}" ]]
 	then
 	    EExec "${op}" "${file_to_edit}"
+	    press-enter-to-continue "Post op>${op}< >${file_to_edit}<: "
 	    # We want ec(dp)'s return code.
 	    exit
+	else
+	    echo "No file to >${op}< this loop: ${recognizer}"
 	fi
     done
     false
