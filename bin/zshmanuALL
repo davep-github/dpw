@@ -112,5 +112,5 @@ Usage_error()
 # Works fine, but makes you look like a fool, since you don't know about `:'
 # Or an elitist who does things differently to show off how S-M-R-T
 
-true ${zsh_manuall:=$HOME/doc/zsh_a4.pdf}
-EExec evince "${zsh_manuall}"
+true ${zsh_manual:=$HOME/doc/zsh_a4.pdf}
+EExec xit evince "${zsh_manual}"
