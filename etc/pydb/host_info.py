@@ -53,7 +53,7 @@ HOME_LOCAL_BIN = opath.join(HOME_LOCAL, "bin")
 LIGHT_BG_LS_COLORS = opath.join(HOME, '.rc/ls-colors-for-light-bg'),
 default = dppydb.Entry({
     'pydb_type:': 'host-info',
-
+    'entry-default': 't',
     # make colors ugly and noticeable that there is no more specific entry
     # for this host's host-info.
     'xterm_bg': 'red',
@@ -169,6 +169,7 @@ home_family = e(
     kef='family',
     dat={
         'family': 'home',
+        'fam-home': 't',
         'comment': 'Common things for home unix like machines.',
         'network-name': 'meduseld',
         'ISP': 'verizon.net',
@@ -210,6 +211,7 @@ e(
     kef='family',
     dat={
         'family': 'home-linux',
+        'fam-home-linux': 't',
         'comment': 'Linux boxen at home.',
         'cd-writer-dev': '/dev/cdrom',
         'cd-writer-fs': '/cdrom',
@@ -231,6 +233,8 @@ amd_family = e(
         'host-default-pattern': '.*',
         'family': 'amd-linux',
         'family_zone': 'amd',
+        'wildcard-amd-linux': 't',
+
         'comment': 'My linux boxen at amd.',
         'DTE': 'kde',
         'main_macs_opts': '-eval (dp-main-rc+2w)',
@@ -461,8 +465,9 @@ VILYA_XEM_GEOMETRY = '--geometry 81x63-1+0'
 e(
     kef='host',
     dat={
-        'host-pattern': '^(vilya)$',
-#        'host': 'vilya',
+        #'host-pattern': '^(vilya)$',
+        'host': 'vilya',
+        'host-vilya': 't',
         'DTE': 'kde',                       # or none
         'comment': 'My main box at home.',
         'nick': 'home',
