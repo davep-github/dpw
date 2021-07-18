@@ -23,7 +23,10 @@ function dp_decode_cmd_status()
     # User return codes should not be >= 128.
     if [[ "${rc}" == "99" ]]
     then
-	pstr="dp(1) debug exit"
+	pstr="99/dp(1) debug exit"
+    elif [[ "${rc}" == "88" ]]
+    then
+	pstr="88/dp(1) reminder exit"
     elif (("${rc}" <= "${signum_min}"))
     then
 	# Special case to separate 128 from 0 (128 - 128)
