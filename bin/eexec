@@ -269,6 +269,18 @@ EExecVerbose_p()
 
 EExec_verbose_msg()
 {
+    # while (($# > 0))
+    # do
+    #   #echo 1>&2 "ONE>$1<"
+    # 	case "$1" in
+    # 	  --eko) EExec_verbose_func=EExecStandardErr_eko
+    #       --) shift; break;;
+    #       *) break;;
+    #   esac
+    #   shift
+    #   #echo 1>&2 "@>$@<"
+    # done
+
     local old=${EExecEchoPrefix-}
     local pname="${progname-some_prog}:"
     [ "${1-}" = "-P" ] && pname=
