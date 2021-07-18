@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-vsetp()
-{
-    echo 1>&2 "$0: FIXME! vsetp: Ima fake shell script to hack rc issues."
-    [ -n "$*" ]
-}
+echo 1>&2 "$0: FIXME! vsetp: Ima fake shell script to hack rc issues."
+[[ -n "$*" ]]
 
