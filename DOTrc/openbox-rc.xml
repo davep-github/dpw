@@ -362,16 +362,22 @@
         scripts are in place.  Script logs executing, xset q shows
         proper speed, but no effect on running system.
     -->
-    <!-- Select and raise XEmacs editing server. -->
+    <!-- Select and raise an XEmacs editing server. -->
     <keybind key="A-W-x">
       <action name="Execute">
         <command>wmctrl -a "Serv/XEmacs@"</command>
       </action>
     </keybind>
-    <!-- Select and raise an emacs window. -->
+    <!-- Select and raise an XEmacs editing server. -->
     <keybind key="W-x">
       <action name="Execute">
-        <command>wmctrl -a "XEmacs@"</command>
+        <command>wmctrl -a "Serv/XEmacs@"</command>
+      </action>
+    </keybind>
+    <!-- Select and raise a . -->
+    <keybind key="W-v">
+      <action name="Execute">
+        <command>wmctrl -a " - TigerVNC"</command>
       </action>
     </keybind>
     <!-- Select and raise Emacs editing server. -->
