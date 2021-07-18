@@ -17,7 +17,7 @@ exit 88
 # SHELL says zsh.
 # DP_BASH_p is fucked up.  And I'm in too much of a hurry.
 # "${DP_BASH_p-false}" || {
-#     echo "[ as of: 2021-07-02T11:24:08 ], this isn't know to work with zsh."
+#     echo "[ as of: 2021-07-02T11:24:08 ], this is known to NOT work with zsh."
 #     exit 1
 # } 1>&2
 
