@@ -146,7 +146,6 @@ vsetp "${set_sandbox_p}" && current_sb=$(dp4-sb-root -S) && {
 
 [ -z "$did_cd" ] && cd $HOME
 
-set -x
 if [ -n "${macs}" ]
 then
     BIN="${macs}"
@@ -208,7 +207,9 @@ PRE_CMD=$($HOST_INFO -n '' ${prefix}_pre_cmd)
 [ "$main_macs" = 'y' ] && {
     MAIN_MACS_RC=$($HOST_INFO -n '' 'main_macs_opts')
 }
+set -x
 XEM_XFT_FONT=$($HOST_INFO -n '' 'xem-xft-font')
+type vsetp
 vsetp $XEM_XFT_FONT && {
     FONT_SET_EXPR=("-eval" "'" "(set-frame-font $XEM_XFT_FONT)" "'")
     font=
@@ -217,7 +218,7 @@ vsetp $XEM_XFT_FONT && {
 #    echo "[1]>${FONT_SET_EXPR[1]}<"
 #    echo "[@]>${FONT_SET_EXPR[@]}<"
 }
-
+set +x
 if [ -z "$OPTS" ]
 then
     case $HOSTNAME in
