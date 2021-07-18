@@ -331,6 +331,7 @@ pinentry-x2go
 bsdgames
 bsdutils
 bsdmainutils
+gawk
 ### <:New Entry Placeholder:> ###
 # For external app adding utility, it can sed this exact text with a new entry
 # and add another placeholder.
