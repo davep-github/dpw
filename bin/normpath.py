@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys, os
-import dp_utils, dp_sequences
+import dp_io, dp_utils, dp_sequences
 
 def main(argv):
     import getopt
