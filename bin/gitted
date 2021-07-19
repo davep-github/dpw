@@ -3,6 +3,9 @@
 source script-x
 set -u
 
+# @todo XXX Make `git_fun' an array and to allow combinations of functionality,
+# like adding the printing of .git along with file or !quiet.
+
 progname=$(basename $0)
 
 DOT_NOT_GIT=12
