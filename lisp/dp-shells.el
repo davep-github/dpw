@@ -63,14 +63,19 @@ Should be a color which nearly blends into background."
 ;; (bash) 3150/0001<130:SIGINT>
 
 (defconst dp-bash-prompt-regexp
-  (concat "^\\(?:(.*)\\s-*\\)?"	    ; (zsh) Misc annotation: shell name, etc.
+  (concat "^\\(?:(.*)\\s-*\\)?"	; e.g (zsh,bash) Misc annotation: shell name, etc.
 	  "[0-9]+"		    ; xxxx History number
           "\\("	      ; hist num terminator/separator, from shell number/name
           "[/<]"      ; terminator char.
           "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name/number"
           "\\)"			    ; hist num end.
-	  ;;                 V should this be [#>] ?
-          "?\\([#>]\\|<[0-9]*>\\)")  ; prompt terminatior [#>] or error: <rc>
+	  ;;                 V should this be [#>] ? ??? did the V location change?
+	  ;; the <[0-9]*> is no longer compatible with the output of
+	  ;; dp_decode_cmd_status, which returns characters other than
+	  ;; numerals. ".*" lowers the specificity, but I don't think that's
+	  ;; worse than the totally incorrect and problematic and ruins "up
+	  ;; arrow" (previous comint history).
+          "?\\([#>]\\|<.*>\\)")  ; prompt terminatior [#>] or error: <rc>
   "For colorization in shell-mode buffer (bash/sh/etc.)")
 
 ;; zsh prompt (d'uh)
@@ -90,8 +95,8 @@ Should be a color which nearly blends into background."
           "\\("	      ; hist num terminator/separator, from shell number/name
           "[/<]"      ; terminator char.
           "\\)"				; hist num end.
-	  ;;                 V should this be [#>] ?
-          "?\\([#>]\\|<[0-9]*>\\)")  ; prompt terminatior [#>] or error: <rc>
+	  ;; See `dp-bash-prompt-regexp's comment about this component.
+          "?\\([#>]\\|<.*>\\)")  ; prompt terminatior [#>] or error: <rc>
   "For colorization in shell-mode buffer
 \(zsh only [ at this time: 2020-10-14T10:19:43 ])")
 
