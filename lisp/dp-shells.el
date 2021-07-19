@@ -1084,7 +1084,7 @@ Or both.")
    comint-prompt-regexp
    (concat "^([0-9]+:\\(zsh\\|bash\\)) " ; Shell level (-ish) and shell name.
 	   "+[0-9]+"			 ; History number.
-	   "\\(<[0-9]+\\)?"		 ; Optional errno.
+	   "\\(<.*\\)?"		 ; Optional errno.
 	   ;; Terminal chars {">" user, "#" root} and as many spaces as your
 	   ;; little heart desires.
 	   "\\(>\\|#\\) *")
