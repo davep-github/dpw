@@ -117,6 +117,8 @@ then
     true ${dp_emacs_grep_options:="-n --color=never ${dp_grep_options}"}
     export dp_emacs_grep_options
     #echo "dp_emacs_grep_options>$dp_emacs_grep_options<"
+    # @todo XXX Is this Emacs specific
+    export TERM=eterm
     dp_emacs_dash_n_greps()
     {
 #        source ${DP_RC_DIR}/grep-functions
