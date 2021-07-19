@@ -39,7 +39,16 @@ PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # doesn't look like the raw prompt, but it could be some "compiled" form.
 # [(nh)]user@host:(c/w/d -OR- ~/w/d) [(git-branch[git-modified-indicator])]<actual newline>
 # (SHLVL:zsh) hist-num(> -OR- <error-code>) "
-# PROMPT+=' $(git_prompt_info)'
+#
+# @todo XXX parameterize this.
+# Huge directories take forever for git_prompt_info to get its info.
+# Nope needs to be removed/changed in a hook ?? chdir ?? cmd ??
+# so turn it off in known huge directories.
+# +++ Look at git_prompt_info, an omz function.
+# [[ $PWD =~ /work/amd/amdgpu ]] || {
+#     PROMPT+=' $(git_prompt_info)'
+# }
+
 if [[ "$(id -u)" == 0 ]]
 then
     # ~I am root.~
