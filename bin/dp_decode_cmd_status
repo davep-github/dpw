@@ -20,6 +20,12 @@ function dp_decode_cmd_status()
     local num_sigs=$(/bin/kill -l | wc -w)
     local pstr="pstr UNSET!"
 
+    echo "DP_DECODE_PROMPT_RET>$DP_DECODE_PROMPT_RET<"
+
+    [[ -n "$DP_DECODE_PROMPT_RET" ]] && {
+	echo "$DP_DECODE_PROMPT_RET"
+	return "${rc}"
+    }
     # User return codes should not be >= 128.
     if [[ "${rc}" == "99" ]]
     then
