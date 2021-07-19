@@ -10,6 +10,7 @@ eval_name_p=t
 fini()
 {
     o_val="$*$two"
+    eval o_val="${o_val}"
     [ -n "${do_dirname_p}" ] && [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
     echo $o_val
     # All of our lookup attempts failed.
