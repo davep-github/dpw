@@ -71,10 +71,22 @@ gitted_p_file()
         echo "$file"
     fi
 }
+gitted_p_dotgit()
+{
+    local file="$1"; shift
+    if gitted_p "$file" > /dev/null 2>&1
+    then
+	{
+	    echo "$progname: dotgit: $(realpath $(git-dotgit))"
+	} 2>/dev/null
+    else
+        echo "$file"
+    fi
+}
 
 : ${git_fun="gitted_p_quiet"}
 : ${quiet_p=}
-
+: ${show_dot_git_p=false}
 
 # Parse command line.
 # std_options has some "useful" options.
@@ -96,7 +108,7 @@ Exit:
 "
 
 # The real meat...
-option_str="fdqV"
+option_str="fdqVgd"
 declare -a long_options
 #Each element is a long option name sans '--'
 long_options=(
@@ -104,6 +116,7 @@ long_options=(
     "quiet"			# -a, anti vv
     "debug"			# -d
     "file"			# -f
+    "vvv" "dot-git"		# -d|-g
 )
 
 source dp-getopt+.sh            # Runs when sourced.
@@ -118,6 +131,7 @@ for i in "$@"; do
 		    quiet_p=t;;
 	-V|--vv|--verbose) git_fun="gitted_p_verbose"
 			   quiet_p=;;
+	-d|-g|--vvv|--dot-git) git_fun="gitted_p_dotgit";;
         --) shift; break;;
     esac
     shift
@@ -126,17 +140,21 @@ done
 at_least_one_fail=0
 for f in "$@"
 do
-  [ -e "$f" ] || {
-      at_least_one_fail=1
-      ## I'd be nice to know if I'm called from the command line and be
-      ## verbose by default.
-      [ -z "${quiet_p}" ] && {
-	  # print the fail prefix for bad programs using this.
-          echo "-- $progname: $f does not exist."
-      } 1>&2
-      continue
-  }
-  "$git_fun" "$f" || at_least_one_fail=1
+    [ -e "${f}" ]
+    rc="$?"
+    [ -e "$f" ] || {
+	echo "FOAD!"
+	at_least_one_fail=1
+	## I'd be nice to know if I'm called from the command line and be
+	## verbose by default.
+	[[ -z "${quiet_p}" ]] && {
+	    # print the fail prefix for bad programs using this.
+            echo "-- $progname: $f does not exist."
+	} 1>&2
+	echo "show_dot_git_p>${show_dot_git_p}<"
+	continue
+    }
+    "$git_fun" "$f" || at_least_one_fail=1
 done
 
 exit "${at_least_one_fail}"
