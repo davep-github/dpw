@@ -86,6 +86,8 @@ Excludes are sed -r regexps"
 : ${files_to_cat=""}
 : ${only_cat_files=""}
 : ${relative_opt=}
+# e.g. /tmp/find-src-code-files.out
+: ${TEE_LOG_FILE:=/dev/null}
 
 add_foi_regexp $INTERESTING_FILES
 
@@ -194,7 +196,7 @@ fi 1>&2
 
 filter()
 {
-    tee /dev/null | \
+    tee "${TEE_LOG_FILE}" | \
     $exclude_filter | \
     sed -r "$VC_EXCLUDES" $EXCLUDES | \
     egrep -i "${FILES_OF_INTEREST[@]}" | \
@@ -208,11 +210,11 @@ filter()
     }
     [ -n "$only_cat_files" ] && exit 0
 
-    ftreewalk.py ${dash_x_files} \
-       ${relative_opt} \
-       $EXCLUDED_FILES_FILE_OPT \
-       $follow_sym_links $dirs | \
-       tee /dev/null
+    EExec ftreewalk.py ${dash_x_files} \
+	  ${relative_opt} \
+	  $EXCLUDED_FILES_FILE_OPT \
+	  $follow_sym_links $dirs | \
+	tee /dev/null
 } | filter | tee $v_file
 
 rm -f "$EXCLUDED_FILES_FILE"
