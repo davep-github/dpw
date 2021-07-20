@@ -39,15 +39,12 @@ PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # doesn't look like the raw prompt, but it could be some "compiled" form.
 # [(nh)]user@host:(c/w/d -OR- ~/w/d) [(git-branch[git-modified-indicator])]<actual newline>
 # (SHLVL:zsh) hist-num(> -OR- <error-code>) "
-#
-# @todo XXX parameterize this.
-# Huge directories take forever for git_prompt_info to get its info.
-# Nope needs to be removed/changed in a hook ?? chdir ?? cmd ??
-# so turn it off in known huge directories.
-# +++ Look at git_prompt_info, an omz function.
-# [[ $PWD =~ /work/amd/amdgpu ]] || {
-#     PROMPT+=' $(git_prompt_info)'
-# }
+# It's incredibly slow for large projects.
+# Need a way to switch to it, hopefull automagically.
+# Anyway to get git project size?
+export NO_GIT_PROMPT=${PROMPT}
+NO_GIT_PROMPT+=' ixnay'
+PROMPT+=' $(git_prompt_info)'
 
 if [[ "$(id -u)" == 0 ]]
 then
@@ -63,8 +60,11 @@ function precmd() {
     psvar=$(dp_decode_cmd_status $?)
 }
 
+final_prompt_part="%F{${line2_color}}(${SHLVL}:zsh) %!%(0?||<%S%v%s)>%f "
 PROMPT+="
-%F{${line2_color}}(${SHLVL}:zsh) %!%(0?||<%S%v%s)>%f "
+${final_prompt_part}"
+NO_GIT_PROMPT+=+="
+${final_prompt_part}"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
