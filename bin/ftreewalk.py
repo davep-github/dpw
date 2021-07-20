@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # $Id: ftreewalk.py,v 1.32 2005/06/19 08:20:11 davep Exp $
 
 import os, sys, getopt, types, string, re
 import dp_io, dp_sequences
-dp_io.vprint_on()
 
 NEWER_THAN_FILE = None
 OLDER_THAN_FILE = None
@@ -688,14 +687,17 @@ if __name__ == "__main__":
             continue
         if o == '-v':
             verbosity = verbosity + 1
+            dp_io.set_verbose_level(verbosity)
             continue
         if o == '-D':
             dp_io.debug_on()
             debug_level = debug_level + 1
+            dp_io.set_debug_level(debug_level)
             continue
         if o == '-F':
             dp_io.debug_on()
             debug_flags = debug_flags | eval(v)
+            dp_io.set_debug_mask(debug_flags)
             continue
         if o == '-R':
             # make output names relative.
@@ -716,10 +718,7 @@ if __name__ == "__main__":
             FILE_NAME_CLOSE_QUOTE = """'"""
             continue
 
-    dp_io.set_debug_level(debug_level)
     dp_io.v_vprint_files = [sys.stderr]
-    dp_io.set_verbose_level(verbosity)
-    dp_io.set_debug_mask(debug_flags)
 
     if args == []:
         args = ['.']

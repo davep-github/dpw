@@ -107,10 +107,19 @@ Usage_error()
 ########################################################################
 
 #set -x
-cscope=$(sp -N1 cscope)
+gtags_cscope=$HOME/local/bin/gtags-cscope
+if [[ -e "${gtags_cscope}"  ]]
+then
+    cscope="${gtags_cscope}"
+else
+    # I know this cscope ($HOME/bin) is the first match, so we don't want it.
+    cscope=$(EExec sp -N1 cscope)
+fi
+cscope=$(realpath "${cscope}")
+EExec_verbose_echo_id cscope
 {
     echo "====== Start: $(date) ======"
-    echo "$0: @>$@<"
+    echo "$0: ${cscope} @>$@<"
     echo "====== End: $(date) ======"
 } |& tee -a "${DP_LOG_DIR}/auto-rotate-c5-50K/cscope.log" >& /dev/null
 exec "${cscope}" "$@"

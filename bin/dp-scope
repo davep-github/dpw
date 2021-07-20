@@ -63,7 +63,7 @@ else
           --global|--def|--definition|--global-def|--global-definition) shift; arg="${1}"; field_num=1;;
           --called|--called-by) shift; arg="${1}"; field_num=2;;
           --calling|--callers|--calls) shift; arg="${1}"; field_num=3;;
-          --raw|--no-post|--post-nada|--nada-post) POST_PROCESSOR=post_raw;;
+          --raw|--no-post|--post-nada|--nada-post|--cat) POST_PROCESSOR=post_raw;;
           -t|--text|--str|--string|--text-string|--text-str|--txt) shift; arg="${1}"; field_num=4;;
           --change|--change-text|--change-txt) field_num=5;;  # This may require more work.
           --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
@@ -87,7 +87,6 @@ else
     done
 fi
 
-EExec_verbose_echo_id POST_PROCESSOR
 # ((${#db_files[@]-0} == 0)) || vsetp "${find_up_p}" || {
 #     # look for a cscope db above us.
 #     EExec_verbose_msg "finding up"
@@ -150,6 +149,16 @@ compile_mode_ify()
     #awk '{printf "%s:%d\t ", $1, $3; $1=$2=$3=""; print $0}'
 }
 
+DP_CSCOPE_PROGRAM="$(sp ${DP_CSCOPE_PROGRAM})"
+[[ -e "${DP_CSCOPE_PROGRAM}" ]] || {
+    DP_CSCOPE_PROGRAM=$(sp -N1 cscope)
+    [[ -e "${DP_CSCOPE_PROGRAM}" ]] || {
+	echo "Cannot find a cscope type program"
+	exit 1
+    } 1>&2
+}
+
+EExec_verbose_echo_id POST_PROCESSOR
 for db_file in "${db_files[@]}"
 do
   # -f reffile doesn't work with gtags-cscope,
@@ -161,4 +170,4 @@ do
 	-L -"${field_num}" "$@" \
       | EExec "${POST_PROCESSOR}"
   popd >& /dev/null
-done  
+done
