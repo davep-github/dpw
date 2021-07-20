@@ -178,8 +178,13 @@
   (when dp-using-gtags-cscope-p
     (setq cscope-program dp-cscope-program))
 
+  ;; @todo XXX USE THIS!!! vs the variable.
   (defun dp-cscope-do-not-update-database ()
     dp-using-gtags-cscope-p)
+
+  ;; Currently this isn't working and I'm in literally life or death panic
+  ;; mode.
+  (setq cscope-do-not-update-database t)
 
   (defun dp-cscope-list-entry-hook ()
     (define-key cscope-list-entry-keymap "i" 'dp-tag-find-with-idutils-bury-first))
