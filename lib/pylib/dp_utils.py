@@ -405,7 +405,8 @@ def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
     s = "%s" % (s,)
     m = re.search("^(\d+(\.\d+)?)\s*([dDcCkKmMgGtT]?)$", s)
     if not m:
-        print("Warning: numWithUnits: no match for>{}<.".format(s), file=sys.stderr)
+        ##print("Warning: numWithUnits: no match for>{}<.".format(s), file=sys.stderr)
+        dp_io.eprint("Warning: numWithUnits: no match for>{}<\n", s)
         return 0                   # Or should it be an error with no digits?
 
     n = float(eval(m.group(1)))
@@ -587,7 +588,7 @@ def process_gopath(args=None):
         if opath.exists(f):
             xfiles.append(f)
     if not xfiles:
-        print("No go files. Exiting.", file=sys.stderr)
+        dp_io.eprint("No go files. Exiting.\n")
         sys.exit(1)
     # Keep most specific files last so values may be overridden.
     #print >>sys.stderr, "xfiles>{}<".format(xfiles)
