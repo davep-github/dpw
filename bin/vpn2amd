@@ -112,8 +112,13 @@ true ${user:='amd\dpanarit'}
 true ${sudo:='sudo'}
 true ${strace=}
 
-EExec ${strace} ${sudo} openconnect \
-    --csd-wrapper=/usr/libexec/openconnect/hipreport.sh \
-    --protocol=gp \
-    --user="${user}" \
-    "${gateway}"
+pass amd/password
+
+#dpass amd/password | \
+    # 	  --passwd-on-stdin \
+EExec dpxx -B linen -F black \
+     ${strace} ${sudo} openconnect \
+     --csd-wrapper=/usr/libexec/openconnect/hipreport.sh \
+     --protocol=gp \
+     --user="${user}" \
+     "${gateway}"
