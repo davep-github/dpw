@@ -7,7 +7,15 @@
   (interactive)
   (cond
    ;; Main development boxen, so I needs the kernel mode.
+   ((or
+     (string-equal (getenv "PROJECT") "umr")
+     (string-match "/utils/umr/" buffer-file-truename))
+    (setq dp-current-c-style dp-umr-c-style
+          dp-current-c-style-name "dp-umr-c-style"))
    ((string-match "^\\(cz\\|xerxes$\\|yyz\\)" (dp-short-hostname))
+    (setq dp-current-c-style dp-kernel-c-style
+          dp-current-c-style-name "dp-kernel-c-style"))
+   ((string-equal (getenv "PROJECT") "umr")
     (setq dp-current-c-style dp-kernel-c-style
           dp-current-c-style-name "dp-kernel-c-style"))
    ((string-match "^atl" (dp-short-hostname))
