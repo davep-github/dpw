@@ -63,6 +63,60 @@
   "KERNEL C/C++ Programming Style")
 (c-add-style "dp-kernel-c-style" dp-kernel-c-style)
 
+(defconst dp-umr-c-style
+  '(
+    (dp-c-using-kernel-style-p                     . t)
+    (dp-c-indent-for-comment-prefix                . "")
+    (dp-use-stupid-kernel-struct-indentation-p     . nil)
+    (dp-c-like-mode-default-indent-tabs-mode-p     . t)
+    (dp-c-fill-statement-minimal-indentation-p     . nil)
+    (dp-lang-use-c-new-file-template-p             . nil)
+    (dp-c-style-tab-width                          . 4)
+    ;; Mine is out-of-date and FSF Emacs has one.
+    (dp-trailing-whitespace-use-trailing-ws-font-p . nil)
+    (dp-use-space-before-tab-font-lock-p           . t)
+    (dp-use-too-many-spaces-font-p                 . t)
+    (dp-use-ugly-ass-pointer-style-p               . t)
+    (c-insert-tab-function                         . dp-phys-tab)
+    ;; see `c-indent-command'
+    (c-tab-always-indent                           . t)
+    (c-basic-offset                                . 4)
+    (c-comment-only-line-offset                    . 0)
+
+    (c-cleanup-list                . (scope-operator
+                                      empty-defun-braces
+                                      defun-close-semi
+                                      list-close-comma
+                                      brace-else-brace
+                                      brace-elseif-brace
+                                      knr-open-brace)) ; my own addition
+    (c-offsets-alist               . ((arglist-intro     . +)
+                                      (substatement-open . 0)
+                                      (inline-open       . 0)
+                                      (cpp-macro-cont    . +)
+                                      (access-label      . /)
+                                      (inclass           . +)
+                                      (statement-block-intro . +)
+                                      (knr-argdecl-intro     . 0)
+                                      (substatement-label    . 0)
+                                      (label                 . 0)
+                                      (statement-cont        . +)
+
+                                      (case-label        . 0)))
+    (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
+    (c-echo-syntactic-information-p . nil)
+    (c-indent-comments-syntactically-p . t)
+    (c-hanging-braces-alist         . ((brace-list-open   . ignore)
+                                       (brace-list-close  . ignore)
+                                       (brace-list-intro  . ignore)
+                                       (substatement-open . (after))
+                                       (brace-entry-open  . ignore)))
+
+    (c-hanging-colons-alist         . ((member-init-intro . (before))))
+    )
+  "AMD/umr C/C++ Programming Style")
+(c-add-style "dp-umr-c-style" dp-umr-c-style)
+
 (defun linux-c-mode ()
   "C mode with Linux kernel defaults"
   (dmessage "in linux-c-mode.")
@@ -114,9 +168,23 @@
 (c-add-style "basic-c-style" dp-basic-c-style)
 (c-add-style "ptb-c-style" dp-basic-c-style)
 
+
+;FUUFUF ;; @todo XXX MAJOR FUCKING HACK.  I HATE THIS "JOB".
+;FUUFUF (defun dp-force-fucking-umr-c-mode()
+;FUUFUF   (interactive)
+;FUUFUF   (let* ((proj (getenv "PROJECT"))
+;FUUFUF 	 (umrp (and proj (string= proj "umr"))))
+;FUUFUF     (when umrp
+;FUUFUF       (defvar dp-default-c-style-name "dp-umr-c-style")
+;FUUFUF       (defvar dp-default-c-style dp-umr-c-style)
+;FUUFUF       ))
+;FUUFUF   )
+
 ;; `defvar' only sets if void.
-(defvar dp-default-c-style-name "basic-c-style")
-(defvar dp-default-c-style dp-basic-c-style)
+;; (defvar dp-default-c-style-name "basic-c-style")
+;; (defvar dp-default-c-style dp-basic-c-style)
+(defvar dp-default-c-style-name "dp-umr-c-style")
+(defvar dp-default-c-style dp-umr-c-style)
 
 (defconst meduseld-c-style
   '((c-tab-always-indent           . t)
@@ -151,11 +219,22 @@
 
 (defun dp-c-add-default-style (&optional name style)
   (interactive)
-  (dmessage "dp-c-add-default-style, name>%s< style>%s<" name style)
+  (dmessage "dp-c-add-default-style, args: name>%s< style>%s<" name style)
   (when name
     (setq dp-default-c-style-name name))
   (when style
     (setq dp-default-c-style style))
+  (dmessage "dp-c-add-default-style, current: name>%s< style>%s<" name style)
+  (c-add-style dp-default-c-style-name dp-default-c-style t))
+
+(defun dp-c-add-current-style (&optional name style)
+  (interactive)
+  (dmessage "dp-c-add-current-style, args: name>%s< style>%s<" name style)
+  (when name
+    (setq dp-current-c-style-name name))
+  (when style
+    (setq dp-current-c-style style))
+  (dmessage "dp-c-add-current-style, current: name>%s< style>%s<" name style)
   (c-add-style dp-default-c-style-name dp-default-c-style t))
 
 (defun meduseld-style ()
