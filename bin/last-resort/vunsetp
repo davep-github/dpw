@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-vunsetp()
+function vunsetp()
 {
-    echo 1>&2 "$0: FIXME! vunsetp: Ima fake shell script to hack rc issues."
-    [ -z "$*" ]
+    ###echo 1>&2 "$0: FIXME! vunsetp: Ima fake shell script to hack rc issues."
+    [[ -z "$*" ]]
 }
+
+dp_runme && vunsetp
