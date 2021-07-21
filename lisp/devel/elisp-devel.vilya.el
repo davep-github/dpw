@@ -7603,3 +7603,81 @@ variable-history
   (defvar zuzz zuzz-val))
 
 
+
+========================
+Tuesday July 20 2021
+--
+========================
+2021-07-20T16:10:58
+--
+(require 'ggtags)
+ggtags
+
+(require 'xgtags)
+xgtags
+
+
+
+
+(defun dp-force-fucking-umr-c-mode()
+  (interactive)
+  (let* ((proj (getenv "PROJECT"))
+	 (umrp (and proj (string= proj "umr"))))
+    (when umrp
+      (setq dp-default-c-style-name "dp-umr-c-style")
+      (setq dp-default-c-style dp-umr-c-style)
+      ))
+  )
+
+(dp-force-fucking-umr-c-mode)
+((dp-c-using-kernel-style-p . t) (dp-c-indent-for-comment-prefix . "") (dp-use-stupid-kernel-struct-indentation-p) (dp-c-like-mode-default-indent-tabs-mode-p . t) (dp-c-fill-statement-minimal-indentation-p) (dp-lang-use-c-new-file-template-p) (dp-c-style-tab-width . 4) (dp-trailing-whitespace-use-trailing-ws-font-p) (dp-use-space-before-tab-font-lock-p . t) (dp-use-too-many-spaces-font-p . t) (dp-use-ugly-ass-pointer-style-p . t) (c-insert-tab-function . dp-phys-tab) ...)
+
+(cl-pp dp-default-c-style)
+
+((dp-c-using-kernel-style-p . t)
+ (dp-c-indent-for-comment-prefix . "")
+ (dp-use-stupid-kernel-struct-indentation-p)
+ (dp-c-like-mode-default-indent-tabs-mode-p . t)
+ (dp-c-fill-statement-minimal-indentation-p)
+ (dp-lang-use-c-new-file-template-p)
+ (dp-c-style-tab-width . 4)
+ (dp-trailing-whitespace-use-trailing-ws-font-p)
+ (dp-use-space-before-tab-font-lock-p . t)
+ (dp-use-too-many-spaces-font-p . t)
+ (dp-use-ugly-ass-pointer-style-p . t)
+ (c-insert-tab-function . dp-phys-tab)
+ (c-tab-always-indent . t)
+ (c-basic-offset . 4)
+ (c-comment-only-line-offset . 0)
+ (c-cleanup-list scope-operator
+		 empty-defun-braces
+		 defun-close-semi
+		 list-close-comma
+		 brace-else-brace
+		 brace-elseif-brace
+		 knr-open-brace)
+ (c-offsets-alist (arglist-intro . +)
+		  (substatement-open . 0)
+		  (inline-open . 0)
+		  (cpp-macro-cont . +)
+		  (access-label . /)
+		  (inclass . +)
+		  (statement-block-intro . +)
+		  (knr-argdecl-intro . 0)
+		  (substatement-label . 0)
+		  (label . 0)
+		  (statement-cont . +)
+		  (case-label . 0))
+ (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
+ (c-echo-syntactic-information-p)
+ (c-indent-comments-syntactically-p . t)
+ (c-hanging-braces-alist (brace-list-open . ignore)
+			 (brace-list-close . ignore)
+			 (brace-list-intro . ignore)
+			 (substatement-open after)
+			 (brace-entry-open . ignore))
+ (c-hanging-colons-alist (member-init-intro before)))nil
+
+
+
+
