@@ -85,7 +85,6 @@ do
   # Now we need info about the remote host.
   # E.g. what are it's xterm colors?  We rsh to the remote host and our local
   # xterm has the same appearance as a dpxx(dp) done locally on that host.
-  
 
   EExec dpxx $just_show -h $host -n $title_base -f $font \
         -- ${rsh_bin} ${X_opt} ${host}
