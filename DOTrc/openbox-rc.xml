@@ -374,10 +374,10 @@
         <command>wmctrl -a "Serv/XEmacs@"</command>
       </action>
     </keybind>
-    <!-- Select and raise a . -->
+    <!-- Select and raise chicxulub's VNC window. -->
     <keybind key="W-v">
       <action name="Execute">
-        <command>wmctrl -a " - TigerVNC"</command>
+        <command>wmctrl -a "chicxulub - TigerVNC"</command>
       </action>
     </keybind>
     <!-- Select and raise Emacs editing server. -->
