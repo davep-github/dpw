@@ -124,7 +124,7 @@ do_pings ()
 
     for s in `find_nameservers`
     do
-        pingit "$s" "$prefix(NS)" || add_failure "$2"
+        pingit "$s" "$prefix(NS)" || add_failure "$s"
     done
 
     for s in ${other_places[@]}
