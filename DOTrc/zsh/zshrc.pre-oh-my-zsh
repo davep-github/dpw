@@ -8,9 +8,11 @@ zstyle ':completion:*' insert-unambiguous true
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
 zstyle ':completion:*' menu select=long-list select=0
+zstyle ':completion:*' rehash true
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %l%s'
 zstyle ':completion:*' squeeze-slashes true
 zstyle ':completion:*' verbose true
+
 zstyle :compinstall filename '/home/davep/.zshrc'
 
 # This is done in zshrc.pre-oh-my-zsh, which is a copy of my zshrc when I add
