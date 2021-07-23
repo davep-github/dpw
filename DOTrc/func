@@ -1079,7 +1079,16 @@ function spg()
 
 function ps1()
 {
-    echo "$PS1" | hd
+    local zuzz=
+
+    if (($# > 0))
+    then
+    	zuzz="$@"
+    	shift
+    else
+    	zuzz="${PS1}"
+    fi
+    echo "${zuzz}" | hd
 }
 DP_EXPORT_FUNC ps1
 
