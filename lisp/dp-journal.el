@@ -88,6 +88,8 @@ positives, but funky enough to minimize them.")
 (dp-set-mode-local-value 'dp-local-variables-hack-separator
 			 dpj-local-variables-hack-separator
 			 'dp-journal-mode)
+(defvar dpj-use-alternates-highlighting-p nil
+  "Alternate highlighting of 1) 2)... type lists.")
 
 (defun dp-journal-mode-indent-according-to-mode ()
   "Indent line so it ends up 1 dpj tab under past the previous line's."
@@ -387,13 +389,16 @@ This way we can get alternating colors on journal mode structure in the text:
 	 ;; 1) sjdhjsdh     <<<< color 1
 	 ;; 2) not sjdhjsdh <<<< color 2
 	 ;; 3) yadda        <<<< color 1
-	 (if (dp-xemacs-p)
-	     (cons ''dpj-alt-0 (list 0 ''dp-journal-alt-0-face ''prepend))
-	   '(dpj-alt-0 (2 'dp-journal-alt-0-face prepend)))
-	 (if (dp-xemacs-p)
-	     (cons ''dpj-alt-1 (list 0 ''dp-journal-alt-1-face ''prepend))
-	   '(dpj-alt-1 (2 'dp-journal-alt-1-face prepend)))
-
+					;colors suck (if (dp-xemacs-p)
+	 ;; Readability can near zero.  TODO FIX COLORS.
+	 (when dpj-use-alternates-highlighting-p
+	   (if (dp-xemacs-p)
+	       (cons ''dpj-alt-0 (list 0 ''dp-journal-alt-0-face ''prepend))
+	     '(dpj-alt-0 (2 'dp-journal-alt-0-face prepend)))
+	   (if (dp-xemacs-p)
+	       (cons ''dpj-alt-1 (list 0 ''dp-journal-alt-1-face ''prepend))
+	     '(dpj-alt-1 (2 'dp-journal-alt-1-face prepend)))
+	   )
 	 ;; Shell type comment face
 	 ;;    (cons "\\(^[^=~].*?\\)\\(.*?\\) \\(# .*\\)$"
 	 ;;          (list 3 ''dp-journal-low-question-face t))
@@ -2959,7 +2964,8 @@ This kind of allows us to use a journal file with a non-standard name."
 
 (defun dp-journal-start-font-locking ()
   (dp-journal-setup-font-lock)
-  (dp-add-line-too-long-font '(dp-journal-mode-font-lock-keywords)))
+  ;ugly. (dp-add-line-too-long-font '(dp-journal-mode-font-lock-keywords))
+  )
 
 (add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
 
