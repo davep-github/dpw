@@ -3608,10 +3608,10 @@ lisp-interaction mode."
     (when dev-dir
       (setq dp-current-elisp-devel-dirname dev-dir)))
   ;; (paths-construct-path COMPONENTS &optional EXPAND-DIRECTORY)
-  (paths-construct-path (list(or dp-current-elisp-devel-dirname
-                                 dp-default-elisp-devel-dir)
-                             (or dp-current-elisp-devel-filename
-                                 dp-default-elisp-devel-file))))
+  (paths-construct-path (list (or dp-current-elisp-devel-dirname
+				  dp-default-elisp-devel-dir)
+			      (or dp-current-elisp-devel-filename
+				  dp-default-elisp-devel-file))))
 
 (defvar dp-elisp-devel-candidate-file-names
   '("./dp-elisp-devel.el" "./devel/dp-elisp-devel.el" "./dev/dp-elisp-devel.el"
