@@ -140,7 +140,8 @@ then
       false
   fi
 else
-    echo 1>&2 "$0: not running as script"
+    true
+    ###echo 1>&2 "$0: not running as script"
 fi
 
 #
