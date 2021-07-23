@@ -957,7 +957,9 @@ tab setting, font or phase of the moon."
         c-tab-always-indent (not dp-use-stupid-kernel-struct-indentation-p)
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
-
+  (and-boundp 'dp-c-style-tab-width
+      (setq tab-width dp-c-style-tab-width))
+  
   (dp-update-alist 'c-hanging-braces-alist dp-hanging-brace-alist)
   ;; @todo -- see if I can do this programmatically.
   (if (eq major-mode 'pike-mode)
