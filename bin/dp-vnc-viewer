@@ -8,6 +8,7 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
+
 if [[ -n "${eexec_program-}" ]]	# Did the caller provide a program?
 then
     EEXEC_SHIFT=:
@@ -113,10 +114,10 @@ Usage_error()
 : ${XIT=}
 : ${loopp:=false}
 : ${invertp:=false}
-: ${keep_going_p=true}
+: ${keep_going_p=false}
 : ${num_loops=100}
 
-EExec_verbose_echo_id VIEWER VNCSERVER XIT
+EExec_verbose_echo_id VNCVIEWER VNCSERVER XIT
 
 # Usage variable usage:
 Usage_args_info=' Set $Usage_args_info'
@@ -202,23 +203,32 @@ done
 # showed the vncviewer I thought I was using.
 # It's a good one, as long I remember about it when the universe thinks it'll
 # help me.
-#EExec_verbose_exec type  "${VNCVIEWER}"
+EExec_verbose_echo_id loopp
 while true
 do
     # @todo XXX Using xit is not recommended because it'll spawn processed
     # speedy quick.  Can't even get to a console.
     # It also loops like mad when EExec is in -n mode EExecDashN_p
     EExec ${XIT} "${VNCVIEWER}" "${VNCSERVER}"
+    rc="$?"
     EExecDashN_p && {
 	EExec_verbose_msg "I'm not going to loop forever because you're using -n."
 	exit 3			# Or break --> returns 0.
-    } 1>&2 
+    } 1>&2
     ((--num_loops))
-    ((num_loops <= 0)) && break
+    ((num_loops <= 0)) && {
+	echo "Number of loops completed."
+	echo "loopp>${loopp}<"
+	break
+    } 1>&2
+
     #  Maybe break if XIT used?
-    rc="$?"
-    "${keep_going_p}" && continue
-    "${loopp}" && [[ "${rc}" != 0 ]] && break
+    [[ "${rc}" != 0 ]] && {
+	echo "vncviewer returned non-zero status: ${rc}"
+	"${keep_going_p}" && continue
+	return "${rc}"
+    } 1>&2
+    "${loopp}" || break
 done
 
 exit 0
