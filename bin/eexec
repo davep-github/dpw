@@ -54,7 +54,7 @@ source ~/.rc/echo_id
 #     exit 6
 # } 1>&2
 
-: ${EExecExporter:=export}
+true ${EExecExporter:=export}
 # as of: 2014-12-04T18:12:50, use ${EExec} (NO quotes) vs EExec
 ${EExecExporter} EExec="EExec"
 ${EExecExporter} EExecShowCommand=EExecStderrEcho
