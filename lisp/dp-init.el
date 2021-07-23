@@ -35,9 +35,12 @@
 
 (defun dp-hostname (&optional default)
   "Get a hostname, whatever the system gives us."
-   (or (getenv "HOSTNAME")
-       (shell-command-to-string "hostname")
-       (or default "***LOCALHOST***")))
+  (let ((hostname
+	 (or (getenv "HOSTNAME")
+	     (shell-command-to-string "hostname")
+	     (or default "***LOCALHOST***"))))
+    (car
+     (split-string hostname "\\(\\.\\|\\|\n\\)"))))
 
 (defun dp-short-hostname ()
    (or (getenv "HOST")
