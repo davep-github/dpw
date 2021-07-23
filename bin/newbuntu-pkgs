@@ -332,6 +332,8 @@ bsdgames
 bsdutils
 bsdmainutils
 gawk
+alacarte
+seahorse
 ### <:New Entry Placeholder:> ###
 # For external app adding utility, it can sed this exact text with a new entry
 # and add another placeholder.
