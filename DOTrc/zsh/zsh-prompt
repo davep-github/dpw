@@ -28,7 +28,7 @@ unset PROMPT
 # indicators.  The hash is best because then we can unset the prefix by name.
 # Display them as sorted by name or key or hash order?
 decorated_NH_indicator=
-PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
+export GIT_PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # We need to match the form of the bash prompt for emacs shell-buffer dir
 # tracking.  In fact all shells should do the same.
 # [ at this time: 2020-11-02T11:17:53 ] zsh and shell mode don't get along.
@@ -42,9 +42,9 @@ PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # It's incredibly slow for large projects.
 # Need a way to switch to it, hopefull automagically.
 # Anyway to get git project size?
-export NO_GIT_PROMPT=${PROMPT}
-NO_GIT_PROMPT+=' ixnay'
-PROMPT+=' $(git_prompt_info)'
+export NO_GIT_PROMPT=${GIT_PROMPT}
+NO_GIT_PROMPT+=' $(git_current_branch)(sans stat)'
+GIT_PROMPT+=' $(git_prompt_info)'
 
 if [[ "$(id -u)" == 0 ]]
 then
@@ -61,10 +61,12 @@ function precmd() {
 }
 
 final_prompt_part="%F{${line2_color}}(${SHLVL}:zsh) %!%(0?||<%S%v%s)>%f "
-PROMPT+="
+GIT_PROMPT+="
 ${final_prompt_part}"
-NO_GIT_PROMPT+=+="
+NO_GIT_PROMPT+="
 ${final_prompt_part}"
+
+PROMPT="${GIT_PROMPT}"
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[white]%}(%{$fg[white]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
