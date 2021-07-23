@@ -49,7 +49,8 @@ Format is a list of these:
 
   ;; @todo XXX Get name from $HOST or host-info or ...
   (unless (boundp 'dp-mew-case)
-    (message "dp-mew-case is void, using default.  Set it somewhere like: %s"
+    (message "dp-mew-case is void, using default.  
+Set it's done here: %s"
 	     dp-most-specific-spec-macs)
     ;; Make non-void.
     (setq dp-mew-case nil))
