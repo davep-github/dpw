@@ -2,8 +2,8 @@
 
 function vsetp()
 {
-    ###echo 1>&2 "$0: FIXME! vunsetp: Ima fake shell script to hack rc issues."
+    ###echo 1>&2 "$0: FIXME! vsetp: Ima fake shell script to hack rc issues."
     [[ -n "$*" ]]
 }
 
-dp_runme && vsetp
+dp_runme && vsetp "$@"

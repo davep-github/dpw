@@ -6,4 +6,4 @@ function vunsetp()
     [[ -z "$*" ]]
 }
 
-dp_runme && vunsetp
+dp_runme && vunsetp "$@"
