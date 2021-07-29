@@ -49,7 +49,7 @@ function dp_decode_cmd_status()
 	# Is the signum > max signum?
 	pstr="Illegal SIGNUM:$rc"
 	rc=1
-    elif  signame=$(/bin/kill -l "${signum}") 2>/dev/null
+    elif  signame=$(/bin/kill -l"${signum}") 2>/dev/null
     then
 	# Did kill find the signum pleasing?
 	# We already know the code isn't too big.
