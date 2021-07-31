@@ -54,7 +54,6 @@ echo_name_and_val()
             *) eval echo_name_and_val_val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
         esac
 
-        dp_rc_logger "remove this line."
         true_p "${bare_p}" && {
             echo_name_and_val_prefix=
             echo_name_and_val_anno=
