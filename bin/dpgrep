@@ -112,7 +112,7 @@ long_options=(
     "PSA:"
 )
 source dp-getopt+.sh
-echo "\$@>$@<"
+#echo "\$@>$@<"
 for i in "$@"
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
