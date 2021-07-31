@@ -3,8 +3,6 @@
 # NB: all non-bash code is old, crufty and untested in a long time.
 # Suppress any other means of enabling this.  NB: may break some stuff.
 
-# Longer and more noticeable (aka annoying) is good if we're going to use it.
-echo 1>&2 'BASHYOPP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
 #set -x
 if type emulate >/dev/null 2>/dev/null; then emulate bash; fi
 
@@ -125,7 +123,6 @@ then
 else
     PATH="$most_basic_path:$PATH"
 fi
-DP_EXPORT_FUNC prompt_command
 
 DP_BITCH_LOG="$DP_LOG_DIR/bitches"
 DP_SUGGESTION_BOX="$DP_LOG_DIR/suggestions"
@@ -210,6 +207,8 @@ bashrc_echo_err()
     bashrc_echo "$@" 1>&2
 }
 
+# Longer and more noticeable (aka annoying) is good if we're going to use it.
+bashrc_echo_err 'BASHRCYOPP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
 if cut_and_run_host_p && [ -z "$DP_ENV_INTERACTIVE" ]
 then
     # Simple things like scp or tramp using same don't need anything more.

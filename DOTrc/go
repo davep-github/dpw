@@ -72,6 +72,10 @@ Ee|emacsdropping|edrop|emd|     ${droppings}/editors/emacs/
 Ee|xemacsdropping|xedrop|xmd|   ${droppings}/editors/xemacs/
 Ee|originmaster|origmas|origm|omaster|omas| origin/master
 Ee|masto|morigin|morig|         ${originmaster}
+# /ssh:dpanarit@192.168.1.155:/home/dpanarit/.rc/go
+Ee|yyz|                         /ssh:dpanarit@192.168.1.155
+Ee|yyzhome|                     ${yyz}:/home/dpanarit
+Ee|yyzpip |                     ${yyz}:/home/dpanarit/work/
 
 ### 
 ### Local Variables: ***

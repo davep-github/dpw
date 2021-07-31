@@ -7681,3 +7681,362 @@ xgtags
 
 
 
+
+========================
+Wednesday July 21 2021
+--
+(defvar dp-input-bup dp-input)
+dp-input-bup
+
+dp-input
+"[?2004l
+[1m[7m%[m[1m[m                                                                                        "
+
+
+dp-input1
+"ccd .[?2004l
+[1m[7m%[m[1m[m                                                                                        "
+
+dp-input2
+"ccd .[?2004l
+[1m[7m%[m[1m[m                                                                                        "
+
+(string= dp-input1 dp-input2)
+t
+
+in shell zsh prompt and dirtrack issue:
+current:
+(setq dp-dirtrack-regexp
+      (format
+       ;; Switching to zsh caused this to fail.  It looked like it was just
+       ;; sending garbage with no prompt/dir.  However, there was a
+       ;; prompt/dir, it was just not at the beginning of the reply string.
+       ;; So, after [too] much wailing and gnashing of teeth, all it too was
+       ;; the removal of the ^ before <usr>@<host>.  `concat' makes it easier
+       ;; (for me) to see and doc the components.
+       (concat "%s@%s:"
+	       "\\([~/][[:graph:]]*\\)" ; potential funky prompt graphical chars.
+	       "\\(.*\\)$"		;possible terminators
+	       )
+       (user-login-name) (dp-short-hostname)))
+
+(setq dp-dirtrack-regexp
+      (format
+       ;; Switching to zsh caused this to fail.  It looked like it was just
+       ;; sending garbage with no prompt/dir.  However, there was a
+       ;; prompt/dir, it was just not at the beginning of the reply string.
+       ;; So, after [too] much wailing and gnashing of teeth, all it too was
+       ;; the removal of the ^ before <usr>@<host>.  `concat' makes it easier
+       ;; (for me) to see and doc the components.
+       (concat "%s@%s:"
+	       "\\([~/][[:graph:]]*\\)" ; potential funky prompt graphical chars.
+	       "\\(.*\\)$"		;possible terminators
+	       )
+       (user-login-name) (dp-short-hostname)))
+n
+
+dp-input
+
+dpx-dirtrack-list-using-regexp
+"davep@vilya
+:\\([~/][[:graph:]]*\\)\\(.*\\)$"
+
+dpx-dirtrack-list
+("davep@vilya
+:\\([~/][[:graph:]]*\\)\\(.*\\)$" 1)
+
+dpx-input-echo
+"[A[m[m[m[J[1mdavep@vilya:~/tmp[m 
+[36m(3:zsh) 3000>[39m "
+
+(nth 0 dpx-dirtrack-list)
+"davep@vilya
+:\\([~/][[:graph:]]*\\)\\(.*\\)$"
+
+
+(string-match "davep@vilya\\([~/][[:graph:]]*\\)\\(.*\\)$" dpx-input-echo)
+21
+
+nil
+
+nil
+
+nil
+
+(or (getenv "HOSTNAME")
+       (shell-command-to-string "hostname")
+       (or default "***LOCALHOST***"))
+"vilya
+"
+
+(shell-command-to-string "hostname")
+"vilya
+"
+(or (getenv "HOST")
+      (car (split-string
+	    (dp-hostname)
+	    ?.)))
+(dp-hostname)
+"vilya
+"
+(getenv "HOST")
+nil
+(getenv "HOSTNAME")
+nil
+(dp-short-hostname)
+
+"vilya
+"
+(split-string (dp-hostname) "\\.")
+("vilya
+")
+(dp-hostname)
+"vilya
+"
+
+(split-string (dp-hostname) "\\(\\.\\|\\|$\\)")
+("vilya" "
+" "")
+
+("vilya
+")
+
+(car
+ (split-string "vilya
+ " "\\(\\.\\|\\|\n\\)"))
+"vilya"
+
+ ("vilya" " ")
+
+("vilya
+ ")
+
+
+("vilya
+")
+(split-string (dp-hostname) "\\(\\.\\|\\|
+\\)")
+("vilya" "")
+
+(shell-command-to-string "hostname")
+"vilya
+"
+
+(dp-hostname)
+
+
+
+
+;installed (defun dp-short-hostname ()
+;installed    (or (getenv "HOST")
+;installed        (car (split-string
+;installed 	     (dp-hostname)
+;installed 	     "\\(\\."\\|\\|\\)"))
+;installed "
+;installed (defun dp-hostname (&optional default)
+;installed   "Get a hostname, whatever the system gives us."
+;installed   (let ((hostname
+;installed 	 (or (getenv "HOSTNAME")
+;installed 	     (shell-command-to-string "hostname")
+;installed 	     (or default "***LOCALHOST***"))))
+;installed     (car
+;installed      (split-string hostname "\\(\\.\\|\\|\n\\)"))))
+;installed dp-hostname
+
+;installed (dp-hostname)
+;installed "vilya"
+
+;installed (defun dp-short-hostname ()
+;installed    (or (getenv "HOST")
+;installed        (car (split-string
+;installed 	     "a.b.c.d
+;installed "
+;installed 	     "\\."))))
+;installed dp-short-hostname
+
+(dp-hostname)
+"vilya"
+
+"vilya"
+
+(dp-short-hostname)
+"vilya"
+
+"vilya"
+
+"vilya"
+
+"a"
+
+"vilya"
+
+
+
+========================
+Tuesday July 27 2021
+--
+(append '(1 2 3) '(a b c) nil)
+(1 2 3 a b c)
+
+(cons 'a '(1 2 3))
+(a 1 2 3)
+
+
+(1 2 3 a b c)
+
+(append '(1 2 3) nil '(a b c) nil)
+(1 2 3 a b c)
+
+
+(setq full-plist (append
+		  '(re quired)
+		  '(prop list)
+		  (when (= 0 0)
+		    '(invisible))))
+(re quired prop list invisible)
+
+(defun dp-invisible-color-p (color)
+  "Return t if COLOR implies invisibility."
+  (and color
+       (or (and (integerp color)
+		(<= color 0))
+	   (eq color 'invisible)
+	   (eq color '-))
+       'invisible))
+
+(dp-invisible-color-p 'invisible)
+invisible
+(dp-invisible-color-p '-)
+invisible
+(dp-invisible-color-p 0)
+invisible
+(dp-invisible-color-p -1)
+invisible
+(dp-invisible-color-p 1)
+nil
+
+(dp-invisible-color-p '-)
+invisible
+
+
+(setq full-plist (append
+		  '(re quired)
+		  '(prop list)
+		  (dp-invisible-color-p '-)))
+(re quired prop list . invisible)
+
+		  (when (= 0 0)
+		    '(invisible))))
+(setq buffer-invisibility-spec t)
+
+(add-to-invisibility-spec '(dp-invis t))
+HEREvvvv
+(setq full-plist (append
+		  '(re quired)
+		  '(prop list)
+		  (when (= 0 0)
+		    '(invisible))))
+(re quired prop list invisible)
+^^^^^HERE
+
+(re quired prop list invisible)
+
+(setq full-plist (append
+		  '(re quired)
+		  '(prop list)
+		  '(nil)))
+(re quired prop list nil)
+
+		  (dp-invisible-color-p '-)))
+
+(append '(a 1 2) '(nil))
+(a 1 2 nil)
+
+(a 1 2 a)
+
+(a 1 2)
+
+(a 1 2 . t)
+
+(a 1 2)
+
+buffer-invisibility-spec
+t
+
+;installed (cl-pe '
+;installed (defmacro dp-with-current-buffer (buffer &rest forms)
+;installed   "Exec FORMS in `dp-get-buffer'.  A *functional* language? Sigh."
+;installed   `(with-current-buffer (dp-get-buffer ,buffer)
+;installed      ,@forms))
+;installed )
+
+;installed   (put 'dp-with-current-buffer 'lisp-indent-function
+;installed        (get 'with-current-buffer 'lisp-indent-function))
+
+;installed (defmacro dp-with-current-buffer (buffer &rest forms)
+;installed   "Exec FORMS in `dp-get-buffer'.  A *functional* language? Sigh."
+;installed   `(with-current-buffer (dp-get-buffer ,buffer)
+;installed      ,@forms))
+;installed dp-with-current-buffer
+
+
+;installed (defalias 'dp-with-current-buffer
+;installed   (cons 'macro
+;installed 	(function
+;installed 	 (lambda (buffer &rest forms)
+;installed 	   "Exec FORMS in `dp-get-buffer'.  A *functional* language? Sigh."
+;installed 	   (cons 'with-current-buffer
+;installed 		 (cons (list 'dp-get-buffer buffer) forms))))))nil
+
+
+
+;installed (defalias 'dp-with-current-buffer
+;installed   (cons 'macro
+;installed 	(function
+;installed 	 (lambda (buffer &rest forms)
+;installed 	   "Exec FORMS in `dp-get-buffer'.  A *functional* language? Sigh."
+;installed 	   (cons 'with-current-buffer
+;installed 		 (cons (list 'dp-get-buffer buffer) forms))))))nil
+
+;installed (cl-pe '
+;installed  (dp-with-current-buffer nil
+;installed      (save-excursion
+;installed        (goto-char (point-max))
+;installed        (insert "FTW!")))
+
+;installed  )
+
+;installed (save-current-buffer (set-buffer (dp-get-buffer nil))
+;installed 		     (save-excursion (goto-char (point-max)) (insert "FTW!")))nil
+
+
+
+;installed (save-current-buffer (set-buffer (dp-get-buffer nil))
+;installed 		     (save-excursion (goto-char (point-max)) (insert "FTW!")))
+;installed nil
+
+
+
+
+;installed (save-current-buffer (set-buffer (dp-get-buffer buffer))
+;installed 		     (save-excursion
+;installed 		       (goto-char
+;installed 			(point-max))
+;installed 		       (insert "FTW!")))
+
+ (dp-with-current-buffer "*scratch*"
+     (save-excursion
+       (goto-char (point-max))
+       (insert "\n!FTW!\n")))
+nil
+
+
+
+ (dp-with-current-buffer nil
+     (save-excursion
+       (goto-char (point-max))
+       (insert "\n!FTW!\n")))
+ 
+nil
+
+!FTW!

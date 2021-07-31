@@ -276,7 +276,12 @@ function prompt_command()
     # Status is still set from the last command.
     local rc="$?"
     # This is now in a script that is imported to define a function
-    PS1_path_suffix=$(dp_stolen__git_ps1)
+    if [[ "${PWD}" =~ /work/amd/amdgpu/kernel-git/linux ]]
+    then
+	PS1_path_suffix="sans git"
+    else
+	PS1_path_suffix=$(dp_stolen__git_ps1)
+    fi
     PS1_terminator="$BASE_PS1_terminator"
     # Have 0, the most common rc, be plain and simple.
     if [ "$rc" != 0 ]; then
@@ -296,7 +301,7 @@ function prompt_command()
     # Or to get that fucking prompt as a whole to work!
     #local x
     #eval x="$PS1_line0"
-    #echo "$x"  
+    #echo "$x"
     eval title_bar_titler "$XTerm_title" || {
 	: echo -n "$*" >/dev/tty
     }

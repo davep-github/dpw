@@ -18,7 +18,7 @@ dp_rc_logger()
     {
 	dp_log_header
 	echo ": $@"
-    } >> $DAVEP_rc_log
+    } >> "${DAVEP_rc_log-$HOME/var/log/fuck-my-rc-system}"
 }
 DP_EXPORT_FUNC dp_rc_logger
 dp_rc_logger "================= $(date): begin $0 ================="

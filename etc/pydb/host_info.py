@@ -66,6 +66,7 @@ default = dppydb.Entry({
     'xrl_xterm_bin': 'xterm',           # more ?most? universal.
     'xrl_xterm_bin_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'xterm_bin': 'xterm',       # more ?most? universal.
+    'xterm_geometry': '-geometry 129x25',
     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'xterm_font': '9x15',
     'shell': 'bash',
@@ -176,14 +177,17 @@ home_family = e(
         'family_zone': 'home',
         ## 'xterm_bg': HOME_BG_COLOR,
         ## 'xterm_fg': HOME_FG_COLOR,
-        'xterm_bin': "lxterminal",
-        'xterm_geometry': '--geometry=129x25',
-        'xterm_bg': '-',
-        'xterm_fg': '-',
+        ##'xterm_bin': "lxterminal",
+        ## Gratuitous option difference.
+        ##'xterm_geometry': '--geometry=129x25',
         # lxterminal doesn't like these options.
         # 'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+        'xterm_bin': "xterm",
+        'xterm_geometry': '"-geometry 129x25"',
+        'xterm_font': '9x15',
+        'xterm_bg': '-',
+        'xterm_fg': '-',
         'xterm_opts': '-',
-        'xterm_font': "*NONE*",
         'cdrw-dev': '1001,1,0',             # dvd, etc. rw
         'cdrw-speed': '4',                  # 4x write speed, max for CDRWs
         'namazu-dir-base': namazu_base_dir, # look up before this e()
