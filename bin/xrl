@@ -17,10 +17,19 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
-unset eexec_program
+##unset eexec_program
+export eexec_program
+
+(($# < 1)) && {
+    echo "$progname: Need a hostname."
+    exit 1
+} 1>&2
+
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
+
+true ${title_base:=}
 
 trap_exit_msg=
 
@@ -46,19 +55,20 @@ on_error()
 ########################################################################
 
 
+# We need to know the xrl program to run on the rsh'ing host, not the rsh'd
+# to host.  It's constant across all remote hosts.
+rsh_bin=${XRL_BIN:-$($HOST_INFO -n 'rsh' xrl_rsh_bin)}
+
 just_show=
-X_opt=-X
+#
+# xrl ([-N] host) ...  Allow -N (just show) to be applied to each host.
+# Loop, issuing a dpxx command for each host.
 for i in "$@"
 do
   # Apply -N to next arg only. Multiple -Ns may be specified.
+  # ??? Allow individual hosts to be -N'd (just displayed) by dpxx?
   [ "$i" = "-N" ] && {
       just_show=-N
-      continue
-  }
-
-  # Apply -X to next arg only. Multiple -Xs may be specified.
-  [ "$i" = "-X" ] && {
-      X_opt=
       continue
   }
 
@@ -69,13 +79,16 @@ do
   esac
   EExec_verbose_echo_id host
   full_host=$(full-hostname $host) # || dpFATAL 1 "getting full-hostname for >$host< failed"
-  EExec_verbose_echo_id full_host
+  EExec_verbose_echo_id --pre 1st\  full_host
   hname=${full_host:-$host}
-  shost=$(echo $hname | cut -d. -f1)
-  title_base=$(rx_name rlogin $hname)
-  # We need to know the xrl program to run on the rsh'ing host, not the rsh'd
-  # to host.
-  rsh_bin=${XRL_BIN:-$($HOST_INFO -n 'rsh' xrl_rsh_bin)}
+  EExec_verbose_echo_id --pre 2nd\  full_host
+  if [[ -n "${full_host}" ]]
+  then
+      title_base="$(rx_name rlogin $hname)"
+  else
+      title_base="${hname}"
+  fi
+  EExec_verbose_echo_id title_base
   # This is the xterm we run on our local machine.
   xrl_xterm_bin=${XRL_XTERM_BIN:-$($HOST_INFO -n 'xterm' xrl_xterm_bin)}
   # These are local options needed by the local machine's rsh_bin.
@@ -87,7 +100,6 @@ do
   # xterm has the same appearance as a dpxx(dp) done locally on that host.
 
   EExec dpxx $just_show -h $host -n $title_base -f $font \
-        -- ${rsh_bin} ${X_opt} ${host}
+        --  ${rsh_bin} ${host}
   just_show=
-  X_opt=-X
 done
