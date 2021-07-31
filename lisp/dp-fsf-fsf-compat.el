@@ -29,13 +29,16 @@ See `fill-paragraph' and `fill-region' for more information."
       (call-interactively 'fill-paragraph))))
 
 (defun dp-mark-active-p (&optional dont-count-outside-minibuffer-p)
-  "Emulate fsf emacs' transient mark activation w/zmacs-regions"
+  "Emulate fsf emacs' transient mark activation w/zmacs-regions.
+@todo XXX This doesn't make sense WRT the comment.
+Oh well, correctness isn't an issue in this day and age."
   (and (use-region-p)
        (cons (region-beginning) (region-end))))
 
 (defalias 'dp-region-active-p 'dp-mark-active-p)
 
-(dp-defaliases 'dp-mark-active-p 'dp-region-active-p 'use-region-p)
+;;@todo XXX comment out the above since this seems to override them anyway.
+;;(dp-defaliases 'dp-mark-active-p 'dp-region-active-p 'use-region-p)
 
 (defsubst dp-deactivate-mark ()
   (deactivate-mark))
