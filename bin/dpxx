@@ -112,6 +112,7 @@ fg=$(set_var fg ${2-} "")
 
 #
 # the term runs locally, so get bin for local host
+# Glad I wrote that, I was confused when I came back to look at it.
 # other xterm parameters are based on the local host.
 # The font could be considered a remote property for another
 # differentiation, but the syntax is related to the local
@@ -149,8 +150,8 @@ then
     name=''
 fi
 #name=$(serialize_name $name)
-#[ "$bg" = "" ] || bg="-bg '$bg'"
-#[ "$fg" = "" ] || fg="-fg '$fg'"
+[[ "$bg" = "" ]] || bg="-bg '$bg'"
+[[ "$fg" = "" ]] || fg="-fg '$fg'"
 
 if [ "$font" = "*NONE*" ]
 then
