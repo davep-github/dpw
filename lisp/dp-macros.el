@@ -686,6 +686,13 @@ FORMS complete."
   (put 'with-marker-buffer 'lisp-indent-function
        (get 'when 'lisp-indent-function))
 
+  (defmacro dp-with-current-buffer (buffer &rest forms)
+    "Exec FORMS in `dp-get-buffer'.  A *functional* language? Sigh."
+    `(with-current-buffer (dp-get-buffer ,buffer)
+       ,@forms))
+  (put 'dp-with-current-buffer 'lisp-indent-function
+       (get 'with-current-buffer 'lisp-indent-function))
+
   (defmacro dp-advise-for-go-back (func &optional doc reason)
     "Wrap FUNC with 'before advice that does a `dp-push-go-back'"
     (let* ((doc (or (and doc (eval doc))

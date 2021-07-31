@@ -1356,10 +1356,11 @@ non-nil otherwise get the current list topics."
 (defalias 'dpj-repl-topic 'dpj-get-and-replace-current-topic)
 
 (defun dpj-extract-a-record (record-info buffer)
-  (buffer-substring-no-properties
+  (dp-buffer-substring-no-properties
    (dpj-topic-info-record-start record-info)
    (dpj-topic-info-end record-info)
-   buffer))
+   buffer
+   ))
 
 (defun dpj-view-topic-visit-real-topic ()
   (interactive)

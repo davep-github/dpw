@@ -550,6 +550,11 @@ This is an XEmacs compatibility function."
   (with-current-buffer (or buffer (current-buffer))
     (syntax-ppss-depth (syntax-ppss))))
 
+(defun dp-buffer-substring-no-properties (start end &optional buffer)
+  "Provide XEmacs' superior functionality by allowing buffer to be specified."
+  (dp-with-current-buffer buffer
+    (buffer-substring-no-properties start end)))
+
 (defalias 'describe-function-at-point 'describe-function)
 
 ;; Stolen.  And hacked.
