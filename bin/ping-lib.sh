@@ -88,9 +88,10 @@ pingit()
     return $rc
 }
 
+RESOLV_CONF=/etc/resolv.conf
 find_nameservers ()
 {
-    servers=$(grep '^nameserver' /etc/resolv.conf | while read line
+    servers=$(grep '^nameserver' "${RESOLV_CONF}" | while read line
 		do
 		    #echo 1>&2 "line>$line<"
 		    set -- $line
@@ -103,6 +104,11 @@ find_nameservers ()
 
     #echo 1>&2 "out servers>$servers<"
     echo "$servers"
+}
+
+show_resolv_conf()
+{
+    cat "${RESOLV_CONF}"
 }
 
 dump_bad_nodes()

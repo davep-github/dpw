@@ -11,10 +11,10 @@ fi
 PATH="/home/davep/bin:/home/davep/yokel/bin/:/home/davep/yokel/sbin/:$PATH"
 echo "just running."
 
-echo "\$@>$@<"
+#echo "\$@>$@<"
 #source sh-script-template.sh
 source dp-getopt+.sh
-echo "\$@>$@<"
+#echo "\$@>$@<"
 
 newname()
 {

@@ -122,7 +122,7 @@ do_pings ()
     # !!! find verizon gateway (hopefully programmatically)
     # pingit 66.92.73.1 '(ISP-GW) '
 
-    for s in `find_nameservers`
+    for s in $(find_nameservers)
     do
         pingit "$s" "$prefix(NS)" || add_failure "$s"
     done
@@ -138,6 +138,9 @@ do_pings ()
 #echo "other_places>${other_places[@]}<"
 
 orig_num_loops="${num_loops}"
+echo "resolv conf: ${RESOLV_CONF}"
+show_resolv_conf
+echo '==================='
 wan_ip=$(my-wan-ip)
 echo "External IP: ${wan_ip} [$(nslookup ${wan_ip})]"
 

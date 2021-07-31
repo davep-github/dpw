@@ -19,7 +19,7 @@ source script-x
 # Where $DP_IMPORTING_P is normally "" or null and must be set to force the
 # script to act as a library.
 
-if running_as_script
+if dp_runme #  >> older, defecating it. >> running_as_script
 then
     XXX "$@"
     exit                        # With XXX's code.
@@ -28,4 +28,6 @@ else
     exit 0
 fi
 
+exit 99 <<<<< debug early exit. dp_decode_cmd_status(dp) decodes it.
+exit 88 <<<<< reminder exit. dp_decode_cmd_status(dp) decodes it.
 exit 123
