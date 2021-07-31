@@ -43,7 +43,16 @@ export GIT_PROMPT='${dp_NH_indicator}%B%n@%m:%~%b'
 # Need a way to switch to it, hopefull automagically.
 # Anyway to get git project size?
 export NO_GIT_PROMPT=${GIT_PROMPT}
-NO_GIT_PROMPT+=' $(git_current_branch)(sans stat)'
+function git_prompt_info_no_stat()
+{
+    local gcb=$(git_current_branch)
+    if [[ -n "${gcb}" ]]
+    then
+	gcb="(${gcb})<-*->"
+    fi
+    echo "${gcb}"
+}
+NO_GIT_PROMPT+=' $(git_prompt_info_no_stat)'
 GIT_PROMPT+=' $(git_prompt_info)'
 
 if [[ "$(id -u)" == 0 ]]
