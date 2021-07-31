@@ -27,7 +27,7 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
-all_options="CNPRVacdghlm:npqr:svzi"
+all_options="CNPRVacdghlm:npqr:svziI"
 ln_s_p=
 MV_CMD=
 MV_OPTS=
@@ -43,7 +43,7 @@ then
 fi
 
 #echo $prog: $* 1>&2
-query=
+query=false			# This isn't the same as the -i to mv(1)
 verbose=0
 ECHO=echo
 show_cmds=n
@@ -116,7 +116,7 @@ do
 	-R) ropt=;;
 	#	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
 	-N) dash_n_prefix=""; skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
-	-q) query=y;;
+	-q) query=true;;
 	-v) verbose=1;;
 	-V) verbose=1; ECHO=eko;;
 	-d) : $((++verbose));;
@@ -133,6 +133,7 @@ do
 	# Make regexp an option as well.
 	-r) sed_expr="$2"; shift;;
 	-i) dash_i='-i';;
+	-I) dash_i='';;
 	-h) Usage; exit 0;;
 	--) shift ; break ;;
 	*)
@@ -177,8 +178,10 @@ sed_renamer()
 	*) sed_expr="$sed_expr/";;
     esac
     local f="$2"
-    [[ "$verbose" > 1 ]] && echo "echo $f | sed $ropt -e $sed_expr"
-    newname=$(echo "$f" | sed $ropt -e "$sed_expr")
+    #[[ "$verbose" > 1 ]] && echo "echo $f | sed $ropt -e $sed_expr"
+    EExec_verbose_msg "DOING: echo $f | sed $ropt -e $sed_expr"
+    newname=$(echo "$f" | sed $ropt -- "$sed_expr")
+    EExec_verbose_echo_id newname
     EExec_verbose_echo_id sed_expr
     if [ "$f" = "$newname" ]
     then
@@ -193,7 +196,7 @@ sed_renamer()
         eval echo "$cmd"
         return
     }
-    if [ -n "$query" ]
+    if "${query}"
     then
 	verbose=0
 	eval echo -n "$cmd, do it?"; echo -n " "
