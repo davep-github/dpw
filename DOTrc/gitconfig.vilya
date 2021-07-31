@@ -12,13 +12,22 @@
 	displayuntracked = false
 	fontui = -family \"Ricty Diminished Discord\" -size 14 -weight normal -slant roman -underline 0 -overstrike 0
 
+# [user]
+# 	# Default author/committer details (standard GIT variables)
+# 	name = Sound Chaser
+# 	email = davep.git@meduseld.net
+
 [user]
 	# Default author/committer details (standard GIT variables)
-	name = Sound Chaser
-	email = davep.git@meduseld.net
+	name = David Panariti
+	email = david.panariti@amd.com
 
 [mail "alias"]
 	# E-mail aliases used with the 'mail' command
 	git = git@vger.kernel.org
 [credential]
 	helper = store
+
+[format]
+	signoff = true
+
