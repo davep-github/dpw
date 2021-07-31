@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import sys, os
 import dp_io, dp_utils, dp_sequences
 
