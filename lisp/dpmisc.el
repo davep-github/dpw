@@ -6242,7 +6242,7 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
       (ff2)
     (dp-push-go-back&call-interactively 'find-function nil nil "ff")))
 
-; Consistency w/other functions which can use other windows.
+;; Consistency w/other functions which can use other windows.
 (dp-defaliases 'ff0 'ff. 'ff 'dp-find-function)
 
 (defun dp-find-function-other-window ()
