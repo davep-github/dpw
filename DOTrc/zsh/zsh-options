@@ -22,6 +22,8 @@
 # command/function. However, there's a trivial way to prevent the splitting
 # ("") but there is no way to force the split that's as easy.  There are no
 # anti-quotes (in this anti-anti-universe).
+# !!! XXX NB:     posixstrings -- FUCKS UP COMPLETION.  See apt ins<TAB>
+
 setopt						\
     extendedglob				\
     nomatch					\
@@ -52,7 +54,6 @@ setopt						\
     nomultifuncdef				\
     nooctalzeroes				\
     noposixcd					\
-    posixstrings				\
     shfileexpansion				\
     noshoptionletters				\
     shortloops					\
