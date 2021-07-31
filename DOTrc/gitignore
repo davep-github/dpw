@@ -48,6 +48,21 @@ SCM-HIDE/
 HIDE-SCM/
 HIDE-from-git/
 
+# Standard temp files:
+zuzz
+zuzz.*
+zuzz-*
+*-zuzz
+*.zuzz
+davep-tmp/
+dpanarit-tmp/
+
+WTF
+
+MOUNTED_FROM_VILYA
+DPANARIT*
+
+# Tagging.  Or not.
 NOTAG
 
 # other SCMs
@@ -100,6 +115,9 @@ etc/AMD/
 # We may want to add additional extensions.
 # Like all of the read only extensions in *macs.
 *.[ch].orig
+.p4config
+CPackConfig.cmake
+CPackSourceConfig.cmake
 
 # kernel droppings
 *.ko
@@ -112,3 +130,14 @@ modules.order
 amdkcl.mod.c
 symbols.c
 amdkfd.mod.c
+
+# # CMake shit.
+# Leave it in so I can know to delete it.
+# <whiny-little-bitch>: you should do everything in build.
+# As if no one has ever had a directory named "build" of their own
+# before switching to CMake(blecch).
+# CMakeCache.txt
+# CMakeFiles
+# Makefile
+# cmake_install.cmake
+# #install_manifest.txt
