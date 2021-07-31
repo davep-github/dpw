@@ -57,6 +57,9 @@
 
 ;; From XEmacs
 ;; (set-extent-properties EXTENT PLIST)
+
+(add-to-invisibility-spec '(dp-invis t))
+
 (defun set-extent-properties (olay prop-list)
   "Copped from XEmacs and implemented via Emacs' overlay system."
   (when prop-list
@@ -70,17 +73,23 @@
 				      bounding-markers
 				      front-advance rear-advance)
   "Make an overlay the way I like and the way I like to make it."
-  (let ((begin (or from (point-min)))
-	(end (or to (point-max)))
-	;; These are required to make things work. prop-list will be
-	;; appended.
-	(required-plist (list id-prop t
-			      'dp-extent-p t
-			      'dp-source 'dp-make-color-overlay
-			      'dp-extent-id id-prop
-			      'dp-extent-type id-prop
-			      'face color))
-	olay)
+  (let* ((begin (or from (point-min)))
+	 (end (or to (point-max)))
+	 ;; These are required to make things work. prop-list will be
+	 ;; appended.
+	 (required-plist (list id-prop t
+			       'dp-extent-p t
+			       'dp-source 'dp-make-color-overlay
+			       'dp-extent-id id-prop
+			       'dp-extent-type id-prop))
+	 olay
+	 (invisible (dp-invisible-color-p color))
+	 (full-plist (append required-plist
+			     prop-list
+			     (if invisible
+				 '(invisible dp-invis)
+			       (list 'face color)
+			       ))))
     (when bounding-markers
       (cond
        ((memq bounding-markers '(begin both t))
@@ -91,7 +100,8 @@
 			     buffer
 			     front-advance
 	     		     rear-advance))
-    (set-extent-properties olay (append required-plist prop-list))
+    ;;;(dmessage "full-plist>%s<" full-plist)
+    (set-extent-properties olay full-plist)
     olay))
 
 ;; `make-extent' is a built-in function
@@ -186,7 +196,11 @@ The regexp is matched against the buffer name.")
 (defun dp-invisible-color-p (color)
   "Return t if COLOR implies invisibility."
   (and color
-       (eq color '-)))
+       (or (and (integerp color)
+		(<= color 0))
+	   (eq color 'invisible)
+	   (eq color '-))
+       'invisible))
 
 (defun dp-colorize-roll-colors (&optional color)
   (interactive "P")
