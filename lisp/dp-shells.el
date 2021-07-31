@@ -1082,12 +1082,16 @@ Or both.")
   ;; in all cases, we're only interested in the last line of the prompt.
   (setq
    comint-prompt-regexp
-   (concat "^([0-9]+:\\(zsh\\|bash\\)) " ; Shell level (-ish) and shell name.
+   (concat (concat
+	    "^([0-9]+:\\(zsh\\|bash\\)) " ; Shell level (-ish) and shell name.
 	   "+[0-9]+"			 ; History number.
 	   "\\(<.*\\)?"		 ; Optional errno.
 	   ;; Terminal chars {">" user, "#" root} and as many spaces as your
 	   ;; little heart desires.
 	   "\\(>\\|#\\) *")
+	   ;; other modes?
+
+	   )
    comint-use-prompt-regexp t)
   (setq show-trailing-whitespace nil)
   (unless (dp-shell-ignored-buffer-p (buffer-name))
@@ -1618,6 +1622,7 @@ so that we can call it after we do our other stuff."
    ((dp-term-type-buffer-p name) 'term)
    (t nil)))
 
+;;;###autoload
 (defun dp-maybe-add-compilation-minor-mode () ;<:macmm|maybe-add:>
   "Add and init compilation minor mode if not already in that mode.
 return t if we are in a shell type buffer, false otherwise."
@@ -1959,6 +1964,14 @@ first file that is `dp-file-readable-p' is used.  Also sets
 ;;;###autoload
 (defun dp-gdb-mode-hook ()              ;<:gdb:>
   "Set up my gdb shell mode fiddle-faddle."
+  ;; Existing Emacs comint prompt stuff well.
+  ;; Except it seems brittle WRT bogus edits on the command line.
+  ;; So, until it is *really* needed, "It's regexp'ing time."
+  (setq comint-use-prompt-regexp t)
+  ;; I've seen `comint-use-prompt-regexp' become non-nil when effing around
+  ;; so this will work, until the regexp needs to change to track the prompt.
+  ;; E.g. I may want to see some useful info in it.
+  (setq comint-prompt-regexp "(gdb) ")
   )
 ;needs fsf debugging   (interactive)
 ;needs fsf debugging   (dmessage "in dp-gdb-mode-hook")
