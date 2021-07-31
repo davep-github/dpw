@@ -7,81 +7,89 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t t)
+ '(apropos-do-all t)
  '(auth-sources
-   '("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc"))
+   (quote
+    ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
  '(beacon-blink-when-focused t)
  '(beacon-color "medium sea green")
  '(beacon-mode nil)
- '(browse-url-browser-function 'browse-url-firefox)
+ '(browse-url-browser-function (quote browse-url-firefox))
  '(browse-url-text-browser "w3m")
  '(cal-tex-diary t)
- '(calendar-holiday-marker 'holiday)
+ '(calendar-holiday-marker (quote holiday))
  '(calendar-mark-holidays-flag t)
- '(calendar-today-marker 'calendar-today)
+ '(calendar-today-marker (quote calendar-today))
  '(column-number-mode t)
  '(comint-buffer-maximum-size 8192)
  '(comint-input-autoexpand t)
  '(comint-input-ignoredups t)
  '(comint-input-ring-size 5120)
- '(comint-mode-hook '(dp-comint-mode-hook))
+ '(comint-mode-hook (quote (dp-comint-mode-hook)))
  '(comint-move-point-for-output nil)
  '(comint-password-prompt-regexp
    "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Password for .*\\)\\|\\(Bad passphrase, try again for.*:\\)\\|\\(Enter password.*:\\s-+\\)\\|\\(\\(\\[sudo\\] \\)?[Pp]assword for .*\\(davep\\||d?panariti?\\|dapanarx.*\\).*:? \\)")
  '(comint-scroll-show-maximum-output nil)
  '(comint-use-prompt-regexp t)
- '(comment-style 'extra-line)
+ '(comment-style (quote extra-line))
  '(completion-ignored-extensions
-   '(".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo"))
+   (quote
+    (".o" "~" ".bin" ".lbin" ".so" ".a" ".ln" ".blg" ".bbl" ".elc" ".lof" ".glo" ".idx" ".lot" "_darcs/" "_MTN/" ".fmt" ".tfm" ".class" ".fas" ".lib" ".mem" ".x86f" ".sparcf" ".dfsl" ".pfsl" ".d64fsl" ".p64fsl" ".lx64fsl" ".lx32fsl" ".dx64fsl" ".dx32fsl" ".fx64fsl" ".fx32fsl" ".sx64fsl" ".sx32fsl" ".wx64fsl" ".wx32fsl" ".fasl" ".ufsl" ".fsl" ".dxl" ".lo" ".la" ".gmo" ".mo" ".toc" ".aux" ".cp" ".fn" ".ky" ".pg" ".tp" ".cps" ".fns" ".kys" ".pgs" ".tps" ".vrs" ".pyc" ".pyo")))
  '(cscope-stop-at-first-match-dir t)
- '(custom-enabled-themes '(dp-challenger-deep))
+ '(custom-enabled-themes (quote (dp-challenger-deep)))
  '(custom-safe-themes
-   '("f05d3ac74520643a3ca55935a0d7f0c4bd9ac00dfdc1efbe8e444131d4c5569f" "69abb990e02221ba8eea46b228214fa348be00f22d77a4a1931bc73851d03d7c" "044f24537c07b7d8823a90ba927f3458baac1fca34f0037730d0483cbfc7bd4a" "246eaa881beeaad200e082fadabf7397a4e12b0999c29088093be16e75ded187" "3335c67d6a2fe43f21cd419b64c7c656a5a31d89fbad1b6f11e900e1e2ddbc88" "9b13dd759f9b5872a120fa6200a39025e9eba2e676b1cc5c1378ed50e15266bd" "550002afa3c490fd9d5448b48eb624684af76c6ea8ab6c76a52156d5462f5a2e" "ac4fa5f372e49f8e7a203db00bf32ffb47db68e70b584bad404c2cba3ece2221" "90a8512e60f26d49c05eb500a943306baa2f540027b2b73460c57485f1a984d1" "75718cb7d721574434a4badf80ae1bcb8e5a235f13d7cde47d7044940cf95c66" "d1ca34eb9c9f8eaaa7f35c05a038b06beeadea35b4a1873ad5c7ea815f15a842" "2a908166a5e975844edd94663d365ebf9a45263904ed6e5b418aa8ecbaff4f4e" "6257b1ccc709abe4417745c440ccfdc201c90707bc39ab1f89bda3cd188aa70f" "b8c24d8aaa6104a020b372c08539a867301ec270b72582fdb97c88bafef809a6" "f58cef779390f90ee1bc51f9f1ca4e23d88acd84a327e3405d0d40ddcb03debc" "a8b5a36b9bfc1af3280af5fae073e672e329121d1e95efd6a087b314db1e2a83" "dcb9fd142d390bb289fee1d1bb49cb67ab7422cd46baddf11f5c9b7ff756f64c" "47744f6c8133824bdd104acc4280dbed4b34b85faa05ac2600f716b0226fb3f6" "64922fcf67155cb9138f9cd41730bc96dcace4076ea157a13764ea809712fade" "128ece6b395c75abec230985113714d7ec251419a56d3850d42e4e77ed57f919" "58ff81f7a8e74f1633c1ce4fb135112dc8736e5b240c9458d2fe43ce930bd76d" "9eb84b9c9c03c789e7d10c02a427d828de4a3a0075bdee039898fa425f43fcad" "28dcfcfad6f70f319aa7cf3a92afb78cc4ba3f614c063fee9cd095b2efb3e64e" "de11dfdc2b94c89baaca111b470bc2ef55b8c5f31627e2e7c682d0309ab611e0" "48d5e503e37a5587f3416e8f3de3015b2c0fb971c05e6f4fb3be7bb98ffa0f41" "c50f28265bdd44ce373f1a06367dfec66bc2adf6ee95d6513a7a07cbb3039c38" "935b1a2de5eb9c72ad904ecc7a607a4372d6808a9c1df73e39f578f76841aca9" "8a7ddbef5ae6addeb464e486c4e5c075caeb3c3bfd6d2eba4e59a556fcf11f14" "c76078b5340febca07edc1d54e54d01754b5e602f5d14332eb81244a7151bb5f" "2fb6c366aad4f6d78f75364a74be56735e8ddb2d0a60dc2c2220c89f17dd832e" "b04153b12fbb67935f6898f38eb985ec62511fd1df6e2262069efa8565874195" default))
+   (quote
+    ("f05d3ac74520643a3ca55935a0d7f0c4bd9ac00dfdc1efbe8e444131d4c5569f" "69abb990e02221ba8eea46b228214fa348be00f22d77a4a1931bc73851d03d7c" "044f24537c07b7d8823a90ba927f3458baac1fca34f0037730d0483cbfc7bd4a" "246eaa881beeaad200e082fadabf7397a4e12b0999c29088093be16e75ded187" "3335c67d6a2fe43f21cd419b64c7c656a5a31d89fbad1b6f11e900e1e2ddbc88" "9b13dd759f9b5872a120fa6200a39025e9eba2e676b1cc5c1378ed50e15266bd" "550002afa3c490fd9d5448b48eb624684af76c6ea8ab6c76a52156d5462f5a2e" "ac4fa5f372e49f8e7a203db00bf32ffb47db68e70b584bad404c2cba3ece2221" "90a8512e60f26d49c05eb500a943306baa2f540027b2b73460c57485f1a984d1" "75718cb7d721574434a4badf80ae1bcb8e5a235f13d7cde47d7044940cf95c66" "d1ca34eb9c9f8eaaa7f35c05a038b06beeadea35b4a1873ad5c7ea815f15a842" "2a908166a5e975844edd94663d365ebf9a45263904ed6e5b418aa8ecbaff4f4e" "6257b1ccc709abe4417745c440ccfdc201c90707bc39ab1f89bda3cd188aa70f" "b8c24d8aaa6104a020b372c08539a867301ec270b72582fdb97c88bafef809a6" "f58cef779390f90ee1bc51f9f1ca4e23d88acd84a327e3405d0d40ddcb03debc" "a8b5a36b9bfc1af3280af5fae073e672e329121d1e95efd6a087b314db1e2a83" "dcb9fd142d390bb289fee1d1bb49cb67ab7422cd46baddf11f5c9b7ff756f64c" "47744f6c8133824bdd104acc4280dbed4b34b85faa05ac2600f716b0226fb3f6" "64922fcf67155cb9138f9cd41730bc96dcace4076ea157a13764ea809712fade" "128ece6b395c75abec230985113714d7ec251419a56d3850d42e4e77ed57f919" "58ff81f7a8e74f1633c1ce4fb135112dc8736e5b240c9458d2fe43ce930bd76d" "9eb84b9c9c03c789e7d10c02a427d828de4a3a0075bdee039898fa425f43fcad" "28dcfcfad6f70f319aa7cf3a92afb78cc4ba3f614c063fee9cd095b2efb3e64e" "de11dfdc2b94c89baaca111b470bc2ef55b8c5f31627e2e7c682d0309ab611e0" "48d5e503e37a5587f3416e8f3de3015b2c0fb971c05e6f4fb3be7bb98ffa0f41" "c50f28265bdd44ce373f1a06367dfec66bc2adf6ee95d6513a7a07cbb3039c38" "935b1a2de5eb9c72ad904ecc7a607a4372d6808a9c1df73e39f578f76841aca9" "8a7ddbef5ae6addeb464e486c4e5c075caeb3c3bfd6d2eba4e59a556fcf11f14" "c76078b5340febca07edc1d54e54d01754b5e602f5d14332eb81244a7151bb5f" "2fb6c366aad4f6d78f75364a74be56735e8ddb2d0a60dc2c2220c89f17dd832e" "b04153b12fbb67935f6898f38eb985ec62511fd1df6e2262069efa8565874195" default)))
  '(custom-theme-directory "~/.emacs.d/dp-themes.d/")
  '(cvs-allow-dir-commit t)
  '(dabbrev-case-fold-search nil)
  '(dabbrev-ignored-buffer-regexps
-   '("\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\|cscope.*\\)\\(<[0-9]+>\\)?"))
+   (quote
+    ("\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\|cscope.*\\)\\(<[0-9]+>\\)?")))
  '(dabbrev-upcase-means-case-search t)
- '(default-toolbar-position 'left)
+ '(default-toolbar-position (quote left))
  '(diary-comment-start "#")
- '(diary-file-name-prefix-function 'dp-file-name-prefix-function)
- '(dired-auto-revert-buffer 'dired-directory-changed-p)
+ '(diary-file-name-prefix-function (quote dp-file-name-prefix-function))
+ '(dired-auto-revert-buffer (quote dired-directory-changed-p))
  '(dired-backup-overwrite t)
  '(dired-find-subdir t)
- '(dired-no-confirm '(revert-subdirs))
+ '(dired-no-confirm (quote (revert-subdirs)))
  '(dired-omit-files nil)
  '(display-time-mode t)
  '(dp-trailing-whitespace-use-trailing-ws-font-p t)
  '(echo-keystrokes 0.1)
  '(ediff-diff-options "")
  '(ediff-make-buffers-readonly-at-startup nil)
- '(ediff-merge-split-window-function 'split-window-vertically)
+ '(ediff-merge-split-window-function (quote split-window-vertically))
  '(efs-auto-save 1 t)
  '(efs-auto-save-remotely nil t)
- '(efs-ftp-program-args '("-e" "-i" "-n" "-g" "-v" "-p"))
+ '(efs-ftp-program-args (quote ("-e" "-i" "-n" "-g" "-v" "-p")))
  '(efs-pty-check-retry-time 60)
  '(efs-send-progress-off t)
  '(elpy-modules
-   '(elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-folding elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-autodoc elpy-module-sane-defaults))
+   (quote
+    (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-folding elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-autodoc elpy-module-sane-defaults)))
  '(elpy-project-ignored-directories
-   '(".tox" "build" "dist" ".cask" ".ipynb_checkpoints" "junk" "JUNK" "HIDE"))
+   (quote
+    (".tox" "build" "dist" ".cask" ".ipynb_checkpoints" "junk" "JUNK" "HIDE")))
  '(elpy-rpc-python-command "python3")
  '(emms-player-mpd
-   '(*player*
+   (quote
+    (*player*
      (start . emms-player-mpd-start)
      (stop . emms-player-mpd-stop)
      (playablep . emms-player-mpd-playable-p)
-     (regex . "\\(\\.\\(m3u\\|pls\\|\\(?:16sv\\|3g[2p]\\|4xm\\|669\\|8svx\\|P00\\|a\\(?:a[3c]\\|c3\\|dx\\|fc\\|if[cf]?\\|law\\|m[dfrs]\\|nim\\|p[ce]\\|sf\\|trac\\|ud\\|v\\(?:m2\\|[is]\\)\\|[luy]\\)\\|b\\(?:ap\\|fi\\)\\|c\\(?:93\\|a[fk]\\|in\\|mv\\|pk\\)\\|d\\(?:00\\|aud\\|bm\\|ct\\|f[fm]\\|ivx\\|s[fm]\\|ts\\|vd?\\|xa\\)\\|eac3\\|f\\(?:ar\\|ilm\\|l\\(?:ac\\|[cilvx]\\)\\)\\|g\\(?:726\\|bs\\|dm\\|sm\\|xf\\|ym\\)\\|h\\(?:es\\|sc\\|tk\\)\\|i\\(?:ff\\|mf\\|ss\\|t\\)\\|kss\\|laa\\|m\\(?:1v\\|2\\(?:ts\\|[tv]\\)\\|4[abv]\\|ad\\|dl\\|ed\\|id\\|j\\(?:2\\|p\\(?:e?g\\)\\)\\|k[av]\\|lp\\|mf?\\|o[dv]\\|p\\(?:eg\\|ga\\|[+1-4cgpu]\\)\\|t[2m]\\|us\\|v[ei]\\|xf\\)\\|n\\(?:c\\|s\\(?:fe\\|[fv]\\)\\|u[tv]\\)\\|o\\(?:g[agmvx]\\|kt\\|m[ag]\\|pus\\)\\|p\\(?:af\\|rg\\|sp\\|v[af]\\)\\|q\\(?:cp\\|t\\)\\|r\\(?:3d\\|a[dmw]\\|l2\\|mvb\\|oq\\|pl\\|vc\\|[am]\\)\\|s\\(?:3m\\|a[2p]\\|d2\\|f\\|hn\\|id\\|mk\\|nd\\|o[ln]\\|p[cx]\\|t[mrx]\\|vx\\|wf\\)\\|t\\(?:ak\\|g[iqv]\\|hp\\|sp?\\|ta\\)\\|u\\(?:lt\\|mx\\|ni\\|v2?\\)\\|v\\(?:b\\|g[mz]\\|id\\|md\\|o[bc]\\|p6\\)\\|w\\(?:64\\|av\\|ebm\\|m[av]\\|s\\(?:aud\\|vga\\)\\|ve?\\)\\|x\\(?:vid\\|[aim]\\)\\)\\)\\'\\)\\|\\(\\`\\(?:Other\\|a\\(?:lsa://\\|vahi\\)\\|cdda://\\|epoll\\|features:\\|gopher://\\|http\\(?:s?://\\)\\|i\\(?:cu\\|notify\\|pv6\\)\\|mms\\(?:[htu]?://\\)\\|nfs://\\|rt\\(?:\\(?:mp[st]?\\|s?p\\)://\\)\\|s\\(?:mb://\\|ystemd\\)\\|tcp\\|un\\)\\)")
+     (regex . "\\(\\.\\(m3u\\|pls\\|\\(?:16sv\\|3g[2p]\\|4xm\\|669\\|8svx\\|P00\\|a\\(?:a[3c]\\|c3\\|dx\\|fc\\|if[cf]?\\|law\\|m[dfrs]\\|nim\\|p[ce]\\|sf\\|trac\\|ud\\|v\\(?:m2\\|[is]\\)\\|[luy]\\)\\|b\\(?:ap\\|fi\\)\\|c\\(?:93\\|a[fk]\\|in\\|mv\\|pk\\)\\|d\\(?:00\\|aud\\|bm\\|ct\\|f[fm]\\|ivx\\|s[fm]\\|ts\\|vd?\\|xa\\)\\|eac3\\|f\\(?:ar\\|ilm\\|l\\(?:ac\\|[cilvx]\\)\\)\\|g\\(?:726\\|bs\\|dm\\|sm\\|xf\\|ym\\)\\|h\\(?:es\\|sc\\|tk\\)\\|i\\(?:ff\\|mf\\|ss\\|t\\)\\|kss\\|laa\\|m\\(?:1v\\|2\\(?:ts\\|[tv]\\)\\|4[abv]\\|ad\\|dl\\|ed\\|id\\|j\\(?:2\\|p\\(?:e?g\\)\\)\\|k[av]\\|lp\\|mf?\\|o[dv]\\|p\\(?:eg\\|ga\\|[+1-4cgpu]\\)\\|t[2m]\\|us\\|v[ei]\\|xf\\)\\|n\\(?:c\\|s\\(?:fe\\|[fv]\\)\\|u[tv]\\)\\|o\\(?:g[agmvx]\\|kt\\|m[ag]\\|pus\\)\\|p\\(?:af\\|rg\\|sp\\|v[af]\\)\\|q\\(?:cp\\|t\\)\\|r\\(?:3d\\|a[dmw]\\|l2\\|mvb\\|oq\\|pl\\|vc\\|[am]\\)\\|s\\(?:3m\\|a[2p]\\|d2\\|f\\|hn\\|id\\|mk\\|nd\\|o[ln]\\|p[cx]\\|t[mrx]\\|vx\\|wf\\)\\|t\\(?:ak\\|g[iqv]\\|hp\\|sp?\\|ta\\)\\|u\\(?:lt\\|mx\\|ni\\|v2?\\)\\|v\\(?:b\\|g[mz]\\|id\\|md\\|o[bc]\\|p6\\)\\|w\\(?:64\\|av\\|ebm\\|m[av]\\|s\\(?:aud\\|vga\\)\\|ve?\\)\\|x\\(?:vid\\|[aim]\\)\\)\\)\\'\\)\\|\\(\\`\\(?:Other\\|a\\(?:lsa://\\|vahi\\)\\|cdda://\\|dbus\\|epoll\\|features:\\|gopher://\\|http\\(?:s?://\\)\\|i\\(?:cu\\|notify\\|pv6\\)\\|mms\\(?:[htu]?://\\)\\|nfs://\\|qobuz://\\|rt\\(?:\\(?:mp[st]?\\|s?p\\)://\\)\\|s\\(?:mb://\\|ystemd\\)\\|t\\(?:cp\\|idal://\\)\\|u\\(?:disks\\|n\\)\\)\\)")
      (pause . emms-player-mpd-pause)
      (resume . emms-player-mpd-pause)
      (seek . emms-player-mpd-seek)
-     (seek-to . emms-player-mpd-seek-to)))
+     (seek-to . emms-player-mpd-seek-to))))
  '(epg-debug t)
- '(ffap-machine-p-known 'reject)
+ '(ffap-machine-p-known (quote reject))
  '(fill-column 77)
  '(filladapt-token-conversion-table
-   '((citation-> . exact)
+   (quote
+    ((citation-> . exact)
      (supercite-citation . exact)
      (lisp-comment . exact)
      (sh-comment . exact)
@@ -92,7 +100,7 @@
      (space . exact)
      (end-of-line . exact)
      (dpj-action-item . spaces)
-     (dpj-action-item-resolution . spaces)))
+     (dpj-action-item-resolution . spaces))))
  '(flymake-start-on-flymake-mode nil)
  '(flymake-start-syntax-check-on-newline nil)
  '(flyspell-duplicate-distance 0)
@@ -102,15 +110,16 @@
  '(global-cwarn-mode t)
  '(global-eldoc-mode nil)
  '(global-hl-line-mode nil)
- '(gmm-tool-bar-style 'gnome)
+ '(gmm-tool-bar-style (quote gnome))
  '(gtags-auto-update t)
  '(gtags-ignore-case nil)
  '(gtags-select-buffer-single t)
  '(help-selects-help-window nil)
  '(highline-selected-window nil)
- '(ibuffer-default-sorting-mode 'alphabetic)
+ '(ibuffer-default-sorting-mode (quote alphabetic))
  '(ibuffer-fontification-alist
-   '((10 buffer-read-only ibuffer-locked-buffer)
+   (quote
+    ((10 buffer-read-only ibuffer-locked-buffer)
      (15
       (and buffer-file-name
 	   (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
@@ -129,11 +138,13 @@
       (memq major-mode ibuffer-help-buffer-modes)
       font-lock-doc-face)
      (35
-      (derived-mode-p 'dired-mode)
+      (derived-mode-p
+       (quote dired-mode))
       font-lock-function-name-face)
      (40
       (and
-       (boundp 'emacs-lock-mode)
+       (boundp
+	(quote emacs-lock-mode))
        emacs-lock-mode)
       ibuffer-locked-buffer)
      (55
@@ -143,10 +154,13 @@
      (33
       (and buffer-file-name
 	   (string-match "^/.[^:]+:\\([^@]+@\\)?[^:]+:" buffer-file-name))
-      dp-remote-buffer-face)))
- '(ibuffer-help-buffer-modes '(help-mode apropos-mode Info-mode Info-edit-mode Man-mode))
+      dp-remote-buffer-face))))
+ '(ibuffer-help-buffer-modes
+   (quote
+    (help-mode apropos-mode Info-mode Info-edit-mode Man-mode)))
  '(ibuffer-saved-filter-groups
-   '(("dp-ibuffer-saved-filter[0]"
+   (quote
+    (("dp-ibuffer-saved-filter[0]"
       ("source"
        (or
 	(mode . c-mode)
@@ -173,7 +187,7 @@
 	(name . "^\\*\\(Man .*\\|Mvsik\\|Warnings\\|Compile-Log\\)\\*$")
 	(name . "^\\*\\(Messages\\|Colors\\|Apropos\\|Calendar\\)\\*$")
 	(name . "^\\*\\(Help\\|info\\)\\*$")
-	(name . "^\\*\\(Completions\\|Backtrace\\|Messages\\)\\*$"))))))
+	(name . "^\\*\\(Completions\\|Backtrace\\|Messages\\)\\*$")))))))
  '(ibuffer-show-empty-filter-groups nil)
  '(ibuffer-use-other-window nil)
  '(icomplete-mode t)
@@ -190,49 +204,55 @@
  '(lazy-highlight-initial-delay 0.1)
  '(lazy-highlight-interval 0)
  '(magit-auto-revert-mode nil)
- '(magit-commit-arguments '("--signoff"))
+ '(magit-commit-arguments (quote ("--signoff")))
  '(magit-diff-hide-trailing-cr-characters nil)
  '(magit-diff-highlight-trailing t)
  '(magit-diff-paint-whitespace t)
- '(magit-diff-paint-whitespace-lines 'both)
- '(magit-diff-refine-hunk 'all)
+ '(magit-diff-paint-whitespace-lines (quote both))
+ '(magit-diff-refine-hunk (quote all))
  '(magit-diff-refine-ignore-whitespace nil)
- '(magit-diff-section-arguments '("--function-context" "-M" "--diff-algorithm=patience"))
- '(magit-pull-arguments '("--rebase"))
- '(magit-rebase-arguments '("--interactive"))
- '(magit-section-initial-visibility-alist '((untracked . hide) (stashes . hide)))
+ '(magit-diff-section-arguments
+   (quote
+    ("--function-context" "-M" "--diff-algorithm=patience")))
+ '(magit-pull-arguments (quote ("--rebase")))
+ '(magit-rebase-arguments (quote ("--interactive")))
+ '(magit-section-initial-visibility-alist (quote ((untracked . hide) (stashes . hide))))
  '(message-log-max 4094)
- '(message-send-mail-function 'message-send-mail-with-sendmail)
+ '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mingus-mode-line-string-max 60)
- '(minibuffer-prompt-properties '(read-only t cursor-intangible t face minibuffer-prompt))
+ '(minibuffer-prompt-properties
+   (quote
+    (read-only t cursor-intangible t face minibuffer-prompt)))
  '(mouse-yank-at-point t)
  '(mu4e-attachment-dir "/home/dpanarit/Downloads")
  '(next-error-highlight t)
  '(next-error-highlight-no-select t)
- '(next-error-recenter '(4))
+ '(next-error-recenter (quote (4)))
  '(open-paren-in-column-0-is-defun-start t)
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
-   '(emamux tmux-pane turnip password-generator password-mode password-store-otp password-vault paste-of-code pastebin pastehub pastery bm flycheck-grammarly flymake-grammarly grammarly langtool languagetool lastfm aas auto-yasnippet c-eval el-autoyas gitignore-snippets yasnippet-classic-snippets ewmctrl grizzl mkdown gited annalist anzu auto-compile auto-complete-c-headers auto-complete-chunk autopair academic-phrases ace-jump-mode ample-regexps amx zlc zoom-window elpy elsa auto-complete-exuberant-ctags auto-dim-other-buffers auto-package-update auto-sudoedit jupyter transient-dwim apel git-dwim git-io git-lens git-link git-messenger gitattributes-mode gitignore-mode gitignore-templates google-this google-translate fringe-current-line fringe-helper function-args fuz git-walktree iregister isearch-dabbrev isearch-project isearch-symbol-at-point native-complete nav nav-flash navi-mode navorski org-ac org-brain org-gcal org-grep pcmpl-args shelisp shell-command show-eol sift signal silkworm-theme smotitah tile torus shx anaconda-mode ascii-table bar-cursor undo-tree wconf strace-mode string-inflection string-utils sudo-ext swap-buffers switch-window swoop synonymous syntactic-close syntactic-sugar syntax-subword syslog-mode systemd therapy toggle toggle-window totd undo-propose virtual-auto-fill visible-mark visual-fill-column voca-builder volatile-highlights wgrep wgrep-ag whitespace-cleanup-mode window-layout window-purpose windwow winnow wonderland wotd ws-butler xah-elisp-mode xah-lookup xah-reformat-code xcscope xkcd xterm-color yafolding snippet socyl sos speed-type speedbar-git-respect start-menu filladapt global-tags counsel-gtags company-ctags comment-tags agtags pungi deferred python-black py-autopep8 yapfify py-yapf leanote markdown-preview-eww markup markup-faces md-readme grip-mode grin gh-md flymd rpn-calc corral hiwin magit-stgit ztree vdiff-magit vdiff treemacs-magit treemacs pcmpl-git mo-git-blame magit-tbdiff libgit github-modern-theme github-browse-file gitconfig-mode gitconfig git-attr git browse-kill-ring browse-at-remote enwc emr emaps emacsist-view emacsc emacsagist elpygen elpa-audit elmacro elisp-sandbox elf-mode eldoc-overlay electric-case eide edebug-x git-wip-timemachine git-timemachine mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp ecb thingopt escreen nhexl-mode mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar flylisp ggtags json-mode context-coloring))
+   (quote
+    (multishell watch-buffer anyins auto-shell-command better-shell bifocal buffer-watcher buffer-wrap bufler bug-reference-github comint-intercept editorconfig editorconfig-charset-extras editorconfig-custom-majormode editorconfig-domain-specific editorconfig-generate equake esh-autosuggest esh-buf-stack esh-help eshell-autojump eshell-bookmark eshell-did-you-mean eshell-fixed-prompt eshell-fringe-status eshell-git-prompt eshell-outline eshell-prompt-extras eshell-syntax-highlighting eshell-toggle eshell-up eshell-z esonify espotify firestarter fish-completion fish-mode flymake-shell flymake-shellcheck friendly-remote-shell friendly-shell friendly-shell-command friendly-tramp-path greenbar grep-a-lot ipython-shell-send modern-sh pcomplete-extension project-shells projectile-codesearch projectile-git-autofetch projectile-rails projectile-ripgrep projectile-sift projectile-speedbar projectile-trailblazer projectile-variable readline-complete realgud shell-command+ shell-current-directory shell-here shell-history shfmt emamux tmux-pane turnip password-generator password-mode password-store-otp password-vault paste-of-code pastebin pastehub pastery bm flycheck-grammarly flymake-grammarly grammarly langtool languagetool lastfm aas auto-yasnippet c-eval el-autoyas gitignore-snippets yasnippet-classic-snippets ewmctrl grizzl mkdown gited annalist anzu auto-compile auto-complete-c-headers auto-complete-chunk autopair academic-phrases ace-jump-mode ample-regexps amx zlc zoom-window elpy elsa auto-complete-exuberant-ctags auto-dim-other-buffers auto-package-update auto-sudoedit jupyter transient-dwim apel git-dwim git-io git-lens git-link git-messenger gitattributes-mode gitignore-mode gitignore-templates google-this google-translate fringe-current-line fringe-helper function-args fuz git-walktree iregister isearch-dabbrev isearch-project isearch-symbol-at-point native-complete nav nav-flash navi-mode navorski org-ac org-brain org-gcal org-grep pcmpl-args shelisp shell-command show-eol sift signal silkworm-theme smotitah tile torus shx anaconda-mode ascii-table bar-cursor undo-tree wconf strace-mode string-inflection string-utils sudo-ext swap-buffers switch-window swoop synonymous syntactic-close syntactic-sugar syntax-subword syslog-mode systemd therapy toggle toggle-window totd undo-propose virtual-auto-fill visible-mark visual-fill-column voca-builder volatile-highlights wgrep wgrep-ag whitespace-cleanup-mode window-layout window-purpose windwow winnow wonderland wotd ws-butler xah-elisp-mode xah-lookup xah-reformat-code xcscope xkcd xterm-color yafolding snippet socyl sos speed-type speedbar-git-respect start-menu filladapt global-tags counsel-gtags company-ctags comment-tags agtags pungi deferred python-black py-autopep8 yapfify py-yapf leanote markdown-preview-eww markup markup-faces md-readme grip-mode grin gh-md flymd rpn-calc corral hiwin magit-stgit ztree vdiff-magit vdiff treemacs-magit treemacs pcmpl-git mo-git-blame magit-tbdiff libgit github-modern-theme github-browse-file gitconfig-mode gitconfig git-attr git browse-kill-ring browse-at-remote enwc emr emaps emacsist-view emacsc emacsagist elpygen elpa-audit elmacro elisp-sandbox elf-mode eldoc-overlay electric-case eide edebug-x git-wip-timemachine git-timemachine mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp ecb thingopt escreen nhexl-mode mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa")
  '(python-eldoc-function-timeout 0)
- '(python-shell-completion-native-disabled-interpreters '("pypy" "ipython" "jupyter"))
+ '(python-shell-completion-native-disabled-interpreters (quote ("pypy" "ipython" "jupyter")))
  '(python-shell-interpreter "jupyter")
  '(python-shell-interpreter-args "console --simple-prompt")
  '(python-shell-prompt-detect-failure-warning nil)
  '(python-skeleton-autoinsert t)
  '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
-   '((mmm-global-classes)
+   (quote
+    ((mmm-global-classes)
      (c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
      (block-comment-end . "")
      (folding-internal-margins)
-     (folded-file . t)))
+     (folded-file . t))))
  '(save-abbrevs nil)
  '(save-place-mode nil)
- '(scroll-bar-mode 'right)
+ '(scroll-bar-mode (quote right))
  '(search-whitespace-regexp nil)
- '(send-mail-function 'smtpmail-send-it)
+ '(send-mail-function (quote smtpmail-send-it))
  '(sendmail-program "/home/dpanarit/bin/dp-msmtp")
  '(shell-cd-regexp "cd|chdir|g")
  '(shell-input-autoexpand t)
@@ -254,7 +274,8 @@
  '(wdired-allow-to-change-permissions t)
  '(whitespace-line-column 72)
  '(whitespace-style
-   '(face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark)))
+   (quote
+    (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
