@@ -157,7 +157,7 @@ long_options=(
     # max loop count
     "max:" "loops:" "max-loops:" "num-loops:" # -m
 )
-DP_IMPORTING_P=true source dp-getopt+.sh || exit 1
+source dp-getopt+.sh || exit 1
 EExec_verbose_msg "after dp-getopt+.sh: \$@>$@<"
 while (($# > 0))
 do
