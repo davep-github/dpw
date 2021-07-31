@@ -133,6 +133,7 @@ Make it buffer local since there can be >1 minibuffers.")
     (ding)
     (message "No active minibuffer.")))
 
+(setq history-length 256)		; History buff (Ha, ha!  get it?)
 (defun dp-minibuffer-setup-hook ()
   "Sets up personal minibuffer options."
   ;;CO; (dmessage "dp-minibuffer-setup-hook, buf: %s, pre: %s\n bl: %s"
@@ -149,7 +150,12 @@ Make it buffer local since there can be >1 minibuffers.")
   ;; SWAG.  3 or 4 tests and it looks to be 100% perfect for all of time in
   ;; Emacs as well as the evil splitters, the "People's front of Macs" vs
   ;; "The macsan people's front." ??? should it be peoples'
-  (setq dp-pre-minibuffer-buffer (cadr (buffer-list))) ; SWAG++
+  (setq dp-pre-minibuffer-buffer (cadr (buffer-list)) ; SWAG++
+	;; Try it out.  ~Kick the variables.~
+	enable-recursive-minibuffers t
+	minibuffer-depth-indicate-mode t
+	)
+
   ;; Some minibuffer users, like isearch, provide their own key maps for the
   ;; minibuffer to use.  We don't want to nuke those maps (here), so let's do
   ;; all our manipulations with the actual minibuffer key map.
@@ -1234,7 +1240,7 @@ Also leave the region active."
 
 (defun dp-you-cant-save-you-silly (&optional force-inhibit-p quiet-p)
   "Too much SpongeBob! NIL --> can save; non-nil --> can't.
-Arr... beware the hooks! "
+Arr... beware the 'ooks! "
   (interactive)
   (unless (and (buffer-file-name)
                (not (dp-save-inhibited-p))
@@ -1274,8 +1280,10 @@ Arr... beware the hooks! "
 					 (eval-print-last-sexp)))
      [(meta left)] dp-beginning-of-defun
      [(meta right)] dp-end-of-defun
-     [(control meta x)] dp-eval-defun-or-region
-     [(meta s)] dp-upcase-preceding-symbol
+     [(control meta ?x)] dp-eval-defun-or-region
+     [(meta ?s)] dp-upcase-preceding-symbol
+     [(meta ?.)] dp-find-function
+     [(meta ?,)] dp-pop-go-back
      [(control ?x) (meta space)] edebug-x-modify-breakpoint-wrapper
      [(control ?|)] edebug-x-modify-breakpoint-wrapper
      [(control ?x) space] rectangle-mark-mode
