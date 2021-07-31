@@ -116,7 +116,8 @@ pass amd/password
 
 #dpass amd/password | \
     # 	  --passwd-on-stdin \
-EExec dpxx -B linen -F black \
+## EExec dpxx -B linen -F black \
+EExec \
      ${strace} ${sudo} openconnect \
      --csd-wrapper=/usr/libexec/openconnect/hipreport.sh \
      --protocol=gp \
