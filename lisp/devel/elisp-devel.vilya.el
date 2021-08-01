@@ -8040,3 +8040,28 @@ nil
 nil
 
 !FTW!
+
+========================
+Sunday August 01 2021
+--
+dp-zsh-prompt-regexp
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\)?\\([#>]\\|<.*>\\)"
+
+dp-bash-prompt-regexp
+"^\\(?:(.*)\\s-*\\)?[0-9]+\\([/<]\\(?:[0-9]+\\|spayshul\\)\\)?\\([#>]\\|<.*>\\)"
+(regexp-quote "(gdb) ")
+"(gdb) "
+
+(getenv "PROMPT")
+nil
+(getenv "PS1")
+nil
+(getenv "PATH")
+"/home/davep/bin/override:/home/davep/bin:/home/davep/local/bin:/home/davep/yokel/sbin:/home/davep/yokel/bin:/home/davep/.cargo/bin:/home/davep/lib/pylib:/home/davep/bin.primitive:/etc/alternatives:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/home/davep/perl5/bin:/home/davep/.oh-my-zsh:/home/davep/.rc/zsh:/usr/games:/usr/local/games:/snap/bin:/usr/bin/X11:/opt/p4v-2021.2.2138880/bin:/opt/p4v/bin:/home/davep/bin/last-resort"
+
+nil
+
+${PS1_prefix}\u@\h${PS1_1}:\w${PS1_path_suffix}\n${PS1_bang_pre}\!${PS1_bang_suff}${PS1_terminator}
+
+(getenv "PS1_prefix")
+nil

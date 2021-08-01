@@ -610,6 +610,10 @@ def expand_files(files, selector):
 
 
 #####################################################################
+##
+## Contender for worst code I've ever written.
+## Too much time pressure.
+##
 def init_aliases(args, selector_regexp,
                  serialized_file=DEFAULT_SERIALIZED_FILE,
                  dict_file=None,

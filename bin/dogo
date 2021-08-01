@@ -10,6 +10,9 @@ eval_name_p=t
 fini()
 {
     o_val="$*$two"
+    # A fucked-up hack to "fix" definition ordering problems.
+    # Need to fix this in go2env.  But that's a nightmare.
+    # Man, I suck when I have too little or too much time to write shit.
     eval o_val="${o_val}"
     [ -n "${do_dirname_p}" ] && [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
     echo $o_val
