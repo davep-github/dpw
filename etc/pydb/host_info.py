@@ -322,6 +322,7 @@ e(
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xxem_bg_color': "grey80", # Need to have fsf and xem parameters.
+        'xrl_default_host': 'vilya',
         'project': 'brahma',
  },
     ref=[amd_family, OSDB['linux'], default]
@@ -484,6 +485,7 @@ e(
         'xem_opts': '-eval (dp-2-v-or-h-windows)',
         'xem_geometry': VILYA_XEM_GEOMETRY,
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
+        'xrl_default_host': 'yyz',
         #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
         # magically changed from 120 being right to 160 being right.
         # update of terminus font?

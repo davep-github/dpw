@@ -3,6 +3,9 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
+#
+# xrl - rsh login in its own xterm window.  Yeah, rsh.  HAHA.  Now the
+# default is ssh, of course.  But rsh is fine inside a firewall.
 if vsetp "${eexec_program-}"    # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
@@ -20,9 +23,17 @@ EExec_verbose_msg $(echo_id eexec_program)
 ##unset eexec_program
 export eexec_program
 
-(($# < 1)) && {
-    echo "$progname: Need a hostname."
-    exit 1
+if (($# < 1))
+then
+    # No arg, check for a default.
+    xrl_default_host=$($HOST_INFO -n '' xrl_default_host)
+    if [[ -n "${xrl_default_host}" ]]
+    then
+	set -- "${xrl_default_host}"
+    else
+	echo "$progname: Need a hostname, or add an \"xrl_default_host\" host-info value."
+	exit 1
+    fi
 } 1>&2
 
 #export eexec_program
@@ -57,7 +68,7 @@ on_error()
 
 # We need to know the xrl program to run on the rsh'ing host, not the rsh'd
 # to host.  It's constant across all remote hosts.
-rsh_bin=${XRL_BIN:-$($HOST_INFO -n 'rsh' xrl_rsh_bin)}
+rsh_bin=${XRL_BIN:-$($HOST_INFO -n 'ssh' xrl_rsh_bin)}
 
 just_show=
 #
