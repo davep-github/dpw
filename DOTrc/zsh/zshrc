@@ -180,7 +180,11 @@ plugins=(
 	ubuntu
 )
 
-dp_source $ZSH/oh-my-zsh.sh
+# Dumb fuckers, I'm sure no one will have used the name ZSH to mean something
+# other than oh-my-zsh.
+export ZSH_DISABLE_COMPFIX=true
+true  ${DP_USE_OH_MY_ZSH:=true}
+"${DP_USE_OH_MY_ZSH}" && dp_source $ZSH/oh-my-zsh.sh
 
 export DP_ZSH_COMPLETIONS_DIR="${DP_ZSH_RC_DIR}/completions/davep"
 
