@@ -178,7 +178,6 @@ plugins=(
 #	tmux
 #	tmuxinator
 	ubuntu
-	copyzshell
 )
 
 dp_source $ZSH/oh-my-zsh.sh
