@@ -1,9 +1,9 @@
 # -*-Shell-script-*-
 
-if [ -n "${DP_DEBUG_STARTUP}" ]
+if [ -n "${DP_DEBUG_STARTUP-}" ]
 then
     set -x
-elif [ -n "${DP_NODEBUG_STARTUP}" ]
+elif [ -n "${DP_NODEBUG_STARTUP-}" ]
 then
     set +x
 fi
