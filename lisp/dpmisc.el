@@ -985,24 +985,31 @@ examining all of the message calls."
 ;;exp; 	      (setq bol (1- bol)))))
 ;;exp;       (cons bol (point)))))
 
+(defvar dp-line-boundaries-eol-punctuation ";,: {"
+  "Skip these chars when marking line.")
+
 (defun dp-line-boundaries (&optional text-only-p no-newline-p from-pos
 				     no-eol-punctuation-p)
   "Return cons of beginning-of-line and end-of-line.
-The *ENTIRE* line is marked.  This includes the following newline, if
-one exists, otherwise the preceding newline.  The purpose of this was
-to emulate the behavior of the slick editor (itself a derivative of
-emacs).  The reason we mark the preceding newline is so that deleting
-the last line \"deletes upwards\", leaving the cursor on the new last
-line.
-If TEXT-ONLY-P is non-nil, then shrink-wrap the mark around just the
-non-white space on the line."
+The *ENTIRE* line is marked by default.  This includes the
+following newline, if one exists, otherwise the preceding
+newline.  The purpose of this was to emulate the behavior of the
+slick editor (itself a derivative of emacs).  The reason we mark
+the preceding newline is so that deleting the last line \"deletes
+upwards\", leaving the cursor on the new last line.  If
+TEXT-ONLY-P is non-nil, then shrink-wrap the mark around just the
+non-white space on the line.
+NO-NEWLINE-P pretty much does what it says.
+NO-EOL-PUNCTUATION-P skips back over certain characters, mostly programming type punctionation chars.  See `dp-line-boundaries-eol-punctuation'.
+"
   (interactive "P")
   (save-excursion
     (let (bol skip-backward-chars)
       (when text-only-p
         (setq skip-backward-chars (concat skip-backward-chars dp-ws)))
       (when no-eol-punctuation-p
-        (setq skip-backward-chars (concat skip-backward-chars ";,: {")))
+        (setq skip-backward-chars (concat skip-backward-chars
+					  dp-line-boundaries-eol-punctuation)))
       (beginning-of-line)
       (if text-only-p
           (skip-chars-forward dp-ws (line-end-position)))

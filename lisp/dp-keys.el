@@ -111,6 +111,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control meta ?l)] 'dp-center-to-top-other-window)
 (global-set-key [(meta ?a)] 'dp-toggle-mark)
 (global-set-key [(meta ?A)] 'dp-mark-to-end-of-line)
+(global-set-key [(shift end)] 'dp-mark-to-end-of-line)
+(global-set-key [(shift home)] 'dp-mark-to-beginning-of-line)
 (global-set-key [(control ?x) (meta ?a)] 'rectangle-mark-mode)
 (global-set-key [(control ?A)] 'dp-copy-to-end-of-line)
 (global-set-key [(control ?x) ?4 (meta ?e)] 'dp-ffap-other-window)

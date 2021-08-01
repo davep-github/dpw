@@ -4,6 +4,17 @@
 # with PATH!  export PATH=$HOME/bin:/usr/local/bin:$PATH
 # Actually into zsh_path
 
+#
+# It's utter bullshit that this is needed, but is blessedly possible, and
+# seems to solve the terrible problem of the keyword ":", which should be the
+# same as "true", but isn't.
+# @todo XXX Will it work in all cases, e.g. might it need to be autoloaded?
+# Also, there may be cases where functions don't work?
+function :()
+{
+    true "$@"
+}
+
 # Can stuff like this go in a zsh hook?
 # {
 #     echo ">>>>>>>>>>>> $(date)"
