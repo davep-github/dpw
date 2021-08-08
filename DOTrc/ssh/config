@@ -1,0 +1,86 @@
+# $Id$
+
+# See ssh's: -a and -A options.
+# yes <--> -A
+#ForwardAgent yes
+
+Host *
+     IdentitiesOnly=yes
+
+# ??? Needed with -Y (or ForwardX11Trusted)
+#@todo XXX Inteferes with git (from amd) or at least causes a complaint.
+# See if we can disable it on a per host basis.
+#ForwardX11 yes
+# See also ssh's: -X -x and -Y options.
+# -Y      Enables trusted X11 forwarding.  Trusted X11 forwardings are not
+#         subjected to the X11 SECURITY extension controls.
+# yes <--> -Y
+#ForwardX11Trusted yes
+
+Host yyz wifi0 192.168.1.155
+     HostName yyz 
+     IdentityFile ~/.ssh/vilya-id_rsa
+     port 22
+     user davep
+
+Host vilya 192.168.1.77
+     HostName vilya
+     IdentityFile ~/.ssh/vilya-id_rsa
+     port 22
+     user davep
+
+############ Inside the AMD Firewall #############
+# Host androidgit
+#     HostName git.amd.com
+#     User androidgit
+#     Port 22
+
+#
+# How to allow ONLY gerrit* up to a dot,
+# And then to allow gerrit*.amd.com
+# where amd.com is required.
+Host gerrit*
+    HostName git.amd.com
+    IdentityFile ~/.ssh/gerrit-git-id_rsa
+    User dpanarit
+    Port 29418
+
+# Host gerrit-git*
+#     HostName git.amd.com
+#     IdentityFile ~/.ssh/gerrit-git-id_rsa
+#     User dpanarit
+#     Port 29418
+
+# Host gerritgitmaster*
+#     HostName git.amd.com
+#     IdentityFile ~/.ssh/gerrit-git-id_rsa
+#     User dpanarit
+#     Port 29418
+
+#
+# This will change as my VMs change, i.e. are released.
+Host atl
+    HostName atlr5n4-0759
+    User dpanarit
+    Port 22
+
+Host ub1
+    HostName ub1404dktp64
+    User dpanarit
+    Port 22
+
+Host phawk
+    HostName pigeonhawk
+    User dpanarit
+    Port 22
+
+Host cz
+    HostName cz-fp4-bdc
+
+Host bw
+    HostName bambleweeny-57
+    User dpanarit
+
+Host bw57
+    HostName bambleweeny-57
+    User dpanarit
