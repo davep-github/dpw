@@ -405,30 +405,21 @@ DP_EXPORT_FUNC expand_source_list source_list dpFATAL dp_die
 DP_EXPORT_FUNC dpdbg_echo dpio_echo dpWARN
 DP_EXPORT_FUNC dpe_error dpe_warn dpe_warning
 
-function inside_emacs_p()
-{
-    # If this is true then we're not in a shell buffer.
-    [[ "${TERM-}" =~ .*term.* ]] && false ||
-    [[ "$TERM" = "emacs" \
-	   || "$TERM" = "eterm" \
-	   || -n "${EMACS-}" \
-	   || ${EMACS-} == "t" \
-     ]]
-}
-
-DP_EXPORT_FUNC inside_emacs_p
-
-
 if inside_emacs_p; then
-    emacs_man()
+    function emacs_man()
     {
         /usr/bin/man "$@" | col -b
     }
     DP_EXPORT_FUNC emacs_man
 
-    make()
+    function make()
     {
         /usr/bin/make "$@" 2>&1 | ul -t dumb
+    }
+
+    function less()
+    {
+	cat
     }
 fi
 
