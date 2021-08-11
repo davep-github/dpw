@@ -180,7 +180,6 @@ then
 
     #alias less='cat'
     # use the opener so we can get some kind of translation
-    alias less="${LESSOPEN_PROG_DP-cat}"
     alias more='cat'
     alias show='scat'           # nmh command
     alias man='emacs_man'

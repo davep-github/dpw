@@ -8,6 +8,17 @@ then
     set +x
 fi
 
+function inside_emacs_p()
+{
+    # If this is true then we're not in a shell buffer.
+    [[ "${TERM-}" =~ .*term.* ]] && false ||
+    [[ "$TERM" = "emacs" \
+	   || "$TERM" = "eterm" \
+	   || -n "${EMACS-}" \
+	   || ${EMACS-} == "t" \
+     ]]
+}
+
 dp_log_header()
 {
     echo -n "$(date +'%j:%R:%S')"
