@@ -111,24 +111,6 @@ then
 fi
 unset m
 
-if inside_emacs_p
-then
-    export PAGER=cat
-    export TERMINFO=$HOME/.terminfo
-    export DP_HIST_GREP_GREPPER=egrep
-    export GIT_PAGER=cat
-    export GREP_DASH_N=-n
-    # Do not use the --RAW-CONTROL-CHARS (-R) option unless Emacs is
-    # configured to handle the ANSI color sequences.
-    # Why did I not export this?  There is a problem either way. If the new
-    # value is exported, and I open, say, an xterm, it won't handle colors
-    # properly.  If it's not exported, then a shell buffer subshell will get
-    # the RAW option.
-    LESS="--LONG-PROMPT --no-init --ignore-case"
-else
-    export GREP_DASH_N=
-fi
-
 MAILDIR="$HOME/Maildir"
 [ -d  $"MAILDIR" ] && {
     unset MAIL

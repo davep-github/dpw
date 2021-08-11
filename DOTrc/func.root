@@ -1,3 +1,5 @@
+# -*-Shell-script-*-
+
 # Meant to be sourced.
 # Shared with root.
 
@@ -410,6 +412,20 @@ function gnewto()
     return "$?"
 }
 DP_EXPORT_FUNC gnewto
+
+function fuck_gpg_agent()
+{
+    # E.g.
+    # SSH_AUTH_SOCK=/run/user/8084/gnupg/S.gpg-agent.ssh
+    export FUCK_SSH_AUTH_SOCK="${SSH_AUTH_SOCK}"
+    unset SSH_AUTH_SOCK
+    echo 1>&2 "FUCK_SSH_AUTH_SOCK>${FUCK_SSH_AUTH_SOCK}<"
+    eval $(ssh-agent)
+    {
+	echo "Fix either gpg-agent or ~/.rc/dp-ssh-agent"
+	echo "Now, do this: ssh-add ~/.ssh/<some-key>"
+    } 1>&2
+}
 
 #echo 1>&2 "YOPP! end of ~/bin/func.root SHELL>$SHELL< ***************************************************"
 true
